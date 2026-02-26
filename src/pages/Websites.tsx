@@ -1,3 +1,9 @@
+import SubpageLayout from '../layouts/SubpageLayout'
+
 export default function Websites() {
-  return <div>Websites</div>
+  return (
+    <SubpageLayout accentColor="--web">
+      <div />
+    </SubpageLayout>
+  )
 }

@@ -1,3 +1,9 @@
+import SubpageLayout from '../layouts/SubpageLayout'
+
 export default function Dashboards() {
-  return <div>Dashboards</div>
+  return (
+    <SubpageLayout accentColor="--dash">
+      <div />
+    </SubpageLayout>
+  )
 }

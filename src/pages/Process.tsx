@@ -1,3 +1,9 @@
+import SubpageLayout from '../layouts/SubpageLayout'
+
 export default function Process() {
-  return <div>Process</div>
+  return (
+    <SubpageLayout accentColor="--auto">
+      <div />
+    </SubpageLayout>
+  )
 }

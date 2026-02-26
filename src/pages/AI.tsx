@@ -1,3 +1,9 @@
+import SubpageLayout from '../layouts/SubpageLayout'
+
 export default function AI() {
-  return <div>AI</div>
+  return (
+    <SubpageLayout accentColor="--ai">
+      <div />
+    </SubpageLayout>
+  )
 }
