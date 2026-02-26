@@ -1,0 +1,134 @@
+/* ========================================
+   IVERSO — Global CSS
+   Mobile-first base styles
+   ======================================== */
+
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Syne:wght@600;700;800&display=swap');
+
+/* --- CSS Reset --- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* --- CSS Variables --- */
+:root {
+  /* Core colors */
+  --bg: #0A0A0C;
+  --text: #EDEDF0;
+  --accent: #F77F0A;
+  --gray: #88889A;
+
+  /* Service colors */
+  --web: #22B8CF;
+  --dash: #4D8EFF;
+  --ai: #A855F7;
+  --auto: #F77F0A;
+}
+
+/* --- Body base --- */
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* --- "Ultra deep" gradient background ---
+   Dramatic orange radial gradient from top,
+   multiple depth layers, vignette, film grain.
+   Mobile-first — this IS the final mobile version.
+   ---------------------------------------- */
+#root {
+  position: relative;
+  min-height: 100vh;
+}
+
+#root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    /* Layer 1: Main orange radial glow from top */
+    radial-gradient(
+      ellipse 80% 40% at 50% 0%,
+      rgba(247, 127, 10, 0.10) 0%,
+      rgba(247, 127, 10, 0.04) 30%,
+      transparent 70%
+    ),
+    /* Layer 2: Deeper warm spread */
+    radial-gradient(
+      ellipse 100% 60% at 50% -5%,
+      rgba(247, 127, 10, 0.05) 0%,
+      transparent 60%
+    ),
+    /* Layer 3: Subtle center warmth */
+    radial-gradient(
+      circle at 50% 30%,
+      rgba(247, 127, 10, 0.03) 0%,
+      transparent 50%
+    ),
+    /* Layer 4: Vignette — dark edges */
+    radial-gradient(
+      ellipse 70% 70% at 50% 50%,
+      transparent 50%,
+      rgba(10, 10, 12, 0.6) 100%
+    ),
+    /* Base */
+    var(--bg);
+
+  /* DESKTOP TWEAK — gradient sizes & intensities can be adjusted for larger screens */
+}
+
+/* Film grain overlay */
+#root::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}

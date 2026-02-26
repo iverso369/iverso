@@ -1,3 +1,9 @@
+import SubpageLayout from '../layouts/SubpageLayout'
+
 export default function Automation() {
-  return <div>Automation</div>
+  return (
+    <SubpageLayout accentColor="--auto">
+      <div />
+    </SubpageLayout>
+  )
 }
