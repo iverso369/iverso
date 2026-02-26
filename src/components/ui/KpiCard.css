@@ -1,0 +1,23 @@
+.kpi-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kpi-card__value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  /* DESKTOP TWEAK — font-size */
+}
+
+.kpi-card__label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #88889A;
+  line-height: 1.3;
+}

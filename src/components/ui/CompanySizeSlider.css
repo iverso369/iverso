@@ -1,0 +1,93 @@
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding: 8px 0;
+}
+
+/* Track container — positions track, fill, and input on top of each other */
+.slider__track-container {
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.slider__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+.slider__fill {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #F77F0A, #FF8F1A);
+  border-radius: 2px;
+  transition: width 0.25s ease;
+}
+
+/* Native range input — styled thumb, invisible track */
+.slider__input {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  z-index: 1;
+}
+
+/* We draw our own thumb using a pseudo-element on the fill */
+.slider__fill::after {
+  content: '';
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #F77F0A;
+  box-shadow: 0 0 12px rgba(247, 127, 10, 0.3);
+  transition: box-shadow 0.2s;
+}
+
+/* Labels row */
+.slider__labels {
+  display: flex;
+  justify-content: space-between;
+}
+
+.slider__label {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--gray);
+  padding: 8px 4px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  /* DESKTOP TWEAK — font-size */
+}
+
+.slider__label--active {
+  color: #F77F0A;
+  font-weight: 500;
+}
