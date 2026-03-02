@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "services": "Szolgáltatások",
+    "process": "Folyamat",
+    "contact": "Kapcsolat",
+    "dashboards": "Dashboardok",
+    "ai": "AI",
+    "automation": "Automatizáció",
+    "websites": "Weboldalak"
+  },
+  "common": {
+    "more": "Tovább →",
+    "impressum": "Impressum",
+    "privacy": "Adatvédelem",
+    "slogan": "Let's build something",
+    "cta": "Beszéljünk →",
+    "copyright": "© 2026 Iverso"
+  }
+}

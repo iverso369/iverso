@@ -163,11 +163,11 @@ Ezek az újrahasználható komponensek amikből a főoldali előzetesek ÉS az a
 
 ---
 
-### Réteg 1 — Alap ✅ Átbeszélve
+### Réteg 1 — Alap ✅ IMPLEMENTÁLVA
 
-Projekt, routing, színek, fontok, háttér, i18n váz, hooks.
+Projekt, routing, színek, fontok, háttér, i18n váz.
 
-**Nincs nyitott kérdés.**
+**Részletek:** RETEG_1_NAPLO.md
 
 ---
 
@@ -320,20 +320,20 @@ Loading, i18n, jogi, teljesítmény.
 
 ## Hol tartunk most
 
-**Repo:** törölve — újrakezdés tiszta lappal
+**Repo:** github.com/iverso369/iverso — aktív
 
-**Ami kész:** storyboard (az elképzelés le van írva)
+**Ami kész:** Réteg 1 (Alap) implementálva — fut a projekt, routing, fontok, háttér gradient, i18n, Vercel config
 
-**Amit most csinálunk:** Mind a 7 fázis átbeszélve — implementáció következik
+**Amit most csinálunk:** Réteg 2 (Háttér + Hero) következik
 
-**Átbeszélés állapota:**
-- ✅ Réteg 1 (Alap) — kész
-- ✅ Réteg 2 (Keretek) — kész
-- ✅ Réteg 3 (Építőkockák) — kész (logika eldöntve, vizuális design gépen)
-- ✅ Réteg 4 (Jelenetek) — kész (tartalom eldöntve, vizuális finomhangolás gépen)
-- ✅ Réteg 5 (Aloldalak) — kész (szövegek megírva, vizuális design gépen)
-- ✅ Réteg 6 (Amelia) — kész (átadás: email, provider: később)
-- ✅ Réteg 7 (Polish) — kész (fordítások megírva, technikai döntések meghozva, maradék implementációkor)
+**Implementáció állapota:**
+- ✅ Réteg 1 (Alap) — IMPLEMENTÁLVA (részletek: RETEG_1_NAPLO.md)
+- ⬜ Réteg 2 (Háttér + Hero) — következik
+- ⬜ Réteg 3 (Építőkockák)
+- ⬜ Réteg 4 (Jelenetek)
+- ⬜ Réteg 5 (Aloldalak)
+- ⬜ Réteg 6 (Amelia)
+- ⬜ Réteg 7 (Polish)
 
 ---
 

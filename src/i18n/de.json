@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "services": "Leistungen",
+    "process": "Prozess",
+    "contact": "Kontakt",
+    "dashboards": "Dashboards",
+    "ai": "AI",
+    "automation": "Automatisierung",
+    "websites": "Webseiten"
+  },
+  "common": {
+    "more": "Weiter →",
+    "impressum": "Impressum",
+    "privacy": "Datenschutz",
+    "slogan": "Let's build something",
+    "cta": "Lass uns reden →",
+    "copyright": "© 2026 Iverso"
+  }
+}
