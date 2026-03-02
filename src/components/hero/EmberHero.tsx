@@ -10,8 +10,8 @@ const CAMERA_Z = 35
 const CAMERA_FOV = 75
 const MOUSE_PUSH_RADIUS = 5.0
 const MOUSE_GLOW_RADIUS = 8.0
-const DESTROY_RADIUS_FRAC = 0.15
-const REBUILD_TIME = 12000
+const DESTROY_RADIUS_FRAC = 0.18
+const REBUILD_TIME = 8000
 const FADE_IN_TIME = 1.5
 
 const COLOR_A = new THREE.Color(0xCC5500)
@@ -153,12 +153,12 @@ const fragmentShader = /* glsl */ `
 
     // Additive color build (warm ember — not mix!)
     vec3 warmColor = mix(uColorA, uColorB, 0.5);
-    vec3 deepColor = warmColor * 0.2;
+    vec3 deepColor = warmColor * 0.35;
     vec3 hotCore = vec3(1.0, 0.92, 0.8);
 
     vec3 color = deepColor * outerGlow
-               + warmColor * midGlow * 0.8
-               + hotCore * coreGlow * 0.3;
+               + warmColor * midGlow * 1.0
+               + hotCore * coreGlow * 0.4;
 
     // Per-particle color variation
     color = mix(color, vColor * midGlow * 0.6, 0.25);
@@ -169,7 +169,7 @@ const fragmentShader = /* glsl */ `
 
     // Soft edge + alpha
     float softEdge = smoothstep(0.5, 0.03, dist);
-    float alpha = softEdge * 0.4 * vAlpha;
+    float alpha = softEdge * 0.5 * vAlpha;
 
     // Hover glow
     float hoverGlow = vMouseProximity * 0.8;
@@ -192,7 +192,7 @@ function sampleTextPositions(
   const scale = 2
   canvas.width = width * scale
   canvas.height = height * scale
-  const fontSize = Math.round(width * scale * 0.13)
+  const fontSize = Math.round(width * scale * 0.08)
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.font = `800 ${fontSize}px Syne`
@@ -461,7 +461,7 @@ export default function EmberHero() {
         if (dist < destroyR) {
           destroyedFlags[i] = now
           const ang = Math.random() * Math.PI * 2
-          const speed = 0.3 + Math.random() * 0.9
+          const speed = 0.2 + Math.random() * 0.6
           const f = 1 - dist / destroyR
           velocities[i * 3] = Math.cos(ang) * speed * (0.5 + f)
           velocities[i * 3 + 1] = (Math.sin(ang) + Math.random() * 0.3) * speed * (0.5 + f)
