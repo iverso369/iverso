@@ -5,7 +5,7 @@ import styles from './EmberHero.module.css'
 /* ========================================
    CONSTANTS
    ======================================== */
-const PARTICLE_COUNT = 50000
+const PARTICLE_COUNT = 80000
 const CAMERA_Z = 35
 const CAMERA_FOV = 75
 const MOUSE_PUSH_RADIUS = 5.0
@@ -146,32 +146,34 @@ const fragmentShader = /* glsl */ `
     float dist = length(center);
     if (dist > 0.5) discard;
 
-    // 3-layer glow system
-    float outerGlow = exp(-dist * 4.0);
-    float midGlow = exp(-dist * 10.0);
-    float coreGlow = exp(-dist * 25.0);
+    // 3-layer glow (softer spread for 80K density)
+    float outerGlow = exp(-dist * 3.0);
+    float midGlow = exp(-dist * 7.0);
+    float coreGlow = exp(-dist * 18.0);
 
-    // Coal/ember coloring (from uniform palette)
-    vec3 coalColor = mix(uColorA, uColorB, 0.4) * 0.3;
-    vec3 emberHot = mix(uColorA, uColorB, 0.6);
+    // Additive color build (warm ember — not mix!)
+    vec3 warmColor = mix(uColorA, uColorB, 0.5);
+    vec3 deepColor = warmColor * 0.2;
     vec3 hotCore = vec3(1.0, 0.92, 0.8);
 
-    vec3 color = mix(coalColor, emberHot, coreGlow * 0.5 + midGlow * 0.2);
+    vec3 color = deepColor * outerGlow
+               + warmColor * midGlow * 0.8
+               + hotCore * coreGlow * 0.3;
+
+    // Per-particle color variation
+    color = mix(color, vColor * midGlow * 0.6, 0.25);
 
     // Edge glow — thin bright rim
     float edgeBrightness = smoothstep(0.35, 0.47, dist) * smoothstep(0.5, 0.47, dist) * 0.5;
-    color += emberHot * edgeBrightness;
-
-    // Per-particle color blend (individual variation)
-    color = mix(color, vColor * midGlow * 0.6, 0.25);
+    color += warmColor * edgeBrightness;
 
     // Soft edge + alpha
     float softEdge = smoothstep(0.5, 0.03, dist);
-    float alpha = softEdge * 0.35 * vAlpha;
+    float alpha = softEdge * 0.4 * vAlpha;
 
     // Hover glow
     float hoverGlow = vMouseProximity * 0.8;
-    color = mix(color, emberHot * 1.5, hoverGlow * 0.6);
+    color = mix(color, warmColor * 1.5, hoverGlow * 0.6);
     alpha *= 1.0 + hoverGlow * 2.0;
 
     if (alpha < 0.005) discard;
@@ -190,7 +192,7 @@ function sampleTextPositions(
   const scale = 2
   canvas.width = width * scale
   canvas.height = height * scale
-  const fontSize = Math.round(width * scale * 0.19)
+  const fontSize = Math.round(width * scale * 0.13)
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.font = `800 ${fontSize}px Syne`
@@ -310,7 +312,7 @@ export default function EmberHero() {
       for (let i = useSampled.length; i < count; i++) {
         const base = useSampled[Math.floor(Math.random() * useSampled.length)]
         const ang = Math.random() * Math.PI * 2
-        const r = Math.random() * 0.025 + 0.005
+        const r = Math.random() * 0.035 + 0.005
         const x = (base.x + Math.cos(ang) * r) * visW
         const y = (base.y + Math.sin(ang) * r) * visH
         positions[i * 3] = x
@@ -522,7 +524,7 @@ export default function EmberHero() {
       for (let i = useSampled.length; i < PARTICLE_COUNT; i++) {
         const base = useSampled[Math.floor(Math.random() * useSampled.length)]
         const ang = Math.random() * Math.PI * 2
-        const r = Math.random() * 0.025 + 0.005
+        const r = Math.random() * 0.035 + 0.005
         const x = (base.x + Math.cos(ang) * r) * visW
         const y = (base.y + Math.sin(ang) * r) * visH
         posArr[i * 3] = x
