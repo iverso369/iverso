@@ -1,3 +1,5 @@
+import EmberHero from '../components/hero/EmberHero'
+
 export default function Home() {
-  return <div>Home</div>
+  return <EmberHero />
 }
