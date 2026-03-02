@@ -116,16 +116,17 @@ const vertexShader = /* glsl */ `
 
   varying vec3 vColor;
   varying float vOpacity;
+  varying float vHoverEffect;
 
   void main() {
     vec3 pos = position;
 
     // Pulsation — size and brightness oscillate
     float pulse = sin(uTime * aFreq + aPhase);
-    float sizePulse = 1.0 + pulse * 0.2; // ±20%
-    float opacityPulse = 0.35 + pulse * 0.1;
+    float sizePulse = 1.0 + pulse * 0.2;
+    float opacityPulse = 0.8 + pulse * 0.15;
 
-    // Subtle drift noise (position-based pseudo noise)
+    // Subtle drift noise
     float noiseX = sin(pos.x * 13.7 + uTime * 0.3 + aPhase) * 0.001;
     float noiseY = cos(pos.y * 17.3 + uTime * 0.25 + aPhase * 1.3) * 0.001;
     pos.x += noiseX;
@@ -136,22 +137,20 @@ const vertexShader = /* glsl */ `
       pos.y += sin(uTime * 0.2 + aPhase) * ${DRIFT_SPEED.toFixed(6)};
     }
 
-    // Hover interaction — glow brighter and bigger near mouse
+    // Hover interaction
     float dist = distance(pos.xy, uMouse);
     float hoverEffect = 1.0 - smoothstep(0.0, uHoverRadius * uTextWidth, dist);
-    float hoverSizeBoost = 1.0 + hoverEffect * 1.0; // up to 2x
-    float hoverBrightBoost = 1.0 + hoverEffect * 0.7;
-
-    // Shift color toward white-yellow on hover
-    vec3 hoverColor = mix(aColor, vec3(1.0, 0.95, 0.8), hoverEffect * 0.6);
+    float hoverSizeBoost = 1.0 + hoverEffect * 0.5;
 
     // Color pulsation (subtle time-based variation)
+    vec3 particleColor = aColor;
     float colorShift = sin(uTime * 0.3 + aPhase * 2.0) * 0.05;
-    hoverColor.r = clamp(hoverColor.r + colorShift, 0.0, 1.0);
-    hoverColor.g = clamp(hoverColor.g + colorShift * 0.5, 0.0, 1.0);
+    particleColor.r = clamp(particleColor.r + colorShift, 0.0, 1.0);
+    particleColor.g = clamp(particleColor.g + colorShift * 0.5, 0.0, 1.0);
 
-    vColor = hoverColor * hoverBrightBoost;
-    vOpacity = opacityPulse * hoverBrightBoost;
+    vColor = particleColor;
+    vOpacity = opacityPulse;
+    vHoverEffect = hoverEffect;
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
     gl_PointSize = aSize * sizePulse * hoverSizeBoost * uPixelRatio;
@@ -162,16 +161,43 @@ const vertexShader = /* glsl */ `
 const fragmentShader = /* glsl */ `
   varying vec3 vColor;
   varying float vOpacity;
+  varying float vHoverEffect;
 
   void main() {
-    // Gaussian falloff — soft circle
     vec2 center = gl_PointCoord - 0.5;
     float dist = length(center);
-    float alpha = exp(-dist * dist * 6.0); // Gaussian — soft glow
+    if (dist > 0.5) discard;
 
-    if (alpha < 0.01) discard;
+    // 3-layer glow system (coal/ember aesthetic)
+    float outerGlow = exp(-dist * 4.0);
+    float midGlow = exp(-dist * 10.0);
+    float coreGlow = exp(-dist * 25.0);
 
-    gl_FragColor = vec4(vColor, alpha * vOpacity);
+    // Coal/ember coloring from particle color
+    vec3 coalColor = vColor * 0.3;
+    vec3 emberHot = vColor;
+    vec3 hotCore = vec3(1.0, 0.92, 0.8);
+
+    // Build color from glow layers
+    vec3 color = coalColor;
+    color = mix(color, emberHot, midGlow * 0.5 + coreGlow * 0.3);
+    color += hotCore * coreGlow * 0.15;
+
+    // Edge glow — thin bright rim
+    float edgeBrightness = smoothstep(0.35, 0.47, dist) * smoothstep(0.5, 0.47, dist) * 0.4;
+    color += emberHot * edgeBrightness;
+
+    // Soft edge falloff
+    float softEdge = smoothstep(0.5, 0.03, dist);
+    float alpha = softEdge * 0.22 * vOpacity;
+
+    // Hover glow boost
+    color = mix(color, emberHot * 1.3, vHoverEffect * 0.5);
+    alpha *= 1.0 + vHoverEffect * 1.5;
+
+    if (alpha < 0.005) discard;
+
+    gl_FragColor = vec4(color, alpha);
   }
 `
 
@@ -296,7 +322,7 @@ export default function EmberHero() {
         // Pick a random sampled position and offset it for diffuse halo
         const base = useSampled[Math.floor(Math.random() * useSampled.length)]
         const angle = Math.random() * Math.PI * 2
-        const dist = (Math.random() * 0.05 + 0.005)
+        const dist = (Math.random() * 0.025 + 0.005)
         const x = (base.x + Math.cos(angle) * dist) * visibleWidth
         const y = (base.y + Math.sin(angle) * dist) * visibleHeight
         positions[i * 3] = x
@@ -330,14 +356,14 @@ export default function EmberHero() {
           sparksAssigned++
         }
 
-        // Size distribution: 55% tiny, 30% medium, 15% large glow
+        // Size distribution: 70% tiny, 25% medium, 5% large
         const sizeRand = Math.random()
-        if (sizeRand < 0.55) {
-          sizes[i] = 1.5 + Math.random() * 2.0  // 1.5-3.5px — dense texture
-        } else if (sizeRand < 0.85) {
-          sizes[i] = 4.0 + Math.random() * 4.0  // 4-8px — medium
+        if (sizeRand < 0.70) {
+          sizes[i] = 1.0 + Math.random() * 2.0  // 1-3px — dense texture
+        } else if (sizeRand < 0.95) {
+          sizes[i] = 3.0 + Math.random() * 3.0  // 3-6px — medium glow
         } else {
-          sizes[i] = 15.0 + Math.random() * 25.0 // 15-40px — large soft glow (halo)
+          sizes[i] = 6.0 + Math.random() * 6.0  // 6-12px — large glow
         }
 
         // Phase & frequency for pulsation
@@ -620,7 +646,7 @@ export default function EmberHero() {
       for (let i = useSampled.length; i < PARTICLE_COUNT; i++) {
         const base = useSampled[Math.floor(Math.random() * useSampled.length)]
         const angle = Math.random() * Math.PI * 2
-        const dist = (Math.random() * 0.05 + 0.005)
+        const dist = (Math.random() * 0.025 + 0.005)
         const x = (base.x + Math.cos(angle) * dist) * visibleWidth
         const y = (base.y + Math.sin(angle) * dist) * visibleHeight
         posArray[i * 3] = x
