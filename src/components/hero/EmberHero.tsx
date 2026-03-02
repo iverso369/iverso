@@ -10,9 +10,16 @@ const CAMERA_Z = 35
 const CAMERA_FOV = 75
 const MOUSE_PUSH_RADIUS = 5.0
 const MOUSE_GLOW_RADIUS = 8.0
-const DESTROY_RADIUS_FRAC = 0.18
-const REBUILD_TIME = 8000
+const DESTROY_RADIUS_FRAC = 0.22
+const MAX_ACTIVE_CLICKS = 8
 const FADE_IN_TIME = 1.5
+
+// Rebuild phases (ms)
+const EXPLODE_PHASE = 1500
+const DRIFT_PHASE = 1000
+const RETURN_PHASE = 5500
+const RETURN_STAGGER = 2000
+const TOTAL_REBUILD = EXPLODE_PHASE + DRIFT_PHASE + RETURN_PHASE
 
 const COLOR_A = new THREE.Color(0xCC5500)
 const COLOR_B = new THREE.Color(0xFF8533)
@@ -80,17 +87,21 @@ const vertexShader = /* glsl */ `
   uniform float uMouseInfluence;
   uniform vec3 uMouseVelocity;
   uniform float uOpacity;
+  uniform vec3 uShockwaveCenter;
+  uniform float uShockwaveTime;
 
   varying vec3 vColor;
   varying float vAlpha;
   varying float vMouseProximity;
+  varying float vShockEffect;
+  varying float vSparkBright;
 
   ${SNOISE_GLSL}
 
   void main() {
     vec3 pos = position;
 
-    // Breathing — simplex noise micro-shimmer (like poking coals)
+    // Breathing — simplex noise micro-shimmer
     float noiseScale = 0.8;
     float breathe = sin(uTime * 0.3) * 0.2 + 0.8;
     vec3 noiseOffset = vec3(
@@ -100,6 +111,10 @@ const vertexShader = /* glsl */ `
     ) * breathe;
     float textBreathe = 0.03 + snoise(vec3(aRandom * 50.0, uTime * 0.5, 0.0)) * 0.02;
     pos += noiseOffset * textBreathe;
+
+    // Subtle upward convection (heat rises)
+    float convection = snoise(vec3(pos.x * 0.15, uTime * 0.06, pos.z * 0.3)) * 0.12;
+    pos.y += convection * (0.6 + aRandom * 0.4);
 
     // Mouse push-away (particles deflect from cursor)
     vec3 toMouse = uMouse3D - pos;
@@ -115,6 +130,22 @@ const vertexShader = /* glsl */ `
     // Mouse proximity for fragment glow
     vMouseProximity = uMouseInfluence * smoothstep(${MOUSE_GLOW_RADIUS.toFixed(1)}, 0.0, mouseDist);
 
+    // Shockwave — expanding bright ring from click
+    float swAge = uShockwaveTime;
+    float shockRadius = max(swAge, 0.0) * 18.0;
+    float distToShock = length(pos.xy - uShockwaveCenter.xy);
+    float shockRing = exp(-pow(distToShock - shockRadius, 2.0) * 0.8);
+    float shockFade = exp(-max(swAge, 0.0) * 3.0);
+    vShockEffect = shockRing * shockFade * step(0.0, swAge);
+
+    // Spark flare — random particles briefly glow bright
+    float tickInterval = 0.6;
+    float tickIndex = floor(uTime / tickInterval);
+    float tickPhase = fract(uTime / tickInterval);
+    float sparkHash = fract(sin(aRandom * 43758.5453 + tickIndex * 7.919) * 43758.5453);
+    float isSpark = step(0.994, sparkHash);
+    vSparkBright = isSpark * sin(tickPhase * 3.14159);
+
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
 
     // Size — dual-frequency pulse + per-particle variation
@@ -123,7 +154,9 @@ const vertexShader = /* glsl */ `
     float textScale = 0.8 + aRandom * 0.6 + step(0.85, aRandom) * 0.8;
     float size = textScale * (1.0 + pulse);
     float hoverSizeBoost = 1.0 + vMouseProximity * 0.6;
-    gl_PointSize = size * (150.0 / -mvPosition.z) * hoverSizeBoost;
+    float sparkSizeBoost = 1.0 + vSparkBright * 1.5;
+    float shockSizeBoost = 1.0 + vShockEffect * 1.5;
+    gl_PointSize = size * (150.0 / -mvPosition.z) * hoverSizeBoost * sparkSizeBoost * shockSizeBoost;
 
     gl_Position = projectionMatrix * mvPosition;
 
@@ -140,18 +173,20 @@ const fragmentShader = /* glsl */ `
   varying vec3 vColor;
   varying float vAlpha;
   varying float vMouseProximity;
+  varying float vShockEffect;
+  varying float vSparkBright;
 
   void main() {
     vec2 center = gl_PointCoord - 0.5;
     float dist = length(center);
     if (dist > 0.5) discard;
 
-    // 3-layer glow (softer spread for 80K density)
+    // 3-layer glow
     float outerGlow = exp(-dist * 3.0);
     float midGlow = exp(-dist * 7.0);
     float coreGlow = exp(-dist * 18.0);
 
-    // Additive color build (warm ember — not mix!)
+    // Additive color build (warm ember)
     vec3 warmColor = mix(uColorA, uColorB, 0.5);
     vec3 deepColor = warmColor * 0.35;
     vec3 hotCore = vec3(1.0, 0.92, 0.8);
@@ -175,6 +210,14 @@ const fragmentShader = /* glsl */ `
     float hoverGlow = vMouseProximity * 0.8;
     color = mix(color, warmColor * 1.5, hoverGlow * 0.6);
     alpha *= 1.0 + hoverGlow * 2.0;
+
+    // Spark flare — hot flash
+    color += hotCore * vSparkBright * 0.8;
+    alpha *= 1.0 + vSparkBright * 0.5;
+
+    // Shockwave ring — bright pulse
+    color = mix(color, vec3(1.0, 0.9, 0.7), vShockEffect * 0.6);
+    alpha *= 1.0 + vShockEffect * 2.5;
 
     if (alpha < 0.005) discard;
     gl_FragColor = vec4(color, alpha);
@@ -244,6 +287,7 @@ export default function EmberHero() {
     let homePositions: Float32Array
     let velocities: Float32Array
     let destroyedFlags: Float32Array
+    let returnDelays: Float32Array
 
     let renderer: THREE.WebGLRenderer
     let scene: THREE.Scene
@@ -253,11 +297,18 @@ export default function EmberHero() {
     let material: THREE.ShaderMaterial
     let textWorldWidth = 1
 
+    // Separate raycaster for clicks (not shared with animation loop)
+    const clickRaycaster = new THREE.Raycaster()
+
     const rc = new THREE.Raycaster()
     const mousePlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
     const mouseNDC = new THREE.Vector2(0, 0)
     const mouse3D = new THREE.Vector3(9999, 9999, 0)
     let mouseActive = false
+
+    // Click tracking
+    const recentClicks: number[] = []
+    let shockwaveStartTime = -1
 
     async function init() {
       if (disposed) return
@@ -293,6 +344,7 @@ export default function EmberHero() {
       homePositions = new Float32Array(count * 3)
       velocities = new Float32Array(count * 3)
       destroyedFlags = new Float32Array(count)
+      returnDelays = new Float32Array(count)
       const randoms = new Float32Array(count)
       const colors = new Float32Array(count * 3)
 
@@ -300,41 +352,53 @@ export default function EmberHero() {
         ? selectRandom(sampled, count)
         : sampled
 
+      // Text particles — tight z-depth
       for (let i = 0; i < useSampled.length; i++) {
         const x = useSampled[i].x * visW
         const y = useSampled[i].y * visH
+        const z = (Math.random() - 0.5) * 0.6
         positions[i * 3] = x
         positions[i * 3 + 1] = y
+        positions[i * 3 + 2] = z
         homePositions[i * 3] = x
         homePositions[i * 3 + 1] = y
+        homePositions[i * 3 + 2] = z
       }
 
+      // Halo particles — more z-spread for depth
       for (let i = useSampled.length; i < count; i++) {
         const base = useSampled[Math.floor(Math.random() * useSampled.length)]
         const ang = Math.random() * Math.PI * 2
         const r = Math.random() * 0.035 + 0.005
         const x = (base.x + Math.cos(ang) * r) * visW
         const y = (base.y + Math.sin(ang) * r) * visH
+        const z = (Math.random() - 0.5) * 1.6
         positions[i * 3] = x
         positions[i * 3 + 1] = y
+        positions[i * 3 + 2] = z
         homePositions[i * 3] = x
         homePositions[i * 3 + 1] = y
+        homePositions[i * 3 + 2] = z
       }
 
+      // Colors — tiered system
       for (let i = 0; i < count; i++) {
         randoms[i] = Math.random()
         const depth = Math.random()
         if (depth < 0.05) {
+          // Dark coal (5%)
           const t = Math.random()
           colors[i * 3] = 0.4 + t * 0.2
           colors[i * 3 + 1] = 0.133 + t * 0.106
           colors[i * 3 + 2] = 0
         } else if (depth > 0.98) {
+          // Bright spark (2%)
           const t = Math.random()
           colors[i * 3] = 1.0
           colors[i * 3 + 1] = 0.8 + t * 0.2
           colors[i * 3 + 2] = 0.5 + t * 0.43
         } else {
+          // Normal ember (93%)
           const t = Math.random()
           colors[i * 3] = 0.8 + t * 0.2
           colors[i * 3 + 1] = 0.333 + t * 0.189
@@ -358,6 +422,8 @@ export default function EmberHero() {
           uOpacity: { value: 0 },
           uColorA: { value: COLOR_A.clone() },
           uColorB: { value: COLOR_B.clone() },
+          uShockwaveCenter: { value: new THREE.Vector3(0, 0, 0) },
+          uShockwaveTime: { value: -1.0 },
         },
         transparent: true,
         blending: THREE.AdditiveBlending,
@@ -370,6 +436,10 @@ export default function EmberHero() {
       const startTime = performance.now()
       animate(startTime)
     }
+
+    // Reusable vectors for animation loop (avoid GC pressure)
+    const _hitVec = new THREE.Vector3()
+    const _prevMouse = new THREE.Vector3()
 
     function animate(startTime: number) {
       if (disposed) return
@@ -385,17 +455,23 @@ export default function EmberHero() {
         (tgtInfl - material.uniforms.uMouseInfluence.value) * 0.05
 
       rc.setFromCamera(mouseNDC, camera)
-      const hit = new THREE.Vector3()
-      if (rc.ray.intersectPlane(mousePlane, hit)) {
-        mouse3D.copy(hit)
+      if (rc.ray.intersectPlane(mousePlane, _hitVec)) {
+        mouse3D.copy(_hitVec)
       }
 
-      const prev = material.uniforms.uMouse3D.value.clone()
+      _prevMouse.copy(material.uniforms.uMouse3D.value)
       material.uniforms.uMouse3D.value.lerp(mouse3D, 0.1)
-      const vel = material.uniforms.uMouse3D.value.clone().sub(prev)
+      const vel = material.uniforms.uMouse3D.value.clone().sub(_prevMouse)
       material.uniforms.uMouseVelocity.value.lerp(vel, 0.3)
 
-      // Destroyed particles (CPU update)
+      // Shockwave uniform update
+      if (shockwaveStartTime > 0) {
+        const swAge = (now - shockwaveStartTime) / 1000
+        material.uniforms.uShockwaveTime.value = swAge < 1.2 ? swAge : -1.0
+        if (swAge >= 1.2) shockwaveStartTime = -1
+      }
+
+      // Destroyed particles — 3-phase rebuild (CPU update)
       const posAttr = geometry.getAttribute('position') as THREE.BufferAttribute
       const posArr = posAttr.array as Float32Array
 
@@ -403,36 +479,88 @@ export default function EmberHero() {
         if (destroyedFlags[i] === 0) continue
         const age = now - destroyedFlags[i]
 
-        if (age > REBUILD_TIME) {
+        // Safety snap — fully rebuilt
+        if (age > TOTAL_REBUILD) {
           destroyedFlags[i] = 0
           posArr[i * 3] = homePositions[i * 3]
           posArr[i * 3 + 1] = homePositions[i * 3 + 1]
-          posArr[i * 3 + 2] = 0
+          posArr[i * 3 + 2] = homePositions[i * 3 + 2]
           velocities[i * 3] = velocities[i * 3 + 1] = velocities[i * 3 + 2] = 0
           continue
         }
 
-        const explDur = REBUILD_TIME * 0.15
-        if (age < explDur) {
-          velocities[i * 3] *= 0.96
-          velocities[i * 3 + 1] *= 0.96
-          velocities[i * 3 + 2] *= 0.96
+        if (age < EXPLODE_PHASE) {
+          // Phase 1: EXPLOSION — fly outward with decay + slight upward drift
+          velocities[i * 3] *= 0.97
+          velocities[i * 3 + 1] *= 0.97
+          velocities[i * 3 + 2] *= 0.97
+          velocities[i * 3 + 1] += 0.0008
+          posArr[i * 3] += velocities[i * 3]
+          posArr[i * 3 + 1] += velocities[i * 3 + 1]
+          posArr[i * 3 + 2] += velocities[i * 3 + 2]
+        } else if (age < EXPLODE_PHASE + DRIFT_PHASE) {
+          // Phase 2: DRIFT — gentle floating, heavy damping
+          velocities[i * 3] *= 0.93
+          velocities[i * 3 + 1] *= 0.93
+          velocities[i * 3 + 2] *= 0.93
+          const driftT = (age - EXPLODE_PHASE) / DRIFT_PHASE
+          const driftStr = (1 - driftT) * 0.003
+          velocities[i * 3] += (Math.random() - 0.5) * driftStr
+          velocities[i * 3 + 1] += Math.random() * driftStr * 0.5
           posArr[i * 3] += velocities[i * 3]
           posArr[i * 3 + 1] += velocities[i * 3 + 1]
           posArr[i * 3 + 2] += velocities[i * 3 + 2]
         } else {
-          const prog = (age - explDur) / (REBUILD_TIME - explDur)
-          const eased = prog < 0.5
-            ? 4 * prog * prog * prog
-            : 1 - Math.pow(-2 * prog + 2, 3) / 2
-          if (eased < 0.99) {
-            posArr[i * 3] += (homePositions[i * 3] - posArr[i * 3]) * 0.03
-            posArr[i * 3 + 1] += (homePositions[i * 3 + 1] - posArr[i * 3 + 1]) * 0.03
-            posArr[i * 3 + 2] += (0 - posArr[i * 3 + 2]) * 0.03
-          } else {
+          // Phase 3: MAGNETIC RETURN — spring physics with per-particle stagger
+          const returnAge = age - EXPLODE_PHASE - DRIFT_PHASE
+          const particleDelay = returnDelays[i]
+
+          if (returnAge < particleDelay) {
+            // Still waiting — gentle damping, almost stationary
+            velocities[i * 3] *= 0.96
+            velocities[i * 3 + 1] *= 0.96
+            velocities[i * 3 + 2] *= 0.96
+            posArr[i * 3] += velocities[i * 3]
+            posArr[i * 3 + 1] += velocities[i * 3 + 1]
+            posArr[i * 3 + 2] += velocities[i * 3 + 2]
+            continue
+          }
+
+          // Active return — spring strength increases over time
+          const effectiveReturnDur = RETURN_PHASE - particleDelay
+          const t = Math.min((returnAge - particleDelay) / effectiveReturnDur, 1.0)
+          const springK = 0.02 + t * t * 0.15
+
+          const dx = homePositions[i * 3] - posArr[i * 3]
+          const dy = homePositions[i * 3 + 1] - posArr[i * 3 + 1]
+          const dz = homePositions[i * 3 + 2] - posArr[i * 3 + 2]
+
+          // Spring force
+          velocities[i * 3] += dx * springK
+          velocities[i * 3 + 1] += dy * springK
+          velocities[i * 3 + 2] += dz * springK
+
+          // Damping (increases over time for settling)
+          const damping = 0.85 + t * 0.09
+          velocities[i * 3] *= damping
+          velocities[i * 3 + 1] *= damping
+          velocities[i * 3 + 2] *= damping
+
+          posArr[i * 3] += velocities[i * 3]
+          posArr[i * 3 + 1] += velocities[i * 3 + 1]
+          posArr[i * 3 + 2] += velocities[i * 3 + 2]
+
+          // Early snap when settled (close + slow + well into return)
+          const distSq = dx * dx + dy * dy + dz * dz
+          const velSq = velocities[i * 3] * velocities[i * 3]
+            + velocities[i * 3 + 1] * velocities[i * 3 + 1]
+            + velocities[i * 3 + 2] * velocities[i * 3 + 2]
+          if (distSq < 0.01 && velSq < 0.0001 && t > 0.3) {
             posArr[i * 3] = homePositions[i * 3]
             posArr[i * 3 + 1] = homePositions[i * 3 + 1]
-            posArr[i * 3 + 2] = 0
+            posArr[i * 3 + 2] = homePositions[i * 3 + 2]
+            velocities[i * 3] = velocities[i * 3 + 1] = velocities[i * 3 + 2] = 0
+            destroyedFlags[i] = 0
           }
         }
       }
@@ -443,30 +571,51 @@ export default function EmberHero() {
     }
 
     function handleClick(e: MouseEvent) {
+      // Guard — init must be complete
+      if (!camera || !geometry || !material) return
+
+      const now = performance.now()
+
+      // Prune expired click timestamps
+      while (recentClicks.length > 0 && now - recentClicks[0] > TOTAL_REBUILD) {
+        recentClicks.shift()
+      }
+      if (recentClicks.length >= MAX_ACTIVE_CLICKS) return
+
+      // Dedicated raycaster for click (not shared with animation loop)
       const ndcX = (e.clientX / window.innerWidth) * 2 - 1
       const ndcY = -(e.clientY / window.innerHeight) * 2 + 1
-      rc.setFromCamera(new THREE.Vector2(ndcX, ndcY), camera)
+      clickRaycaster.setFromCamera(new THREE.Vector2(ndcX, ndcY), camera)
       const clickPos = new THREE.Vector3()
-      if (!rc.ray.intersectPlane(mousePlane, clickPos)) return
+      if (!clickRaycaster.ray.intersectPlane(mousePlane, clickPos)) return
 
       const destroyR = DESTROY_RADIUS_FRAC * textWorldWidth
-      const now = performance.now()
       const posArr = (geometry.getAttribute('position') as THREE.BufferAttribute).array as Float32Array
 
+      let hitCount = 0
       for (let i = 0; i < PARTICLE_COUNT; i++) {
-        if (destroyedFlags[i] > 0) continue
         const dx = posArr[i * 3] - clickPos.x
         const dy = posArr[i * 3 + 1] - clickPos.y
         const dist = Math.sqrt(dx * dx + dy * dy)
         if (dist < destroyR) {
+          hitCount++
+          // (Re-)destroy — works on both alive and already-destroyed particles
           destroyedFlags[i] = now
+          returnDelays[i] = Math.random() * RETURN_STAGGER
           const ang = Math.random() * Math.PI * 2
-          const speed = 0.2 + Math.random() * 0.6
+          const speed = 0.25 + Math.random() * 0.7
           const f = 1 - dist / destroyR
           velocities[i * 3] = Math.cos(ang) * speed * (0.5 + f)
-          velocities[i * 3 + 1] = (Math.sin(ang) + Math.random() * 0.3) * speed * (0.5 + f)
-          velocities[i * 3 + 2] = (Math.random() - 0.5) * speed * 0.3
+          velocities[i * 3 + 1] = (Math.sin(ang) + 0.3 + Math.random() * 0.3) * speed * (0.5 + f)
+          velocities[i * 3 + 2] = (Math.random() - 0.5) * speed * 0.5
         }
+      }
+
+      if (hitCount > 0) {
+        recentClicks.push(now)
+        // Trigger shockwave visual
+        material.uniforms.uShockwaveCenter.value.copy(clickPos)
+        shockwaveStartTime = now
       }
     }
 
@@ -511,33 +660,39 @@ export default function EmberHero() {
         : sampled
 
       const posArr = (geometry.getAttribute('position') as THREE.BufferAttribute).array as Float32Array
+
+      // Text particles
       for (let i = 0; i < useSampled.length; i++) {
         const x = useSampled[i].x * visW
         const y = useSampled[i].y * visH
+        const z = (Math.random() - 0.5) * 0.6
         posArr[i * 3] = x
         posArr[i * 3 + 1] = y
-        posArr[i * 3 + 2] = 0
+        posArr[i * 3 + 2] = z
         homePositions[i * 3] = x
         homePositions[i * 3 + 1] = y
-        homePositions[i * 3 + 2] = 0
+        homePositions[i * 3 + 2] = z
       }
+      // Halo particles
       for (let i = useSampled.length; i < PARTICLE_COUNT; i++) {
         const base = useSampled[Math.floor(Math.random() * useSampled.length)]
         const ang = Math.random() * Math.PI * 2
         const r = Math.random() * 0.035 + 0.005
         const x = (base.x + Math.cos(ang) * r) * visW
         const y = (base.y + Math.sin(ang) * r) * visH
+        const z = (Math.random() - 0.5) * 1.6
         posArr[i * 3] = x
         posArr[i * 3 + 1] = y
-        posArr[i * 3 + 2] = 0
+        posArr[i * 3 + 2] = z
         homePositions[i * 3] = x
         homePositions[i * 3 + 1] = y
-        homePositions[i * 3 + 2] = 0
+        homePositions[i * 3 + 2] = z
       }
       ;(geometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true
       textWorldWidth = (maxX - minX) * visW
       destroyedFlags.fill(0)
       velocities.fill(0)
+      returnDelays.fill(0)
     }
 
     window.addEventListener('mousemove', handleMouseMove)
