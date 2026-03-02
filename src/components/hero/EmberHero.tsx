@@ -11,8 +11,8 @@ const DESTROY_RADIUS = 0.4      // fraction of text width (~2-3 letters)
 const REBUILD_TIME = 12000      // ms to rebuild after destroy
 const DRIFT_SPEED = 0.0003      // upward drift speed
 const PULSE_SPEED = 0.5         // pulsation speed
-const SPARK_FRACTION = 0.03     // fraction of particles that become rising sparks
-const SPARK_MAX_RISE = 0.08     // max rise distance (normalized) for sparks
+const SPARK_FRACTION = 0.05     // fraction of particles that become rising sparks
+const SPARK_MAX_RISE = 0.12     // max rise distance (normalized) for sparks
 
 /* ========================================
    COLOR PALETTE
@@ -66,8 +66,8 @@ function sampleTextPositions(
   canvas.width = width * scale
   canvas.height = height * scale
 
-  // Calculate font size relative to viewport width — the text should be prominent
-  const fontSize = Math.round(width * scale * 0.13)
+  // Calculate font size relative to viewport width — large, prominent text
+  const fontSize = Math.round(width * scale * 0.19)
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.font = `800 ${fontSize}px Syne`
@@ -123,7 +123,7 @@ const vertexShader = /* glsl */ `
     // Pulsation — size and brightness oscillate
     float pulse = sin(uTime * aFreq + aPhase);
     float sizePulse = 1.0 + pulse * 0.2; // ±20%
-    float opacityPulse = 0.18 + pulse * 0.06;
+    float opacityPulse = 0.35 + pulse * 0.1;
 
     // Subtle drift noise (position-based pseudo noise)
     float noiseX = sin(pos.x * 13.7 + uTime * 0.3 + aPhase) * 0.001;
@@ -139,8 +139,8 @@ const vertexShader = /* glsl */ `
     // Hover interaction — glow brighter and bigger near mouse
     float dist = distance(pos.xy, uMouse);
     float hoverEffect = 1.0 - smoothstep(0.0, uHoverRadius * uTextWidth, dist);
-    float hoverSizeBoost = 1.0 + hoverEffect * 0.8; // up to 1.8x
-    float hoverBrightBoost = 1.0 + hoverEffect * 0.5;
+    float hoverSizeBoost = 1.0 + hoverEffect * 1.0; // up to 2x
+    float hoverBrightBoost = 1.0 + hoverEffect * 0.7;
 
     // Shift color toward white-yellow on hover
     vec3 hoverColor = mix(aColor, vec3(1.0, 0.95, 0.8), hoverEffect * 0.6);
@@ -150,7 +150,7 @@ const vertexShader = /* glsl */ `
     hoverColor.r = clamp(hoverColor.r + colorShift, 0.0, 1.0);
     hoverColor.g = clamp(hoverColor.g + colorShift * 0.5, 0.0, 1.0);
 
-    vColor = hoverColor * hoverBrightBoost * 0.75;
+    vColor = hoverColor * hoverBrightBoost;
     vOpacity = opacityPulse * hoverBrightBoost;
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
@@ -167,7 +167,7 @@ const fragmentShader = /* glsl */ `
     // Gaussian falloff — soft circle
     vec2 center = gl_PointCoord - 0.5;
     float dist = length(center);
-    float alpha = exp(-dist * dist * 12.0); // Gaussian — tighter falloff
+    float alpha = exp(-dist * dist * 6.0); // Gaussian — soft glow
 
     if (alpha < 0.01) discard;
 
@@ -291,12 +291,12 @@ export default function EmberHero() {
         homePositions[i * 3 + 2] = 0
       }
 
-      // Extra particles — scattered around the text edges for diffuse effect
+      // Extra particles — scattered around the text for glow halo
       for (let i = useSampled.length; i < count; i++) {
-        // Pick a random sampled position and offset it slightly
+        // Pick a random sampled position and offset it for diffuse halo
         const base = useSampled[Math.floor(Math.random() * useSampled.length)]
         const angle = Math.random() * Math.PI * 2
-        const dist = (Math.random() * 0.02 + 0.005)
+        const dist = (Math.random() * 0.05 + 0.005)
         const x = (base.x + Math.cos(angle) * dist) * visibleWidth
         const y = (base.y + Math.sin(angle) * dist) * visibleHeight
         positions[i * 3] = x
@@ -330,14 +330,14 @@ export default function EmberHero() {
           sparksAssigned++
         }
 
-        // Size distribution: 70% tiny, 25% medium, 5% large glow
+        // Size distribution: 55% tiny, 30% medium, 15% large glow
         const sizeRand = Math.random()
-        if (sizeRand < 0.70) {
-          sizes[i] = 1.0 + Math.random() * 2.0  // 1-3px
-        } else if (sizeRand < 0.95) {
-          sizes[i] = 3.0 + Math.random() * 3.0  // 3-6px
+        if (sizeRand < 0.55) {
+          sizes[i] = 1.5 + Math.random() * 2.0  // 1.5-3.5px — dense texture
+        } else if (sizeRand < 0.85) {
+          sizes[i] = 4.0 + Math.random() * 4.0  // 4-8px — medium
         } else {
-          sizes[i] = 6.0 + Math.random() * 6.0  // 6-12px
+          sizes[i] = 15.0 + Math.random() * 25.0 // 15-40px — large soft glow (halo)
         }
 
         // Phase & frequency for pulsation
@@ -620,7 +620,7 @@ export default function EmberHero() {
       for (let i = useSampled.length; i < PARTICLE_COUNT; i++) {
         const base = useSampled[Math.floor(Math.random() * useSampled.length)]
         const angle = Math.random() * Math.PI * 2
-        const dist = (Math.random() * 0.02 + 0.005)
+        const dist = (Math.random() * 0.05 + 0.005)
         const x = (base.x + Math.cos(angle) * dist) * visibleWidth
         const y = (base.y + Math.sin(angle) * dist) * visibleHeight
         posArray[i * 3] = x
