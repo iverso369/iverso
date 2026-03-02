@@ -123,7 +123,7 @@ const vertexShader = /* glsl */ `
     // Pulsation — size and brightness oscillate
     float pulse = sin(uTime * aFreq + aPhase);
     float sizePulse = 1.0 + pulse * 0.2; // ±20%
-    float opacityPulse = 0.7 + pulse * 0.15;
+    float opacityPulse = 0.18 + pulse * 0.06;
 
     // Subtle drift noise (position-based pseudo noise)
     float noiseX = sin(pos.x * 13.7 + uTime * 0.3 + aPhase) * 0.001;
@@ -139,8 +139,8 @@ const vertexShader = /* glsl */ `
     // Hover interaction — glow brighter and bigger near mouse
     float dist = distance(pos.xy, uMouse);
     float hoverEffect = 1.0 - smoothstep(0.0, uHoverRadius * uTextWidth, dist);
-    float hoverSizeBoost = 1.0 + hoverEffect * 1.0; // up to 2x
-    float hoverBrightBoost = 1.0 + hoverEffect * 0.8;
+    float hoverSizeBoost = 1.0 + hoverEffect * 0.8; // up to 1.8x
+    float hoverBrightBoost = 1.0 + hoverEffect * 0.5;
 
     // Shift color toward white-yellow on hover
     vec3 hoverColor = mix(aColor, vec3(1.0, 0.95, 0.8), hoverEffect * 0.6);
@@ -150,11 +150,11 @@ const vertexShader = /* glsl */ `
     hoverColor.r = clamp(hoverColor.r + colorShift, 0.0, 1.0);
     hoverColor.g = clamp(hoverColor.g + colorShift * 0.5, 0.0, 1.0);
 
-    vColor = hoverColor * hoverBrightBoost;
+    vColor = hoverColor * hoverBrightBoost * 0.75;
     vOpacity = opacityPulse * hoverBrightBoost;
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    gl_PointSize = aSize * sizePulse * hoverSizeBoost * uPixelRatio * (300.0 / -mvPosition.z);
+    gl_PointSize = aSize * sizePulse * hoverSizeBoost * uPixelRatio;
     gl_Position = projectionMatrix * mvPosition;
   }
 `
@@ -167,7 +167,7 @@ const fragmentShader = /* glsl */ `
     // Gaussian falloff — soft circle
     vec2 center = gl_PointCoord - 0.5;
     float dist = length(center);
-    float alpha = exp(-dist * dist * 8.0); // Gaussian
+    float alpha = exp(-dist * dist * 12.0); // Gaussian — tighter falloff
 
     if (alpha < 0.01) discard;
 
