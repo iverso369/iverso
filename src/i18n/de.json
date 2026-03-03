@@ -23,6 +23,14 @@
       "revenue": "Umsatz",
       "orders": "Bestellungen",
       "satisfaction": "Zufriedenheit"
+    },
+    "ai": {
+      "title": "KI-Lösungen",
+      "description": "Antwortet, wenn du keine Zeit hast",
+      "botName": "Assistent",
+      "greeting": "Hallo! Wie kann ich helfen?",
+      "userQuestion": "Was kosten Ihre Leistungen?",
+      "botAnswer": "Unsere Preise findest du auf der Webseite, aber ich helfe dir gerne auch mit einem individuellen Angebot!"
     }
   },
   "common": {

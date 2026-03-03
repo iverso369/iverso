@@ -23,6 +23,14 @@
       "revenue": "Revenue",
       "orders": "Orders",
       "satisfaction": "Satisfaction"
+    },
+    "ai": {
+      "title": "AI Solutions",
+      "description": "Responds when you can't",
+      "botName": "Assistant",
+      "greeting": "Hi! How can I help?",
+      "userQuestion": "What are your prices?",
+      "botAnswer": "You can find our prices on the website, but I'm happy to help with a custom quote too!"
     }
   },
   "common": {
