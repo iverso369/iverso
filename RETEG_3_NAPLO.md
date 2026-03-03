@@ -10,11 +10,13 @@
 
 | # | Komponens | Állapot |
 |---|-----------|---------|
-| 1 | KpiCard | 📋 prompt kész |
-| 2 | ChatBubble | ⬜ prompt készül |
-| 3 | WorkflowNode | ⬜ prompt készül |
-| 4 | MiniWebsite | ⬜ prompt készül |
-| 5 | CompanySizeSlider | ⬜ prompt készül |
+| 1 | KpiCard | ✅ implementálva |
+| 2 | ChatBubble | ✅ implementálva |
+| 3 | WorkflowNode | ✅ implementálva |
+| 4 | MiniWebsite | ✅ implementálva |
+| 5 | CompanySizeSlider | ✅ implementálva |
+
+**✅ RÉTEG 3 KÉSZ — minden komponens implementálva és pusholva.**
 
 ---
 
@@ -30,41 +32,40 @@
 
 | Dátum | Döntés |
 |-------|--------|
-| 03.03 | KpiCard: ikon + szám + label (ikon kell) |
-| 03.03 | KpiCard: piros/zöld változás jelzés — KIVÉTEL a 3 szín szabály alól, csak a demó KPI kártyáknál |
-| 03.03 | KpiCard háttér: sötétebb fekete (#111) kiemelés |
-| 03.03 | KpiCard: donut / progress ring a kártyán belül — % középen, narancs gradient ív, C stílus (szám a donut alatt) |
-| 03.03 | ChatBubble: demó chatbotnál egyszerű bot ikon (SVG thin line), Ameliánál realisztikus avatár |
-| 03.03 | ChatBubble: lekerekített sarkak (klasszikus chat forma) |
-| 03.03 | ChatBubble: user buborék narancs, bot buborék sötét (fekete/nagyon sötét szürke) |
-| 03.03 | WorkflowNode: n8n stílus — lekerekített téglalap, ikon bal oldalt, cím mellette, connection pontok, bézier íves SVG összekötők |
-| 03.03 | WorkflowNode: inaktív = sötét háttér + szürke border, aktív = narancs border + glow |
-| 03.03 | MiniWebsite: sötét böngésző keret (#111), dark mode |
-| 03.03 | MiniWebsite: HTTPS lakat ikon + nyelvfüggő domain az URL sávban |
-| 03.03 | CompanySizeSlider: vízszintes sáv, 4 snap pont jelöléssel |
-| 03.03 | CompanySizeSlider: aktuális szint neve a slider felett (mindig látható) |
-| 03.03 | CompanySizeSlider: narancs kitöltődő sáv (ahogy húzzuk, kitöltődik) |
-| 03.03 | Prompt stratégia: 5 külön prompt (komponensenként 1). Irányt adnak, nem korlátoznak — Claude Code kapjon teret kreatív megoldásokra. |
+| 03.03 | KpiCard: ikon + szám + label, piros/zöld változás jelzés (KIVÉTEL), sötétebb fekete (#111) háttér, donut progress ring |
+| 03.03 | ChatBubble: lekerekített sarkak, user narancs / bot sötét, avatár slot (SVG ikon VAGY kép) |
+| 03.03 | WorkflowNode: n8n stílus, inaktív (szürke) / aktív (narancs glow), connection pontok |
+| 03.03 | MiniWebsite: sötét keret (#111), HTTPS lakat, nyelvfüggő domain, children wrapper |
+| 03.03 | CompanySizeSlider: vízszintes sáv, 4 snap pont, narancs kitöltődő sáv, szint neve felette |
+| 03.03 | Prompt stratégia: 5 külön prompt, irányt adnak nem korlátoznak |
 
 ---
 
 ## Promptok
 
 ### Prompt 01 — KpiCard 📋 kész
-- Ikon + szám + label + változás jelző (piros/zöld kivétel) + donut progress ring
+- Ikon + szám + label + változás jelző + donut progress ring
 - Count-up animáció (Intersection Observer, egyszer)
-- Sötétebb fekete (#111) háttér, többféle formátum (€, %, db, +/-)
-- Méret variáns (kis/nagy)
 - Fájl: RETEG_3_PROMPT_01.md
 
-### Prompt 02 — ChatBubble ⬜ készül
-### Prompt 03 — WorkflowNode ⬜ készül
-### Prompt 04 — MiniWebsite ⬜ készül
-### Prompt 05 — CompanySizeSlider ⬜ készül
+### Prompt 02 — ChatBubble 📋 kész
+- Bot (bal, sötét) + User (jobb, narancs) + typing indicator
+- Fájl: RETEG_3_PROMPT_02.md
+
+### Prompt 03 — WorkflowNode 📋 kész
+- n8n stílus, hover tooltip, kattintás kinyit, connection pontok
+- Fájl: RETEG_3_PROMPT_03.md
+
+### Prompt 04 — MiniWebsite 📋 kész
+- Böngésző keret wrapper, macOS dot-ok, nyelvfüggő domain
+- Fájl: RETEG_3_PROMPT_04.md
+
+### Prompt 05 — CompanySizeSlider 📋 kész
+- Húzós sáv, 4 snap pont, onChange callback
+- Fájl: RETEG_3_PROMPT_05.md
 
 ---
 
 ## Megjegyzések
 
-- A komponensek logikája átbeszélve (IVERSO_NAPLO.md, Réteg 3 szekció)
 - Minden komponens: .tsx + .module.css pár, src/components/ui/ mappába
