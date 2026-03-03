@@ -39,6 +39,17 @@
       "node2": "Verarbeitung",
       "node3": "Datenbank",
       "node4": "Benachrichtigung"
+    },
+    "websites": {
+      "title": "Webseiten",
+      "description": "Der erste Eindruck in deiner Hand",
+      "restaurantName": "Restaurant Müller",
+      "heroTitle": "Harmonie der Aromen",
+      "heroSubtitle": "Tradition und moderne Küche",
+      "ctaButton": "Reservieren",
+      "card1": "Speisekarte",
+      "card2": "Öffnungszeiten",
+      "card3": "Kontakt"
     }
   },
   "common": {
