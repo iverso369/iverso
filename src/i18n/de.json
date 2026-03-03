@@ -58,6 +58,10 @@
     "step3": { "title": "Umsetzung", "description": "Du kannst jederzeit mitreden." },
     "step4": { "title": "Übergabe", "description": "Du bleibst nicht allein." }
   },
+  "builder": {
+    "title": "Let's build something",
+    "dragPrompt": "Zieh mich rein!"
+  },
   "common": {
     "more": "Weiter →",
     "impressum": "Impressum",
