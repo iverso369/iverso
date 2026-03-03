@@ -9,12 +9,11 @@ const PARTICLE_COUNT = 50000
 const CAMERA_Z = 35
 const CAMERA_FOV = 75
 
-const DESTROY_RADIUS_FACTOR = 0.25 // fraction of text width
-const MAX_ACTIVE_DESTROYS = 8
+const DESTROY_RADIUS_FACTOR = 0.25
 
-// Destroy timeline (ms)
-const DESTROY_FLY_PHASE = 2000
-const DESTROY_RETURN_PHASE = 8000
+// Destroy timeline (ms) — 10s total
+const DESTROY_FLY_PHASE = 1500
+const DESTROY_RETURN_PHASE = 6500
 const DESTROY_SNAP_PHASE = 2000
 const DESTROY_TOTAL = DESTROY_FLY_PHASE + DESTROY_RETURN_PHASE + DESTROY_SNAP_PHASE
 
@@ -25,6 +24,11 @@ const SCROLL_DISPERSE_START = 0.15
 const SCROLL_DISPERSE_END = 0.30
 const SCROLL_REFORM_START = 0.85
 const SCROLL_REFORM_END = 0.95
+
+// Scroll physics
+const SCROLL_IMPULSE = 2.0
+const SCROLL_DAMPING = 0.96
+const SCROLL_SPRING_K = 0.03
 
 /* ========================================
    SHADERS
@@ -38,6 +42,7 @@ const vertexShader = /* glsl */ `
   uniform vec3 uMouse3D;
   uniform float uMouseActive;
   uniform float uOpacity;
+  uniform float uBreathing;
 
   varying vec3 vColor;
   varying float vAlpha;
@@ -66,8 +71,13 @@ const vertexShader = /* glsl */ `
       baseSize = 7.0 + aRandom * 6.0;
     }
 
-    // Subtle pulse
-    float pulse = sin(uTime * 1.0 + aRandom * 6.2832) * 0.12 + 1.0;
+    // Multi-frequency pulse (more alive)
+    float pulse = sin(uTime * 1.5 + aRandom * 6.2832) * 0.15
+                + sin(uTime * 0.7 + aRandom * 3.14) * 0.08
+                + 1.0;
+
+    // Global breathing
+    pulse *= uBreathing;
 
     // Hover size boost
     float hoverBoost = 1.0 + vMouseGlow * 0.6;
@@ -92,8 +102,8 @@ const fragmentShader = /* glsl */ `
     float dist = length(center);
     if (dist > 0.5) discard;
 
-    // Glow profile: tiny=sharp, large=soft
-    float sharpness = mix(8.0, 3.0, vSizeClass);
+    // Glow profile: sharper for tiny, softer for large
+    float sharpness = mix(12.0, 4.0, vSizeClass);
     float glow = exp(-dist * sharpness);
     float core = exp(-dist * 16.0);
 
@@ -130,19 +140,19 @@ function sampleTextPositions(
   const scale = 2
   canvas.width = width * scale
   canvas.height = height * scale
-  const fontSize = Math.round(width * scale * 0.08)
+  const fontSize = Math.round(width * scale * 0.11)
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.font = `800 ${fontSize}px Syne`
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.fillStyle = '#ffffff'
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2)
+  ctx.fillText(text, canvas.width / 2, canvas.height * 0.37)
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const pixels = imageData.data
   const positions: { x: number; y: number }[] = []
-  const step = 2
+  const step = 1
   for (let y = 0; y < canvas.height; y += step) {
     for (let x = 0; x < canvas.width; x += step) {
       const i = (y * canvas.width + x) * 4
@@ -210,15 +220,20 @@ export default function EmberHero() {
     let animationId = 0
     let resizeTimeout = 0
 
-    // Arrays — allocated in init()
+    // Arrays — allocated in buildParticles()
     let homePositions: Float32Array
-    let scatteredPositions: Float32Array
     let positionArray: Float32Array
     let randoms: Float32Array
     let destroyedAt: Float32Array
     let destroyVelocities: Float32Array
     let destroyOffsets: Float32Array
     let returnDelays: Float32Array
+
+    // Scroll physics arrays
+    let scrollVelocities: Float32Array
+    let scrollOffsets: Float32Array
+    let scrollDirections: Float32Array
+    let prevDispersal = 0
 
     let textWorldWidth = 1
 
@@ -245,7 +260,7 @@ export default function EmberHero() {
     let mosquitoStartTime = 0
     let mosquitoOffsets: Float32Array
 
-    // Click raycaster (separate from hover raycaster)
+    // Click raycaster
     const clickRaycaster = new THREE.Raycaster()
 
     async function init() {
@@ -289,22 +304,29 @@ export default function EmberHero() {
       }
       textWorldWidth = (maxX - minX) * visW
 
+      // 90% text particles, 10% halo
+      const textCount = Math.floor(PARTICLE_COUNT * 0.9)
       const useSampled =
-        sampled.length >= PARTICLE_COUNT
-          ? selectRandom(sampled, PARTICLE_COUNT)
+        sampled.length >= textCount
+          ? selectRandom(sampled, textCount)
           : sampled
 
       // Allocate arrays
       const count = PARTICLE_COUNT
       positionArray = new Float32Array(count * 3)
       homePositions = new Float32Array(count * 3)
-      scatteredPositions = new Float32Array(count * 3)
       randoms = new Float32Array(count)
       destroyedAt = new Float32Array(count)
       destroyVelocities = new Float32Array(count * 3)
       destroyOffsets = new Float32Array(count * 3)
       returnDelays = new Float32Array(count)
       mosquitoOffsets = new Float32Array(count * 3)
+
+      // Scroll physics
+      scrollVelocities = new Float32Array(count * 3)
+      scrollOffsets = new Float32Array(count * 3)
+      scrollDirections = new Float32Array(count * 3)
+      prevDispersal = 0
 
       const sizeClasses = new Float32Array(count)
       const colors = new Float32Array(count * 3)
@@ -318,6 +340,7 @@ export default function EmberHero() {
       for (let i = 0; i < count; i++) {
         // Random seed
         randoms[i] = Math.random()
+        const r = randoms[i]
 
         // Home position
         let hx: number, hy: number, hz: number
@@ -339,10 +362,12 @@ export default function EmberHero() {
         homePositions[i * 3 + 1] = hy
         homePositions[i * 3 + 2] = hz
 
-        // Scattered position (random across viewport)
-        scatteredPositions[i * 3] = (Math.random() - 0.5) * visW * 1.3
-        scatteredPositions[i * 3 + 1] = (Math.random() - 0.5) * visH * 1.3
-        scatteredPositions[i * 3 + 2] = (Math.random() - 0.5) * 2
+        // Scroll scatter direction (random unit vector scaled by viewport)
+        const scrollAngle = Math.random() * Math.PI * 2
+        const scrollSpeed = 0.3 + r * 0.7
+        scrollDirections[i * 3] = Math.cos(scrollAngle) * scrollSpeed * visW * 0.02
+        scrollDirections[i * 3 + 1] = Math.sin(scrollAngle) * scrollSpeed * visH * 0.02
+        scrollDirections[i * 3 + 2] = (Math.random() - 0.5) * 0.5
 
         // Initial position = home
         positionArray[i * 3] = hx
@@ -358,16 +383,12 @@ export default function EmberHero() {
         // Color: ember spectrum
         const ct = Math.random()
         if (ct < 0.15) {
-          // dark orange/red (15%)
           tmpColor.copy(colorDarkOrange).lerp(colorOrange, Math.random())
         } else if (ct < 0.7) {
-          // orange range (55%, most common)
           tmpColor.copy(colorOrange).lerp(colorYellow, Math.random() * 0.5)
         } else if (ct < 0.9) {
-          // yellow (20%)
           tmpColor.copy(colorYellow).lerp(colorWhitish, Math.random() * 0.4)
         } else {
-          // whitish (10%, rare)
           tmpColor.copy(colorWhitish)
         }
         colors[i * 3] = tmpColor.r
@@ -411,6 +432,7 @@ export default function EmberHero() {
           uMouse3D: { value: new THREE.Vector3(9999, 9999, 0) },
           uMouseActive: { value: 0 },
           uOpacity: { value: 0 },
+          uBreathing: { value: 1.0 },
         },
         transparent: true,
         blending: THREE.AdditiveBlending,
@@ -423,7 +445,6 @@ export default function EmberHero() {
 
     /* ── animation loop ── */
     const _hitVec = new THREE.Vector3()
-    const _prevMouse = new THREE.Vector3(9999, 9999, 0)
 
     function animate(startTime: number) {
       if (disposed) return
@@ -437,9 +458,15 @@ export default function EmberHero() {
       const scrollRatio = getScrollRatio()
       const dispersal = getDispersalFactor(scrollRatio)
       const scrollOpacity = getOpacityFactor(scrollRatio)
+      const scrollDelta = dispersal - prevDispersal
+      prevDispersal = dispersal
 
       material.uniforms.uTime.value = elapsed
       material.uniforms.uOpacity.value = fadeIn * scrollOpacity
+
+      // Global breathing (4-6s cycle)
+      material.uniforms.uBreathing.value =
+        Math.sin(elapsed * 0.35) * 0.15 + 1.0
 
       // Mouse lerp
       const targetActive = mouseActive ? 1.0 : 0.0
@@ -450,7 +477,6 @@ export default function EmberHero() {
       if (raycaster.ray.intersectPlane(mousePlane, _hitVec)) {
         mouse3D.copy(_hitVec)
       }
-      _prevMouse.copy(material.uniforms.uMouse3D.value as THREE.Vector3)
       ;(material.uniforms.uMouse3D.value as THREE.Vector3).lerp(mouse3D, 0.12)
 
       // Mosquito jitter factor
@@ -462,7 +488,6 @@ export default function EmberHero() {
           mosquitoActive = false
           mosquitoOffsets.fill(0)
         } else if (mAge > mDuration) {
-          // Decay phase: lerp offsets back to 0
           const decay = 0.85
           for (let i = 0; i < PARTICLE_COUNT * 3; i++) {
             mosquitoOffsets[i] *= decay
@@ -489,37 +514,65 @@ export default function EmberHero() {
         const i3 = i * 3
         const r = randoms[i]
 
-        // Base target: lerp between home and scattered
+        // Home position
         const hx = homePositions[i3]
         const hy = homePositions[i3 + 1]
         const hz = homePositions[i3 + 2]
-        const sx = scatteredPositions[i3]
-        const sy = scatteredPositions[i3 + 1]
-        const sz = scatteredPositions[i3 + 2]
 
-        let tx = hx + (sx - hx) * dispersal
-        let ty = hy + (sy - hy) * dispersal
-        let tz = hz + (sz - hz) * dispersal
+        /* ── Scroll physics (velocity-based, organic) ── */
 
-        // Idle animation: subtle breathing + slight upward drift
+        // Damping
+        scrollVelocities[i3] *= SCROLL_DAMPING
+        scrollVelocities[i3 + 1] *= SCROLL_DAMPING
+        scrollVelocities[i3 + 2] *= SCROLL_DAMPING
+
+        // Impulse when dispersing
+        if (scrollDelta > 0.0005) {
+          const imp = scrollDelta * SCROLL_IMPULSE
+          scrollVelocities[i3] += scrollDirections[i3] * imp
+          scrollVelocities[i3 + 1] += scrollDirections[i3 + 1] * imp
+          scrollVelocities[i3 + 2] += scrollDirections[i3 + 2] * imp
+        }
+
+        // Spring return (stronger as dispersal decreases, staggered per particle)
+        const springBase = 1 - dispersal
+        if (springBase > returnDelays[i] * 0.5) {
+          const k = springBase * SCROLL_SPRING_K
+          scrollVelocities[i3] -= scrollOffsets[i3] * k
+          scrollVelocities[i3 + 1] -= scrollOffsets[i3 + 1] * k
+          scrollVelocities[i3 + 2] -= scrollOffsets[i3 + 2] * k
+        }
+
+        // Update scroll offsets
+        scrollOffsets[i3] += scrollVelocities[i3]
+        scrollOffsets[i3 + 1] += scrollVelocities[i3 + 1]
+        scrollOffsets[i3 + 2] += scrollVelocities[i3 + 2]
+
+        // Base target = home + scroll offset
+        let tx = hx + scrollOffsets[i3]
+        let ty = hy + scrollOffsets[i3 + 1]
+        let tz = hz + scrollOffsets[i3 + 2]
+
+        // Multi-frequency idle movement (more alive)
         const breatheX =
-          Math.sin(elapsed * 0.25 + r * 6.28) * 0.015
+          Math.sin(elapsed * 0.3 + r * 6.28) * 0.04 +
+          Math.sin(elapsed * 0.7 + r * 12.56) * 0.02
         const breatheY =
-          Math.sin(elapsed * 0.18 + r * 3.14) * 0.02
+          Math.sin(elapsed * 0.2 + r * 3.14) * 0.05 +
+          Math.cos(elapsed * 0.5 + r * 9.42) * 0.025
         const breatheZ =
-          Math.sin(elapsed * 0.12 + r * 9.42) * 0.005
+          Math.sin(elapsed * 0.15 + r * 9.42) * 0.01
 
         tx += breatheX
         ty += breatheY
         tz += breatheZ
 
-        // Heat escape: top 5% of particles drift upward slightly (only when near home)
-        if (r > 0.95 && dispersal < 0.5) {
+        // Heat escape: 8% of particles drift upward (only when near home)
+        if (r > 0.92 && dispersal < 0.5) {
           const heatPhase = elapsed * 0.4 + r * 20
           const heatStrength = 0.1 * (1 - dispersal * 2)
           ty +=
             (Math.sin(heatPhase) * 0.5 + 0.5) * heatStrength
-          // Fade alpha slightly for drifting particles (handled by position offset)
         }
 
         // Destroy offsets
@@ -527,7 +580,6 @@ export default function EmberHero() {
           const age = now - destroyedAt[i]
 
           if (age >= DESTROY_TOTAL) {
-            // Fully rebuilt
             destroyedAt[i] = 0
             destroyOffsets[i3] = 0
             destroyOffsets[i3 + 1] = 0
@@ -540,16 +592,15 @@ export default function EmberHero() {
             destroyVelocities[i3] *= 0.985
             destroyVelocities[i3 + 1] *= 0.985
             destroyVelocities[i3 + 2] *= 0.985
-            // Slight upward drift
             destroyVelocities[i3 + 1] += 0.0005
             destroyOffsets[i3] += destroyVelocities[i3]
             destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
             destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
           } else if (age < DESTROY_FLY_PHASE + DESTROY_RETURN_PHASE) {
-            // Phase 2: gradual return (staggered start)
+            // Phase 2: gradual return (staggered)
             const returnAge =
               (age - DESTROY_FLY_PHASE) / DESTROY_RETURN_PHASE
-            const particleDelay = returnDelays[i] * 0.6 // max 60% of phase as delay
+            const particleDelay = returnDelays[i] * 0.6
             if (returnAge > particleDelay) {
               const t =
                 (returnAge - particleDelay) / (1 - particleDelay)
@@ -558,7 +609,6 @@ export default function EmberHero() {
               destroyOffsets[i3 + 1] *= 1 - strength
               destroyOffsets[i3 + 2] *= 1 - strength
             }
-            // Gentle velocity decay
             destroyVelocities[i3] *= 0.995
             destroyVelocities[i3 + 1] *= 0.995
             destroyVelocities[i3 + 2] *= 0.995
@@ -628,14 +678,15 @@ export default function EmberHero() {
 
       const now = performance.now()
 
-      // Prune + limit
+      // Prune expired
       while (
         recentDestroys.length > 0 &&
         now - recentDestroys[0] > DESTROY_TOTAL
       ) {
         recentDestroys.shift()
       }
-      if (recentDestroys.length >= MAX_ACTIVE_DESTROYS) return
+
+      // No limit — continuous clicking allowed
 
       // Raycast to click position
       const ndcX = (e.clientX / window.innerWidth) * 2 - 1
@@ -660,7 +711,6 @@ export default function EmberHero() {
           hitCount++
           destroyedAt[i] = now
           returnDelays[i] = Math.random()
-          // Explode outward
           const angle = Math.random() * Math.PI * 2
           const speed = 0.2 + Math.random() * 0.6
           const falloff = 1 - dist / destroyR
@@ -685,7 +735,6 @@ export default function EmberHero() {
 
     function handleContextMenu(e: MouseEvent) {
       e.preventDefault()
-      // Trigger mosquito mode
       mosquitoActive = true
       mosquitoStartTime = performance.now()
     }
