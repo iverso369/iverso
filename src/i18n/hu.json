@@ -15,6 +15,16 @@
     "question": "Mekkora a vállalkozásod?",
     "levels": ["Egyedül", "Kis csapat", "Több részleg", "Komoly szervezet"]
   },
+  "demos": {
+    "more": "Tovább →",
+    "dashboard": {
+      "title": "Dashboardok",
+      "description": "Minden adat, egy helyen",
+      "revenue": "Bevétel",
+      "orders": "Megrendelések",
+      "satisfaction": "Elégedettség"
+    }
+  },
   "common": {
     "more": "Tovább →",
     "impressum": "Impressum",

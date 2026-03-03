@@ -15,6 +15,16 @@
     "question": "Wie groß ist dein Unternehmen?",
     "levels": ["Allein", "Kleines Team", "Mehrere Abteilungen", "Großes Unternehmen"]
   },
+  "demos": {
+    "more": "Weiter →",
+    "dashboard": {
+      "title": "Dashboards",
+      "description": "Alle Daten an einem Ort",
+      "revenue": "Umsatz",
+      "orders": "Bestellungen",
+      "satisfaction": "Zufriedenheit"
+    }
+  },
   "common": {
     "more": "Weiter →",
     "impressum": "Impressum",

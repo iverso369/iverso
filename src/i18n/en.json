@@ -15,6 +15,16 @@
     "question": "How big is your business?",
     "levels": ["Solo", "Small team", "Multiple departments", "Large organization"]
   },
+  "demos": {
+    "more": "More →",
+    "dashboard": {
+      "title": "Dashboards",
+      "description": "All your data in one place",
+      "revenue": "Revenue",
+      "orders": "Orders",
+      "satisfaction": "Satisfaction"
+    }
+  },
   "common": {
     "more": "More →",
     "impressum": "Legal Notice",
