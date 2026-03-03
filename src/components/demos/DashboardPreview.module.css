@@ -1,0 +1,93 @@
+/* ── DashboardPreview ── */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ── title + description ── */
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.description {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: -12px;
+}
+
+/* ── MiniWebsite wrapper ── */
+
+.browser {
+  width: 100%;
+}
+
+/* ── KpiCard grid inside browser ── */
+
+.cardGrid {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px 16px;
+  transition: opacity 0.35s ease;
+}
+
+.fading {
+  opacity: 0;
+}
+
+/* ── "Tovább →" link ── */
+
+.moreLink {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--accent);
+  transition: opacity 0.2s;
+}
+
+.moreLink:hover {
+  opacity: 0.8;
+}
+
+/* ── responsive ── */
+
+@media (max-width: 768px) {
+  .section {
+    gap: 20px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .cardGrid {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 12px;
+  }
+}
+
+/* ── reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .cardGrid {
+    transition: none;
+  }
+}
