@@ -30,12 +30,16 @@ const SCROLL_IMPULSE = 2.0
 const SCROLL_DAMPING = 0.96
 const SCROLL_SPRING_K = 0.03
 
+// Drift when scattered
+const DRIFT_FORCE = 0.004
+
 /* ========================================
    SHADERS
    ======================================== */
 const vertexShader = /* glsl */ `
   attribute float aRandom;
   attribute float aSizeClass;
+  attribute float aEdgeDist;
   attribute vec3 aColor;
 
   uniform float uTime;
@@ -48,6 +52,7 @@ const vertexShader = /* glsl */ `
   varying float vAlpha;
   varying float vMouseGlow;
   varying float vSizeClass;
+  varying float vEdgeDist;
 
   void main() {
     vec3 pos = position;
@@ -61,17 +66,14 @@ const vertexShader = /* glsl */ `
     // Size based on class
     float baseSize;
     if (aSizeClass < 0.25) {
-      // tiny (70%)
       baseSize = 1.0 + aRandom * 0.8;
     } else if (aSizeClass < 0.75) {
-      // medium (25%)
       baseSize = 2.5 + aRandom * 2.0;
     } else {
-      // large glow (5%)
       baseSize = 7.0 + aRandom * 6.0;
     }
 
-    // Multi-frequency pulse (more alive)
+    // Multi-frequency pulse
     float pulse = sin(uTime * 1.5 + aRandom * 6.2832) * 0.15
                 + sin(uTime * 0.7 + aRandom * 3.14) * 0.08
                 + 1.0;
@@ -79,15 +81,19 @@ const vertexShader = /* glsl */ `
     // Global breathing
     pulse *= uBreathing;
 
+    // Edge particles slightly larger (contour glow)
+    float edgeSizeBoost = 1.0 + (1.0 - aEdgeDist) * 0.35;
+
     // Hover size boost
     float hoverBoost = 1.0 + vMouseGlow * 0.6;
 
-    gl_PointSize = baseSize * pulse * hoverBoost * (150.0 / -mvPosition.z);
+    gl_PointSize = baseSize * pulse * hoverBoost * edgeSizeBoost * (150.0 / -mvPosition.z);
     gl_Position = projectionMatrix * mvPosition;
 
     vColor = aColor;
     vAlpha = uOpacity;
     vSizeClass = aSizeClass;
+    vEdgeDist = aEdgeDist;
   }
 `
 
@@ -96,6 +102,7 @@ const fragmentShader = /* glsl */ `
   varying float vAlpha;
   varying float vMouseGlow;
   varying float vSizeClass;
+  varying float vEdgeDist;
 
   void main() {
     vec2 center = gl_PointCoord - 0.5;
@@ -107,8 +114,12 @@ const fragmentShader = /* glsl */ `
     float glow = exp(-dist * sharpness);
     float core = exp(-dist * 16.0);
 
-    // Base ember color
-    vec3 color = vColor * glow + vec3(1.0, 0.95, 0.85) * core * 0.3;
+    // Edge brightness boost: edge=1.8x, interior=1.0x
+    float edgeBrightness = 1.0 + (1.0 - vEdgeDist) * 0.8;
+
+    // Base ember color with edge brightness
+    vec3 color = vColor * glow * edgeBrightness
+               + vec3(1.0, 0.95, 0.85) * core * 0.3 * edgeBrightness;
 
     // Hover: shift toward yellowish-white
     vec3 hoverColor = vec3(1.0, 0.95, 0.8);
@@ -117,7 +128,11 @@ const fragmentShader = /* glsl */ `
     // Alpha: tiny=more opaque, large=more transparent
     float baseAlpha = mix(0.65, 0.12, vSizeClass);
     float softEdge = smoothstep(0.5, 0.05, dist);
-    float alpha = softEdge * glow * baseAlpha * vAlpha;
+
+    // Edge particles more opaque
+    float edgeAlpha = 1.0 + (1.0 - vEdgeDist) * 0.4;
+
+    float alpha = softEdge * glow * baseAlpha * vAlpha * edgeAlpha;
 
     // Hover brightness
     alpha *= 1.0 + vMouseGlow * 2.5;
@@ -128,13 +143,19 @@ const fragmentShader = /* glsl */ `
 `
 
 /* ========================================
-   PIXEL SAMPLING
+   PIXEL SAMPLING (with edge detection)
    ======================================== */
+interface SampledPixel {
+  x: number
+  y: number
+  edgeDist: number // 0.0 = edge, 1.0 = deep interior
+}
+
 function sampleTextPositions(
   text: string,
   width: number,
   height: number,
-): { x: number; y: number }[] {
+): SampledPixel[] {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')!
   const scale = 2
@@ -151,17 +172,52 @@ function sampleTextPositions(
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const pixels = imageData.data
-  const positions: { x: number; y: number }[] = []
-  const step = 1
-  for (let y = 0; y < canvas.height; y += step) {
-    for (let x = 0; x < canvas.width; x += step) {
-      const i = (y * canvas.width + x) * 4
-      if (pixels[i + 3] > 0) {
-        positions.push({
-          x: x / canvas.width - 0.5,
-          y: -(y / canvas.height - 0.5),
-        })
+  const cw = canvas.width
+  const ch = canvas.height
+  const positions: SampledPixel[] = []
+  const maxScan = 12
+
+  for (let y = 0; y < ch; y++) {
+    for (let x = 0; x < cw; x++) {
+      const idx = (y * cw + x) * 4
+      if (pixels[idx + 3] === 0) continue
+
+      // Scan 4 cardinal + 4 diagonal directions for nearest transparent pixel
+      let minDist = maxScan
+      // Right
+      for (let d = 1; d <= minDist; d++) {
+        const nx = x + d
+        if (nx >= cw || pixels[(y * cw + nx) * 4 + 3] === 0) {
+          minDist = d; break
+        }
       }
+      // Left
+      for (let d = 1; d <= minDist; d++) {
+        const nx = x - d
+        if (nx < 0 || pixels[(y * cw + nx) * 4 + 3] === 0) {
+          if (d < minDist) minDist = d; break
+        }
+      }
+      // Down
+      for (let d = 1; d <= minDist; d++) {
+        const ny = y + d
+        if (ny >= ch || pixels[(ny * cw + x) * 4 + 3] === 0) {
+          if (d < minDist) minDist = d; break
+        }
+      }
+      // Up
+      for (let d = 1; d <= minDist; d++) {
+        const ny = y - d
+        if (ny < 0 || pixels[(ny * cw + x) * 4 + 3] === 0) {
+          if (d < minDist) minDist = d; break
+        }
+      }
+
+      positions.push({
+        x: x / cw - 0.5,
+        y: -(y / ch - 0.5),
+        edgeDist: Math.min(minDist / maxScan, 1.0),
+      })
     }
   }
   return positions
@@ -235,6 +291,10 @@ export default function EmberHero() {
     let scrollDirections: Float32Array
     let prevDispersal = 0
 
+    // Stored visible world dimensions (for soft boundaries)
+    let storedVisW = 1
+    let storedVisH = 1
+
     let textWorldWidth = 1
 
     // Three.js objects
@@ -295,6 +355,9 @@ export default function EmberHero() {
       const visH = 2 * Math.tan(fovRad / 2) * CAMERA_Z
       const visW = visH * (w / h)
 
+      storedVisW = visW
+      storedVisH = visH
+
       // Measure text width
       let minX = Infinity
       let maxX = -Infinity
@@ -329,12 +392,16 @@ export default function EmberHero() {
       prevDispersal = 0
 
       const sizeClasses = new Float32Array(count)
+      const edgeDists = new Float32Array(count)
       const colors = new Float32Array(count * 3)
 
-      const colorDarkOrange = new THREE.Color(0xcc4400)
-      const colorOrange = new THREE.Color(0xf77f0a)
-      const colorYellow = new THREE.Color(0xffaa00)
-      const colorWhitish = new THREE.Color(0xffe8c0)
+      // Color palette
+      const colorEdgeBright = new THREE.Color(0xffaa00)
+      const colorEdge = new THREE.Color(0xff8800)
+      const colorMid = new THREE.Color(0xcc4400)
+      const colorInterior = new THREE.Color(0xaa3300)
+      const colorHaloOrange = new THREE.Color(0xf77f0a)
+      const colorHaloYellow = new THREE.Color(0xffaa00)
       const tmpColor = new THREE.Color()
 
       for (let i = 0; i < count; i++) {
@@ -344,12 +411,30 @@ export default function EmberHero() {
 
         // Home position
         let hx: number, hy: number, hz: number
+        let ed: number
+
         if (i < useSampled.length) {
+          // Text particle
           hx = useSampled[i].x * visW
           hy = useSampled[i].y * visH
           hz = (Math.random() - 0.5) * 0.5
+          ed = useSampled[i].edgeDist
+
+          // Color based on edge distance
+          if (ed < 0.15) {
+            // Outer edge: brightest yellow-orange
+            tmpColor.copy(colorEdgeBright).lerp(colorEdge, ed / 0.15)
+          } else if (ed < 0.4) {
+            // Transition zone: orange to dark orange
+            const t = (ed - 0.15) / 0.25
+            tmpColor.copy(colorEdge).lerp(colorMid, t)
+          } else {
+            // Interior: dark reddish-brown
+            const t = Math.min((ed - 0.4) / 0.6, 1.0)
+            tmpColor.copy(colorMid).lerp(colorInterior, t * 0.8)
+          }
         } else {
-          // Halo particles around text
+          // Halo particles around text (glow zone)
           const base =
             useSampled[Math.floor(Math.random() * useSampled.length)]
           const ang = Math.random() * Math.PI * 2
@@ -357,12 +442,18 @@ export default function EmberHero() {
           hx = (base.x + Math.cos(ang) * rad) * visW
           hy = (base.y + Math.sin(ang) * rad) * visH
           hz = (Math.random() - 0.5) * 1.5
+          ed = 0.3 // halo = similar to near-edge
+
+          // Warm orange glow
+          tmpColor.copy(colorHaloOrange).lerp(colorHaloYellow, Math.random() * 0.3)
         }
+
         homePositions[i * 3] = hx
         homePositions[i * 3 + 1] = hy
         homePositions[i * 3 + 2] = hz
+        edgeDists[i] = ed
 
-        // Scroll scatter direction (random unit vector scaled by viewport)
+        // Scroll scatter direction
         const scrollAngle = Math.random() * Math.PI * 2
         const scrollSpeed = 0.3 + r * 0.7
         scrollDirections[i * 3] = Math.cos(scrollAngle) * scrollSpeed * visW * 0.02
@@ -380,22 +471,11 @@ export default function EmberHero() {
         else if (roll < 0.95) sizeClasses[i] = 0.5
         else sizeClasses[i] = 1.0
 
-        // Color: ember spectrum
-        const ct = Math.random()
-        if (ct < 0.15) {
-          tmpColor.copy(colorDarkOrange).lerp(colorOrange, Math.random())
-        } else if (ct < 0.7) {
-          tmpColor.copy(colorOrange).lerp(colorYellow, Math.random() * 0.5)
-        } else if (ct < 0.9) {
-          tmpColor.copy(colorYellow).lerp(colorWhitish, Math.random() * 0.4)
-        } else {
-          tmpColor.copy(colorWhitish)
-        }
         colors[i * 3] = tmpColor.r
         colors[i * 3 + 1] = tmpColor.g
         colors[i * 3 + 2] = tmpColor.b
 
-        // Return delay for destroy rebuild stagger
+        // Return delay for stagger
         returnDelays[i] = Math.random()
       }
 
@@ -417,6 +497,10 @@ export default function EmberHero() {
       geometry.setAttribute(
         'aSizeClass',
         new THREE.BufferAttribute(sizeClasses, 1),
+      )
+      geometry.setAttribute(
+        'aEdgeDist',
+        new THREE.BufferAttribute(edgeDists, 1),
       )
       geometry.setAttribute(
         'aColor',
@@ -505,6 +589,10 @@ export default function EmberHero() {
         recentDestroys.shift()
       }
 
+      // Soft boundary limits for scattered particles
+      const boundX = storedVisW * 0.65
+      const boundY = storedVisH * 0.65
+
       // Update particle positions
       const posAttr = geometry.getAttribute(
         'position',
@@ -534,6 +622,32 @@ export default function EmberHero() {
           scrollVelocities[i3 + 2] += scrollDirections[i3 + 2] * imp
         }
 
+        // Continuous drift when scattered (meditative floating)
+        if (dispersal > 0.1) {
+          const driftScale = dispersal * DRIFT_FORCE
+          // Multi-frequency force for unique organic paths per particle
+          const fx =
+            Math.sin(elapsed * 0.13 + r * 173.7) +
+            Math.sin(elapsed * 0.31 + r * 47.1) * 0.6
+          const fy =
+            Math.cos(elapsed * 0.17 + r * 231.3) +
+            Math.cos(elapsed * 0.23 + r * 89.7) * 0.5
+          const fz = Math.sin(elapsed * 0.11 + r * 317.9) * 0.3
+          scrollVelocities[i3] += fx * driftScale
+          scrollVelocities[i3 + 1] += fy * driftScale
+          scrollVelocities[i3 + 2] += fz * driftScale * 0.3
+
+          // Soft boundary: gentle push-back near viewport edges
+          const px = hx + scrollOffsets[i3]
+          const py = hy + scrollOffsets[i3 + 1]
+          if (Math.abs(px) > boundX) {
+            scrollVelocities[i3] -= Math.sign(px) * 0.012
+          }
+          if (Math.abs(py) > boundY) {
+            scrollVelocities[i3 + 1] -= Math.sign(py) * 0.012
+          }
+        }
+
         // Spring return (stronger as dispersal decreases, staggered per particle)
         const springBase = 1 - dispersal
         if (springBase > returnDelays[i] * 0.5) {
@@ -553,7 +667,7 @@ export default function EmberHero() {
         let ty = hy + scrollOffsets[i3 + 1]
         let tz = hz + scrollOffsets[i3 + 2]
 
-        // Multi-frequency idle movement (more alive)
+        // Multi-frequency idle movement (alive even in text form)
         const breatheX =
           Math.sin(elapsed * 0.3 + r * 6.28) * 0.04 +
           Math.sin(elapsed * 0.7 + r * 12.56) * 0.02
@@ -588,7 +702,6 @@ export default function EmberHero() {
             destroyVelocities[i3 + 1] = 0
             destroyVelocities[i3 + 2] = 0
           } else if (age < DESTROY_FLY_PHASE) {
-            // Phase 1: flying outward with drag
             destroyVelocities[i3] *= 0.985
             destroyVelocities[i3 + 1] *= 0.985
             destroyVelocities[i3 + 2] *= 0.985
@@ -597,7 +710,6 @@ export default function EmberHero() {
             destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
             destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
           } else if (age < DESTROY_FLY_PHASE + DESTROY_RETURN_PHASE) {
-            // Phase 2: gradual return (staggered)
             const returnAge =
               (age - DESTROY_FLY_PHASE) / DESTROY_RETURN_PHASE
             const particleDelay = returnDelays[i] * 0.6
@@ -616,7 +728,6 @@ export default function EmberHero() {
             destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
             destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
           } else {
-            // Phase 3: accelerated snap
             const snapProgress =
               (age - DESTROY_FLY_PHASE - DESTROY_RETURN_PHASE) /
               DESTROY_SNAP_PHASE
@@ -685,8 +796,6 @@ export default function EmberHero() {
       ) {
         recentDestroys.shift()
       }
-
-      // No limit — continuous clicking allowed
 
       // Raycast to click position
       const ndcX = (e.clientX / window.innerWidth) * 2 - 1
