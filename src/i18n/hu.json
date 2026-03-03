@@ -52,6 +52,12 @@
       "card3": "Kapcsolat"
     }
   },
+  "process": {
+    "step1": { "title": "Beszélgetés", "description": "Megismerjük egymást." },
+    "step2": { "title": "Tervezés", "description": "Látod mielőtt elkészül." },
+    "step3": { "title": "Építés", "description": "Közben bármikor szólhatsz." },
+    "step4": { "title": "Átadás", "description": "Nem hagylak magadra." }
+  },
   "common": {
     "more": "Tovább →",
     "impressum": "Impressum",
