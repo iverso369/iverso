@@ -62,6 +62,22 @@
     "title": "Let's build something",
     "dragPrompt": "Húzz be!"
   },
+  "cta": {
+    "title": "Van egy ötleted?",
+    "subtitle": "Építsük meg.",
+    "button": "Beszéljünk →",
+    "amelia": [
+      "Hali! Mesélj, miben gondolkodsz?",
+      "Na, mi jár a fejedben?",
+      "Norbi megint elküldött dolgozni... szóval itt vagyok neked.",
+      "Szia! Van egy perced? Mert nekem van.",
+      "Kíváncsi vagyok mit építenél!"
+    ]
+  },
+  "footer": {
+    "impressum": "Impressum",
+    "privacy": "Adatvédelem"
+  },
   "common": {
     "more": "Tovább →",
     "impressum": "Impressum",
