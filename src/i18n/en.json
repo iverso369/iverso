@@ -52,6 +52,12 @@
       "card3": "Contact"
     }
   },
+  "process": {
+    "step1": { "title": "Conversation", "description": "Getting to know each other." },
+    "step2": { "title": "Planning", "description": "You see it before it's built." },
+    "step3": { "title": "Building", "description": "You can check in anytime." },
+    "step4": { "title": "Handover", "description": "You won't be left on your own." }
+  },
   "common": {
     "more": "More →",
     "impressum": "Legal Notice",

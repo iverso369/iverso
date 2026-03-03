@@ -1,0 +1,189 @@
+/* ── ProcessSection ── */
+
+.section {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── horizontal track (desktop) / vertical (mobile) ── */
+
+.track {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* ── step group (node + connector) ── */
+
+.stepGroup {
+  display: flex;
+  align-items: center;
+}
+
+/* ── node ── */
+
+.node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 18px 14px;
+  background: #111114;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  min-width: 140px;
+  max-width: 170px;
+  /* animation-ready state: hidden by default when animated */
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+/* when animated class is on track, hide nodes initially */
+.animated .node {
+  opacity: 0;
+  transform: scale(0.85);
+}
+
+/* trigger class — added from parent (prompt 09) or when not animated */
+.nodeVisible {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+
+/* ── icon ── */
+
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  line-height: 0;
+}
+
+.iconWrap svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5px;
+}
+
+/* ── title ── */
+
+.stepTitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* ── description ── */
+
+.stepDesc {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ── connectors ── */
+
+.connector {
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.connectorHorizontal {
+  width: 40px;
+  height: 24px;
+  margin: 0 4px;
+}
+
+.connectorVertical {
+  width: 24px;
+  height: 32px;
+  margin: 4px 0;
+}
+
+.connectorLine {
+  stroke: rgba(136, 136, 154, 0.25);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+  transition: stroke 0.4s ease, stroke-dashoffset 0.6s ease;
+}
+
+.connectorArrow {
+  stroke: rgba(136, 136, 154, 0.25);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: stroke 0.4s ease, opacity 0.4s ease;
+}
+
+/* hidden state when animated */
+.animated .connectorLine {
+  stroke-dashoffset: 100;
+}
+
+.animated .connectorArrow {
+  opacity: 0;
+}
+
+/* visible trigger */
+.connectorVisible .connectorLine {
+  stroke: var(--accent);
+  stroke-dashoffset: 0 !important;
+}
+
+.connectorVisible .connectorArrow {
+  stroke: var(--accent);
+  opacity: 1 !important;
+}
+
+/* ── responsive ── */
+
+@media (max-width: 768px) {
+  .section {
+    padding: 0 20px;
+  }
+
+  .track {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stepGroup {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .node {
+    min-width: 200px;
+    max-width: 240px;
+  }
+}
+
+/* ── reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .node {
+    transition: none;
+  }
+
+  .connectorLine {
+    transition: none;
+  }
+
+  .connectorArrow {
+    transition: none;
+  }
+}

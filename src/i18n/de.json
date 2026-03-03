@@ -52,6 +52,12 @@
       "card3": "Kontakt"
     }
   },
+  "process": {
+    "step1": { "title": "Gespräch", "description": "Wir lernen uns kennen." },
+    "step2": { "title": "Planung", "description": "Du siehst es bevor es fertig ist." },
+    "step3": { "title": "Umsetzung", "description": "Du kannst jederzeit mitreden." },
+    "step4": { "title": "Übergabe", "description": "Du bleibst nicht allein." }
+  },
   "common": {
     "more": "Weiter →",
     "impressum": "Impressum",
