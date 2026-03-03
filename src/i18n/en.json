@@ -58,6 +58,10 @@
     "step3": { "title": "Building", "description": "You can check in anytime." },
     "step4": { "title": "Handover", "description": "You won't be left on your own." }
   },
+  "builder": {
+    "title": "Let's build something",
+    "dragPrompt": "Drag me in!"
+  },
   "common": {
     "more": "More →",
     "impressum": "Legal Notice",
