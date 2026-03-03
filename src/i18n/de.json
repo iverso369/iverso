@@ -8,6 +8,9 @@
     "automation": "Automatisierung",
     "websites": "Webseiten"
   },
+  "miniWebsite": {
+    "domain": "mueller-gmbh.de"
+  },
   "common": {
     "more": "Weiter →",
     "impressum": "Impressum",

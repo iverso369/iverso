@@ -8,6 +8,9 @@
     "automation": "Automatizáció",
     "websites": "Weboldalak"
   },
+  "miniWebsite": {
+    "domain": "kovacs-kft.hu"
+  },
   "common": {
     "more": "Tovább →",
     "impressum": "Impressum",
