@@ -11,6 +11,10 @@
   "miniWebsite": {
     "domain": "smith-co.com"
   },
+  "companySize": {
+    "question": "How big is your business?",
+    "levels": ["Solo", "Small team", "Multiple departments", "Large organization"]
+  },
   "common": {
     "more": "More →",
     "impressum": "Legal Notice",

@@ -11,6 +11,10 @@
   "miniWebsite": {
     "domain": "kovacs-kft.hu"
   },
+  "companySize": {
+    "question": "Mekkora a vállalkozásod?",
+    "levels": ["Egyedül", "Kis csapat", "Több részleg", "Komoly szervezet"]
+  },
   "common": {
     "more": "Tovább →",
     "impressum": "Impressum",

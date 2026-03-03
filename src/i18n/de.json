@@ -11,6 +11,10 @@
   "miniWebsite": {
     "domain": "mueller-gmbh.de"
   },
+  "companySize": {
+    "question": "Wie groß ist dein Unternehmen?",
+    "levels": ["Allein", "Kleines Team", "Mehrere Abteilungen", "Großes Unternehmen"]
+  },
   "common": {
     "more": "Weiter →",
     "impressum": "Impressum",
