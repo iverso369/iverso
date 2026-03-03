@@ -1,0 +1,139 @@
+/* ── WorkflowNode ── */
+
+.node {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  background: #111114;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: default;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  user-select: none;
+}
+
+/* clickable when there is a detail section */
+.node[role='button'] {
+  cursor: pointer;
+}
+
+/* ── active state (orange border + glow) ── */
+
+.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 14px rgba(247, 127, 10, 0.35);
+}
+
+/* ── body (icon + title row) ── */
+
+.body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+}
+
+/* ── icon ── */
+
+.icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  line-height: 0;
+}
+
+.icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5px;
+}
+
+/* ── title ── */
+
+.title {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* ── detail panel (click-to-expand) ── */
+
+.detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  padding: 0 18px;
+}
+
+.open .detail {
+  max-height: 200px;
+  padding: 0 18px 14px;
+}
+
+.detailText {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ── connection points ── */
+
+.point {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1A1A20;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.pointIn {
+  top: -5px;
+}
+
+.pointOut {
+  bottom: -5px;
+}
+
+.active .point {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+/* ── hover ── */
+
+.node:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.active:hover {
+  border-color: var(--accent);
+}
+
+/* ── reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .node {
+    transition: none;
+  }
+
+  .detail {
+    transition: none;
+  }
+
+  .point {
+    transition: none;
+  }
+}

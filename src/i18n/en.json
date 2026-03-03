@@ -8,6 +8,9 @@
     "automation": "Automation",
     "websites": "Websites"
   },
+  "miniWebsite": {
+    "domain": "smith-co.com"
+  },
   "common": {
     "more": "More →",
     "impressum": "Legal Notice",
