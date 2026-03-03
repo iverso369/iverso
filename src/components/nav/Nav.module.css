@@ -1,0 +1,333 @@
+/* ========================================
+   STANDALONE LANGUAGE SWITCHER
+   Shown when nav is hidden (hero state)
+   ======================================== */
+
+.standaloneLang {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ========================================
+   NAV BAR
+   ======================================== */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(136, 136, 154, 0.08);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navVisible {
+  transform: translateY(0);
+}
+
+.navHidden {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 56px;
+}
+
+/* ========================================
+   LOGO
+   ======================================== */
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+/* ========================================
+   DESKTOP LINKS
+   ======================================== */
+
+.desktopLinks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 48px;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--muted);
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  color: var(--text);
+}
+
+.navLinkActive {
+  color: var(--text);
+}
+
+/* ========================================
+   SERVICES DROPDOWN
+   ======================================== */
+
+.servicesWrapper {
+  position: relative;
+}
+
+.chevron {
+  transition: transform 0.2s;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  list-style: none;
+  background: rgba(10, 10, 12, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(136, 136, 154, 0.12);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 180px;
+  z-index: 100;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.dropdownLink {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--muted);
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.dropdownLink:hover {
+  color: var(--text);
+  background: rgba(136, 136, 154, 0.08);
+}
+
+.dropdownLinkActive {
+  color: var(--accent);
+}
+
+/* ========================================
+   DESKTOP LANG
+   ======================================== */
+
+.desktopLang {
+  margin-left: auto;
+}
+
+/* ========================================
+   HAMBURGER (mobile only)
+   ======================================== */
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+}
+
+.hamburgerLine {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--text);
+  border-radius: 1px;
+  transition: opacity 0.2s;
+}
+
+/* ========================================
+   MOBILE OVERLAY
+   ======================================== */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(10, 10, 12, 0.97);
+  display: flex;
+  flex-direction: column;
+  animation: overlayIn 0.25s ease-out;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.closeBtn:hover {
+  color: var(--text);
+}
+
+.overlayNav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 4px;
+}
+
+.overlayLabel {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.overlayLink {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: color 0.2s;
+}
+
+.overlayLink:hover {
+  color: var(--accent);
+}
+
+.overlaySubLink {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.overlaySubLink:hover {
+  color: var(--text);
+}
+
+.overlayLinkActive {
+  color: var(--accent);
+}
+
+.overlaySeparator {
+  width: 40px;
+  height: 1px;
+  background: rgba(136, 136, 154, 0.15);
+  margin: 12px 0;
+}
+
+.overlayLangWrapper {
+  margin-top: 8px;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .desktopLinks {
+    display: none;
+  }
+
+  .desktopLang {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .standaloneLang {
+    top: 16px;
+    right: 16px;
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition: none;
+  }
+
+  .dropdown,
+  .standaloneLang,
+  .overlay {
+    animation: none;
+  }
+
+  .chevron {
+    transition: none;
+  }
+}
