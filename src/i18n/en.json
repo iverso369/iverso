@@ -39,6 +39,17 @@
       "node2": "Processing",
       "node3": "Database",
       "node4": "Notification"
+    },
+    "websites": {
+      "title": "Websites",
+      "description": "First impressions in your hands",
+      "restaurantName": "Smith's Kitchen",
+      "heroTitle": "Harmony of Flavors",
+      "heroSubtitle": "Tradition meets modern cuisine",
+      "ctaButton": "Book a table",
+      "card1": "Menu",
+      "card2": "Hours",
+      "card3": "Contact"
     }
   },
   "common": {

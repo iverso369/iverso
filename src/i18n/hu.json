@@ -39,6 +39,17 @@
       "node2": "Feldolgozás",
       "node3": "Adatbázis",
       "node4": "Értesítés"
+    },
+    "websites": {
+      "title": "Weboldalak",
+      "description": "Az első benyomás a te kezedben",
+      "restaurantName": "Kovács Étterem",
+      "heroTitle": "Ízek harmóniája",
+      "heroSubtitle": "Hagyomány és modern konyha",
+      "ctaButton": "Asztalfoglalás",
+      "card1": "Étlap",
+      "card2": "Nyitvatartás",
+      "card3": "Kapcsolat"
     }
   },
   "common": {
