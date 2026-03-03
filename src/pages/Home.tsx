@@ -21,7 +21,9 @@ export default function Home() {
     <div className={styles.home}>
       {/* Réteg 2: EmberHero — 1-2. jelenet (parázs hero + IVERSO felirat) */}
       <EmberHero />
-      <div id="hero-area" className={styles.heroSpacer} />
+      <div id="hero-area" className={styles.heroSpacer}>
+        <p className={styles.slogan}>Let&apos;s build something</p>
+      </div>
 
       {/* Nav — scroll-aware, hero-nál rejtett, scrollra megjelenik */}
       <Nav heroElementId="hero-area" />

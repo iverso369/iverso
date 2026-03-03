@@ -5,221 +5,114 @@ import styles from './EmberHero.module.css'
 /* ========================================
    CONSTANTS
    ======================================== */
-const PARTICLE_COUNT = 80000
+const PARTICLE_COUNT = 50000
 const CAMERA_Z = 35
 const CAMERA_FOV = 75
-const MOUSE_PUSH_RADIUS = 5.0
-const MOUSE_GLOW_RADIUS = 8.0
-const DESTROY_RADIUS_FRAC = 0.22
-const MAX_ACTIVE_CLICKS = 8
-const FADE_IN_TIME = 1.5
 
-// Rebuild phases (ms)
-const EXPLODE_PHASE = 1500
-const DRIFT_PHASE = 1000
-const RETURN_PHASE = 5500
-const RETURN_STAGGER = 2000
-const TOTAL_REBUILD = EXPLODE_PHASE + DRIFT_PHASE + RETURN_PHASE
+const DESTROY_RADIUS_FACTOR = 0.25 // fraction of text width
+const MAX_ACTIVE_DESTROYS = 8
 
-const COLOR_A = new THREE.Color(0xCC5500)
-const COLOR_B = new THREE.Color(0xFF8533)
+// Destroy timeline (ms)
+const DESTROY_FLY_PHASE = 2000
+const DESTROY_RETURN_PHASE = 8000
+const DESTROY_SNAP_PHASE = 2000
+const DESTROY_TOTAL = DESTROY_FLY_PHASE + DESTROY_RETURN_PHASE + DESTROY_SNAP_PHASE
 
-/* ========================================
-   SIMPLEX NOISE (Ashima Arts)
-   ======================================== */
-const SNOISE_GLSL = /* glsl */ `
-vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
-vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
-vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
-float snoise(vec3 v){
-  const vec2 C=vec2(1.0/6.0,1.0/3.0);
-  const vec4 D=vec4(0.0,0.5,1.0,2.0);
-  vec3 i=floor(v+dot(v,C.yyy));
-  vec3 x0=v-i+dot(i,C.xxx);
-  vec3 g=step(x0.yzx,x0.xyz);
-  vec3 l=1.0-g;
-  vec3 i1=min(g.xyz,l.zxy);
-  vec3 i2=max(g.xyz,l.zxy);
-  vec3 x1=x0-i1+C.xxx;
-  vec3 x2=x0-i2+C.yyy;
-  vec3 x3=x0-D.yyy;
-  i=mod289(i);
-  vec4 p=permute(permute(permute(
-    i.z+vec4(0.0,i1.z,i2.z,1.0))
-    +i.y+vec4(0.0,i1.y,i2.y,1.0))
-    +i.x+vec4(0.0,i1.x,i2.x,1.0));
-  float n_=0.142857142857;
-  vec3 ns=n_*D.wyz-D.xzx;
-  vec4 j=p-49.0*floor(p*ns.z*ns.z);
-  vec4 x_=floor(j*ns.z);
-  vec4 y_=floor(j-7.0*x_);
-  vec4 x=x_*ns.x+ns.yyyy;
-  vec4 y=y_*ns.x+ns.yyyy;
-  vec4 h=1.0-abs(x)-abs(y);
-  vec4 b0=vec4(x.xy,y.xy);
-  vec4 b1=vec4(x.zw,y.zw);
-  vec4 s0=floor(b0)*2.0+1.0;
-  vec4 s1=floor(b1)*2.0+1.0;
-  vec4 sh=-step(h,vec4(0.0));
-  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;
-  vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-  vec3 p0=vec3(a0.xy,h.x);
-  vec3 p1=vec3(a0.zw,h.y);
-  vec3 p2=vec3(a1.xy,h.z);
-  vec3 p3=vec3(a1.zw,h.w);
-  vec4 norm=1.79284291400159-0.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));
-  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
-  vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);
-  m=m*m;
-  return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-}
-`
+const MOSQUITO_DURATION = 3000
+
+// Scroll thresholds (fraction of max scroll)
+const SCROLL_DISPERSE_START = 0.15
+const SCROLL_DISPERSE_END = 0.30
+const SCROLL_REFORM_START = 0.85
+const SCROLL_REFORM_END = 0.95
 
 /* ========================================
    SHADERS
    ======================================== */
 const vertexShader = /* glsl */ `
   attribute float aRandom;
+  attribute float aSizeClass;
   attribute vec3 aColor;
 
   uniform float uTime;
   uniform vec3 uMouse3D;
-  uniform float uMouseInfluence;
-  uniform vec3 uMouseVelocity;
+  uniform float uMouseActive;
   uniform float uOpacity;
-  uniform vec3 uShockwaveCenter;
-  uniform float uShockwaveTime;
 
   varying vec3 vColor;
   varying float vAlpha;
-  varying float vMouseProximity;
-  varying float vShockEffect;
-  varying float vSparkBright;
-
-  ${SNOISE_GLSL}
+  varying float vMouseGlow;
+  varying float vSizeClass;
 
   void main() {
     vec3 pos = position;
-
-    // Breathing — simplex noise micro-shimmer
-    float noiseScale = 0.8;
-    float breathe = sin(uTime * 0.3) * 0.2 + 0.8;
-    vec3 noiseOffset = vec3(
-      snoise(pos * noiseScale + uTime * 0.08),
-      snoise(pos * noiseScale + 100.0 + uTime * 0.08),
-      snoise(pos * noiseScale + 200.0 + uTime * 0.08)
-    ) * breathe;
-    float textBreathe = 0.03 + snoise(vec3(aRandom * 50.0, uTime * 0.5, 0.0)) * 0.02;
-    pos += noiseOffset * textBreathe;
-
-    // Subtle upward convection (heat rises)
-    float convection = snoise(vec3(pos.x * 0.15, uTime * 0.06, pos.z * 0.3)) * 0.12;
-    pos.y += convection * (0.6 + aRandom * 0.4);
-
-    // Mouse push-away (particles deflect from cursor)
-    vec3 toMouse = uMouse3D - pos;
-    float mouseDist = length(toMouse);
-    float mouseInfl = uMouseInfluence * smoothstep(${MOUSE_PUSH_RADIUS.toFixed(1)}, 0.0, mouseDist);
-    vec3 pushAway = mouseDist > 0.01 ? normalize(pos - uMouse3D) : vec3(0.0);
-    pos += pushAway * mouseInfl * 2.0 * (0.5 + aRandom * 0.5);
-
-    // Mouse velocity trail
-    float trailInfl = uMouseInfluence * smoothstep(10.0, 0.0, mouseDist) * 0.5;
-    pos += uMouseVelocity * trailInfl * (3.0 + aRandom * 5.0);
-
-    // Mouse proximity for fragment glow
-    vMouseProximity = uMouseInfluence * smoothstep(${MOUSE_GLOW_RADIUS.toFixed(1)}, 0.0, mouseDist);
-
-    // Shockwave — expanding bright ring from click
-    float swAge = uShockwaveTime;
-    float shockRadius = max(swAge, 0.0) * 18.0;
-    float distToShock = length(pos.xy - uShockwaveCenter.xy);
-    float shockRing = exp(-pow(distToShock - shockRadius, 2.0) * 0.8);
-    float shockFade = exp(-max(swAge, 0.0) * 3.0);
-    vShockEffect = shockRing * shockFade * step(0.0, swAge);
-
-    // Spark flare — random particles briefly glow bright
-    float tickInterval = 0.6;
-    float tickIndex = floor(uTime / tickInterval);
-    float tickPhase = fract(uTime / tickInterval);
-    float sparkHash = fract(sin(aRandom * 43758.5453 + tickIndex * 7.919) * 43758.5453);
-    float isSpark = step(0.994, sparkHash);
-    vSparkBright = isSpark * sin(tickPhase * 3.14159);
-
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
 
-    // Size — dual-frequency pulse + per-particle variation
-    float pulse = sin(uTime * 1.2 + aRandom * 6.28) * 0.15
-                + sin(uTime * 0.7 + aRandom * 3.14) * 0.1;
-    float textScale = 0.8 + aRandom * 0.6 + step(0.85, aRandom) * 0.8;
-    float size = textScale * (1.0 + pulse);
-    float hoverSizeBoost = 1.0 + vMouseProximity * 0.6;
-    float sparkSizeBoost = 1.0 + vSparkBright * 1.5;
-    float shockSizeBoost = 1.0 + vShockEffect * 1.5;
-    gl_PointSize = size * (150.0 / -mvPosition.z) * hoverSizeBoost * sparkSizeBoost * shockSizeBoost;
+    // Mouse proximity
+    float mouseDist = length(uMouse3D.xy - pos.xy);
+    float mouseRadius = 5.0;
+    vMouseGlow = uMouseActive * smoothstep(mouseRadius, 0.0, mouseDist);
 
+    // Size based on class
+    float baseSize;
+    if (aSizeClass < 0.25) {
+      // tiny (70%)
+      baseSize = 1.0 + aRandom * 0.8;
+    } else if (aSizeClass < 0.75) {
+      // medium (25%)
+      baseSize = 2.5 + aRandom * 2.0;
+    } else {
+      // large glow (5%)
+      baseSize = 7.0 + aRandom * 6.0;
+    }
+
+    // Subtle pulse
+    float pulse = sin(uTime * 1.0 + aRandom * 6.2832) * 0.12 + 1.0;
+
+    // Hover size boost
+    float hoverBoost = 1.0 + vMouseGlow * 0.6;
+
+    gl_PointSize = baseSize * pulse * hoverBoost * (150.0 / -mvPosition.z);
     gl_Position = projectionMatrix * mvPosition;
 
     vColor = aColor;
     vAlpha = uOpacity;
+    vSizeClass = aSizeClass;
   }
 `
 
 const fragmentShader = /* glsl */ `
-  uniform float uTime;
-  uniform vec3 uColorA;
-  uniform vec3 uColorB;
-
   varying vec3 vColor;
   varying float vAlpha;
-  varying float vMouseProximity;
-  varying float vShockEffect;
-  varying float vSparkBright;
+  varying float vMouseGlow;
+  varying float vSizeClass;
 
   void main() {
     vec2 center = gl_PointCoord - 0.5;
     float dist = length(center);
     if (dist > 0.5) discard;
 
-    // 3-layer glow
-    float outerGlow = exp(-dist * 3.0);
-    float midGlow = exp(-dist * 7.0);
-    float coreGlow = exp(-dist * 18.0);
+    // Glow profile: tiny=sharp, large=soft
+    float sharpness = mix(8.0, 3.0, vSizeClass);
+    float glow = exp(-dist * sharpness);
+    float core = exp(-dist * 16.0);
 
-    // Additive color build (warm ember)
-    vec3 warmColor = mix(uColorA, uColorB, 0.5);
-    vec3 deepColor = warmColor * 0.35;
-    vec3 hotCore = vec3(1.0, 0.92, 0.8);
+    // Base ember color
+    vec3 color = vColor * glow + vec3(1.0, 0.95, 0.85) * core * 0.3;
 
-    vec3 color = deepColor * outerGlow
-               + warmColor * midGlow * 1.0
-               + hotCore * coreGlow * 0.4;
+    // Hover: shift toward yellowish-white
+    vec3 hoverColor = vec3(1.0, 0.95, 0.8);
+    color = mix(color, hoverColor * (glow + core * 0.5) * 1.5, vMouseGlow * 0.6);
 
-    // Per-particle color variation
-    color = mix(color, vColor * midGlow * 0.6, 0.25);
+    // Alpha: tiny=more opaque, large=more transparent
+    float baseAlpha = mix(0.65, 0.12, vSizeClass);
+    float softEdge = smoothstep(0.5, 0.05, dist);
+    float alpha = softEdge * glow * baseAlpha * vAlpha;
 
-    // Edge glow — thin bright rim
-    float edgeBrightness = smoothstep(0.35, 0.47, dist) * smoothstep(0.5, 0.47, dist) * 0.5;
-    color += warmColor * edgeBrightness;
+    // Hover brightness
+    alpha *= 1.0 + vMouseGlow * 2.5;
 
-    // Soft edge + alpha
-    float softEdge = smoothstep(0.5, 0.03, dist);
-    float alpha = softEdge * 0.5 * vAlpha;
-
-    // Hover glow
-    float hoverGlow = vMouseProximity * 0.8;
-    color = mix(color, warmColor * 1.5, hoverGlow * 0.6);
-    alpha *= 1.0 + hoverGlow * 2.0;
-
-    // Spark flare — hot flash
-    color += hotCore * vSparkBright * 0.8;
-    alpha *= 1.0 + vSparkBright * 0.5;
-
-    // Shockwave ring — bright pulse
-    color = mix(color, vec3(1.0, 0.9, 0.7), vShockEffect * 0.6);
-    alpha *= 1.0 + vShockEffect * 2.5;
-
-    if (alpha < 0.005) discard;
+    if (alpha < 0.003) discard;
     gl_FragColor = vec4(color, alpha);
   }
 `
@@ -228,7 +121,9 @@ const fragmentShader = /* glsl */ `
    PIXEL SAMPLING
    ======================================== */
 function sampleTextPositions(
-  text: string, width: number, height: number,
+  text: string,
+  width: number,
+  height: number,
 ): { x: number; y: number }[] {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')!
@@ -253,7 +148,7 @@ function sampleTextPositions(
       const i = (y * canvas.width + x) * 4
       if (pixels[i + 3] > 0) {
         positions.push({
-          x: (x / canvas.width - 0.5),
+          x: x / canvas.width - 0.5,
           y: -(y / canvas.height - 0.5),
         })
       }
@@ -272,6 +167,36 @@ function selectRandom<T>(arr: T[], n: number): T[] {
 }
 
 /* ========================================
+   SCROLL HELPERS
+   ======================================== */
+function getScrollRatio(): number {
+  const maxScroll =
+    document.documentElement.scrollHeight - window.innerHeight
+  if (maxScroll <= 0) return 0
+  return Math.min(1, Math.max(0, window.scrollY / maxScroll))
+}
+
+function getDispersalFactor(ratio: number): number {
+  if (ratio <= SCROLL_DISPERSE_START) return 0
+  if (ratio <= SCROLL_DISPERSE_END)
+    return (ratio - SCROLL_DISPERSE_START) / (SCROLL_DISPERSE_END - SCROLL_DISPERSE_START)
+  if (ratio <= SCROLL_REFORM_START) return 1
+  if (ratio <= SCROLL_REFORM_END)
+    return 1 - (ratio - SCROLL_REFORM_START) / (SCROLL_REFORM_END - SCROLL_REFORM_START)
+  return 0
+}
+
+function getOpacityFactor(ratio: number): number {
+  if (ratio <= SCROLL_DISPERSE_START) return 1.0
+  if (ratio <= SCROLL_DISPERSE_END)
+    return 1.0 - ((ratio - SCROLL_DISPERSE_START) / (SCROLL_DISPERSE_END - SCROLL_DISPERSE_START)) * 0.8
+  if (ratio <= SCROLL_REFORM_START) return 0.2
+  if (ratio <= SCROLL_REFORM_END)
+    return 0.2 + ((ratio - SCROLL_REFORM_START) / (SCROLL_REFORM_END - SCROLL_REFORM_START)) * 0.8
+  return 1.0
+}
+
+/* ========================================
    COMPONENT
    ======================================== */
 export default function EmberHero() {
@@ -283,147 +208,209 @@ export default function EmberHero() {
 
     let disposed = false
     let animationId = 0
+    let resizeTimeout = 0
 
+    // Arrays — allocated in init()
     let homePositions: Float32Array
-    let velocities: Float32Array
-    let destroyedFlags: Float32Array
+    let scatteredPositions: Float32Array
+    let positionArray: Float32Array
+    let randoms: Float32Array
+    let destroyedAt: Float32Array
+    let destroyVelocities: Float32Array
+    let destroyOffsets: Float32Array
     let returnDelays: Float32Array
 
+    let textWorldWidth = 1
+
+    // Three.js objects
     let renderer: THREE.WebGLRenderer
     let scene: THREE.Scene
     let camera: THREE.PerspectiveCamera
     let points: THREE.Points
     let geometry: THREE.BufferGeometry
     let material: THREE.ShaderMaterial
-    let textWorldWidth = 1
 
-    // Separate raycaster for clicks (not shared with animation loop)
-    const clickRaycaster = new THREE.Raycaster()
-
-    const rc = new THREE.Raycaster()
-    const mousePlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
-    const mouseNDC = new THREE.Vector2(0, 0)
+    // Mouse state
+    const mouseNDC = new THREE.Vector2(9999, 9999)
     const mouse3D = new THREE.Vector3(9999, 9999, 0)
+    const mousePlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
+    const raycaster = new THREE.Raycaster()
     let mouseActive = false
 
-    // Click tracking
-    const recentClicks: number[] = []
-    let shockwaveStartTime = -1
+    // Destroy tracking
+    const recentDestroys: number[] = []
+
+    // Mosquito state
+    let mosquitoActive = false
+    let mosquitoStartTime = 0
+    let mosquitoOffsets: Float32Array
+
+    // Click raycaster (separate from hover raycaster)
+    const clickRaycaster = new THREE.Raycaster()
 
     async function init() {
       if (disposed) return
-      await document.fonts.load('800 100px Syne')
+      await document.fonts.ready
       if (disposed) return
 
       const w = window.innerWidth
       const h = window.innerHeight
 
+      // Renderer
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false })
+      renderer.setClearColor(0x000000, 0)
       renderer.setSize(w, h)
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       container!.appendChild(renderer.domElement)
 
+      // Scene + Camera
       scene = new THREE.Scene()
       camera = new THREE.PerspectiveCamera(CAMERA_FOV, w / h, 0.1, 200)
       camera.position.z = CAMERA_Z
 
+      buildParticles(w, h)
+
+      const startTime = performance.now()
+      animate(startTime)
+    }
+
+    function buildParticles(w: number, h: number) {
       const sampled = sampleTextPositions('IVERSO', w, h)
       const fovRad = (camera.fov * Math.PI) / 180
       const visH = 2 * Math.tan(fovRad / 2) * CAMERA_Z
       const visW = visH * (w / h)
 
-      let minX = Infinity, maxX = -Infinity
+      // Measure text width
+      let minX = Infinity
+      let maxX = -Infinity
       for (const p of sampled) {
         if (p.x < minX) minX = p.x
         if (p.x > maxX) maxX = p.x
       }
       textWorldWidth = (maxX - minX) * visW
 
+      const useSampled =
+        sampled.length >= PARTICLE_COUNT
+          ? selectRandom(sampled, PARTICLE_COUNT)
+          : sampled
+
+      // Allocate arrays
       const count = PARTICLE_COUNT
-      const positions = new Float32Array(count * 3)
+      positionArray = new Float32Array(count * 3)
       homePositions = new Float32Array(count * 3)
-      velocities = new Float32Array(count * 3)
-      destroyedFlags = new Float32Array(count)
+      scatteredPositions = new Float32Array(count * 3)
+      randoms = new Float32Array(count)
+      destroyedAt = new Float32Array(count)
+      destroyVelocities = new Float32Array(count * 3)
+      destroyOffsets = new Float32Array(count * 3)
       returnDelays = new Float32Array(count)
-      const randoms = new Float32Array(count)
+      mosquitoOffsets = new Float32Array(count * 3)
+
+      const sizeClasses = new Float32Array(count)
       const colors = new Float32Array(count * 3)
 
-      const useSampled = sampled.length >= count
-        ? selectRandom(sampled, count)
-        : sampled
+      const colorDarkOrange = new THREE.Color(0xcc4400)
+      const colorOrange = new THREE.Color(0xf77f0a)
+      const colorYellow = new THREE.Color(0xffaa00)
+      const colorWhitish = new THREE.Color(0xffe8c0)
+      const tmpColor = new THREE.Color()
 
-      // Text particles — tight z-depth
-      for (let i = 0; i < useSampled.length; i++) {
-        const x = useSampled[i].x * visW
-        const y = useSampled[i].y * visH
-        const z = (Math.random() - 0.5) * 0.6
-        positions[i * 3] = x
-        positions[i * 3 + 1] = y
-        positions[i * 3 + 2] = z
-        homePositions[i * 3] = x
-        homePositions[i * 3 + 1] = y
-        homePositions[i * 3 + 2] = z
-      }
-
-      // Halo particles — more z-spread for depth
-      for (let i = useSampled.length; i < count; i++) {
-        const base = useSampled[Math.floor(Math.random() * useSampled.length)]
-        const ang = Math.random() * Math.PI * 2
-        const r = Math.random() * 0.035 + 0.005
-        const x = (base.x + Math.cos(ang) * r) * visW
-        const y = (base.y + Math.sin(ang) * r) * visH
-        const z = (Math.random() - 0.5) * 1.6
-        positions[i * 3] = x
-        positions[i * 3 + 1] = y
-        positions[i * 3 + 2] = z
-        homePositions[i * 3] = x
-        homePositions[i * 3 + 1] = y
-        homePositions[i * 3 + 2] = z
-      }
-
-      // Colors — tiered system
       for (let i = 0; i < count; i++) {
+        // Random seed
         randoms[i] = Math.random()
-        const depth = Math.random()
-        if (depth < 0.05) {
-          // Dark coal (5%)
-          const t = Math.random()
-          colors[i * 3] = 0.4 + t * 0.2
-          colors[i * 3 + 1] = 0.133 + t * 0.106
-          colors[i * 3 + 2] = 0
-        } else if (depth > 0.98) {
-          // Bright spark (2%)
-          const t = Math.random()
-          colors[i * 3] = 1.0
-          colors[i * 3 + 1] = 0.8 + t * 0.2
-          colors[i * 3 + 2] = 0.5 + t * 0.43
+
+        // Home position
+        let hx: number, hy: number, hz: number
+        if (i < useSampled.length) {
+          hx = useSampled[i].x * visW
+          hy = useSampled[i].y * visH
+          hz = (Math.random() - 0.5) * 0.5
         } else {
-          // Normal ember (93%)
-          const t = Math.random()
-          colors[i * 3] = 0.8 + t * 0.2
-          colors[i * 3 + 1] = 0.333 + t * 0.189
-          colors[i * 3 + 2] = t * 0.2
+          // Halo particles around text
+          const base =
+            useSampled[Math.floor(Math.random() * useSampled.length)]
+          const ang = Math.random() * Math.PI * 2
+          const rad = Math.random() * 0.03 + 0.005
+          hx = (base.x + Math.cos(ang) * rad) * visW
+          hy = (base.y + Math.sin(ang) * rad) * visH
+          hz = (Math.random() - 0.5) * 1.5
         }
+        homePositions[i * 3] = hx
+        homePositions[i * 3 + 1] = hy
+        homePositions[i * 3 + 2] = hz
+
+        // Scattered position (random across viewport)
+        scatteredPositions[i * 3] = (Math.random() - 0.5) * visW * 1.3
+        scatteredPositions[i * 3 + 1] = (Math.random() - 0.5) * visH * 1.3
+        scatteredPositions[i * 3 + 2] = (Math.random() - 0.5) * 2
+
+        // Initial position = home
+        positionArray[i * 3] = hx
+        positionArray[i * 3 + 1] = hy
+        positionArray[i * 3 + 2] = hz
+
+        // Size class: 70% tiny, 25% medium, 5% large
+        const roll = Math.random()
+        if (roll < 0.7) sizeClasses[i] = 0.0
+        else if (roll < 0.95) sizeClasses[i] = 0.5
+        else sizeClasses[i] = 1.0
+
+        // Color: ember spectrum
+        const ct = Math.random()
+        if (ct < 0.15) {
+          // dark orange/red (15%)
+          tmpColor.copy(colorDarkOrange).lerp(colorOrange, Math.random())
+        } else if (ct < 0.7) {
+          // orange range (55%, most common)
+          tmpColor.copy(colorOrange).lerp(colorYellow, Math.random() * 0.5)
+        } else if (ct < 0.9) {
+          // yellow (20%)
+          tmpColor.copy(colorYellow).lerp(colorWhitish, Math.random() * 0.4)
+        } else {
+          // whitish (10%, rare)
+          tmpColor.copy(colorWhitish)
+        }
+        colors[i * 3] = tmpColor.r
+        colors[i * 3 + 1] = tmpColor.g
+        colors[i * 3 + 2] = tmpColor.b
+
+        // Return delay for destroy rebuild stagger
+        returnDelays[i] = Math.random()
       }
 
-      geometry = new THREE.BufferGeometry()
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-      geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1))
-      geometry.setAttribute('aColor', new THREE.BufferAttribute(colors, 3))
+      // Clean up old geometry/material if rebuilding
+      if (geometry) geometry.dispose()
+      if (material) material.dispose()
+      if (points) scene.remove(points)
 
+      // Create geometry
+      geometry = new THREE.BufferGeometry()
+      geometry.setAttribute(
+        'position',
+        new THREE.BufferAttribute(positionArray, 3),
+      )
+      geometry.setAttribute(
+        'aRandom',
+        new THREE.BufferAttribute(randoms, 1),
+      )
+      geometry.setAttribute(
+        'aSizeClass',
+        new THREE.BufferAttribute(sizeClasses, 1),
+      )
+      geometry.setAttribute(
+        'aColor',
+        new THREE.BufferAttribute(colors, 3),
+      )
+
+      // Create material
       material = new THREE.ShaderMaterial({
         vertexShader,
         fragmentShader,
         uniforms: {
           uTime: { value: 0 },
           uMouse3D: { value: new THREE.Vector3(9999, 9999, 0) },
-          uMouseInfluence: { value: 0 },
-          uMouseVelocity: { value: new THREE.Vector3(0, 0, 0) },
+          uMouseActive: { value: 0 },
           uOpacity: { value: 0 },
-          uColorA: { value: COLOR_A.clone() },
-          uColorB: { value: COLOR_B.clone() },
-          uShockwaveCenter: { value: new THREE.Vector3(0, 0, 0) },
-          uShockwaveTime: { value: -1.0 },
         },
         transparent: true,
         blending: THREE.AdditiveBlending,
@@ -432,137 +419,191 @@ export default function EmberHero() {
 
       points = new THREE.Points(geometry, material)
       scene.add(points)
-
-      const startTime = performance.now()
-      animate(startTime)
     }
 
-    // Reusable vectors for animation loop (avoid GC pressure)
+    /* ── animation loop ── */
     const _hitVec = new THREE.Vector3()
-    const _prevMouse = new THREE.Vector3()
+    const _prevMouse = new THREE.Vector3(9999, 9999, 0)
 
     function animate(startTime: number) {
       if (disposed) return
       const now = performance.now()
       const elapsed = (now - startTime) / 1000
 
+      // Fade in over 1.5s
+      const fadeIn = Math.min(elapsed / 1.5, 1.0)
+
+      // Scroll
+      const scrollRatio = getScrollRatio()
+      const dispersal = getDispersalFactor(scrollRatio)
+      const scrollOpacity = getOpacityFactor(scrollRatio)
+
       material.uniforms.uTime.value = elapsed
-      material.uniforms.uOpacity.value = Math.min(elapsed / FADE_IN_TIME, 1.0)
+      material.uniforms.uOpacity.value = fadeIn * scrollOpacity
 
-      // Mouse lerping
-      const tgtInfl = mouseActive ? 1.0 : 0.0
-      material.uniforms.uMouseInfluence.value +=
-        (tgtInfl - material.uniforms.uMouseInfluence.value) * 0.05
+      // Mouse lerp
+      const targetActive = mouseActive ? 1.0 : 0.0
+      material.uniforms.uMouseActive.value +=
+        (targetActive - material.uniforms.uMouseActive.value) * 0.08
 
-      rc.setFromCamera(mouseNDC, camera)
-      if (rc.ray.intersectPlane(mousePlane, _hitVec)) {
+      raycaster.setFromCamera(mouseNDC, camera)
+      if (raycaster.ray.intersectPlane(mousePlane, _hitVec)) {
         mouse3D.copy(_hitVec)
       }
+      _prevMouse.copy(material.uniforms.uMouse3D.value as THREE.Vector3)
+      ;(material.uniforms.uMouse3D.value as THREE.Vector3).lerp(mouse3D, 0.12)
 
-      _prevMouse.copy(material.uniforms.uMouse3D.value)
-      material.uniforms.uMouse3D.value.lerp(mouse3D, 0.1)
-      const vel = material.uniforms.uMouse3D.value.clone().sub(_prevMouse)
-      material.uniforms.uMouseVelocity.value.lerp(vel, 0.3)
-
-      // Shockwave uniform update
-      if (shockwaveStartTime > 0) {
-        const swAge = (now - shockwaveStartTime) / 1000
-        material.uniforms.uShockwaveTime.value = swAge < 1.2 ? swAge : -1.0
-        if (swAge >= 1.2) shockwaveStartTime = -1
+      // Mosquito jitter factor
+      let mJitter = 0
+      if (mosquitoActive) {
+        const mAge = (now - mosquitoStartTime) / 1000
+        const mDuration = MOSQUITO_DURATION / 1000
+        if (mAge > mDuration + 1) {
+          mosquitoActive = false
+          mosquitoOffsets.fill(0)
+        } else if (mAge > mDuration) {
+          // Decay phase: lerp offsets back to 0
+          const decay = 0.85
+          for (let i = 0; i < PARTICLE_COUNT * 3; i++) {
+            mosquitoOffsets[i] *= decay
+          }
+        } else {
+          mJitter = Math.max(0, 1 - mAge / mDuration)
+        }
       }
 
-      // Destroyed particles — 3-phase rebuild (CPU update)
-      const posAttr = geometry.getAttribute('position') as THREE.BufferAttribute
-      const posArr = posAttr.array as Float32Array
+      // Prune expired destroy timestamps
+      while (
+        recentDestroys.length > 0 &&
+        now - recentDestroys[0] > DESTROY_TOTAL
+      ) {
+        recentDestroys.shift()
+      }
+
+      // Update particle positions
+      const posAttr = geometry.getAttribute(
+        'position',
+      ) as THREE.BufferAttribute
 
       for (let i = 0; i < PARTICLE_COUNT; i++) {
-        if (destroyedFlags[i] === 0) continue
-        const age = now - destroyedFlags[i]
+        const i3 = i * 3
+        const r = randoms[i]
 
-        // Safety snap — fully rebuilt
-        if (age > TOTAL_REBUILD) {
-          destroyedFlags[i] = 0
-          posArr[i * 3] = homePositions[i * 3]
-          posArr[i * 3 + 1] = homePositions[i * 3 + 1]
-          posArr[i * 3 + 2] = homePositions[i * 3 + 2]
-          velocities[i * 3] = velocities[i * 3 + 1] = velocities[i * 3 + 2] = 0
-          continue
+        // Base target: lerp between home and scattered
+        const hx = homePositions[i3]
+        const hy = homePositions[i3 + 1]
+        const hz = homePositions[i3 + 2]
+        const sx = scatteredPositions[i3]
+        const sy = scatteredPositions[i3 + 1]
+        const sz = scatteredPositions[i3 + 2]
+
+        let tx = hx + (sx - hx) * dispersal
+        let ty = hy + (sy - hy) * dispersal
+        let tz = hz + (sz - hz) * dispersal
+
+        // Idle animation: subtle breathing + slight upward drift
+        const breatheX =
+          Math.sin(elapsed * 0.25 + r * 6.28) * 0.015
+        const breatheY =
+          Math.sin(elapsed * 0.18 + r * 3.14) * 0.02
+        const breatheZ =
+          Math.sin(elapsed * 0.12 + r * 9.42) * 0.005
+
+        tx += breatheX
+        ty += breatheY
+        tz += breatheZ
+
+        // Heat escape: top 5% of particles drift upward slightly (only when near home)
+        if (r > 0.95 && dispersal < 0.5) {
+          const heatPhase = elapsed * 0.4 + r * 20
+          const heatStrength = 0.1 * (1 - dispersal * 2)
+          ty +=
+            (Math.sin(heatPhase) * 0.5 + 0.5) * heatStrength
+          // Fade alpha slightly for drifting particles (handled by position offset)
         }
 
-        if (age < EXPLODE_PHASE) {
-          // Phase 1: EXPLOSION — fly outward with decay + slight upward drift
-          velocities[i * 3] *= 0.97
-          velocities[i * 3 + 1] *= 0.97
-          velocities[i * 3 + 2] *= 0.97
-          velocities[i * 3 + 1] += 0.0008
-          posArr[i * 3] += velocities[i * 3]
-          posArr[i * 3 + 1] += velocities[i * 3 + 1]
-          posArr[i * 3 + 2] += velocities[i * 3 + 2]
-        } else if (age < EXPLODE_PHASE + DRIFT_PHASE) {
-          // Phase 2: DRIFT — gentle floating, heavy damping
-          velocities[i * 3] *= 0.93
-          velocities[i * 3 + 1] *= 0.93
-          velocities[i * 3 + 2] *= 0.93
-          const driftT = (age - EXPLODE_PHASE) / DRIFT_PHASE
-          const driftStr = (1 - driftT) * 0.003
-          velocities[i * 3] += (Math.random() - 0.5) * driftStr
-          velocities[i * 3 + 1] += Math.random() * driftStr * 0.5
-          posArr[i * 3] += velocities[i * 3]
-          posArr[i * 3 + 1] += velocities[i * 3 + 1]
-          posArr[i * 3 + 2] += velocities[i * 3 + 2]
-        } else {
-          // Phase 3: MAGNETIC RETURN — spring physics with per-particle stagger
-          const returnAge = age - EXPLODE_PHASE - DRIFT_PHASE
-          const particleDelay = returnDelays[i]
+        // Destroy offsets
+        if (destroyedAt[i] > 0) {
+          const age = now - destroyedAt[i]
 
-          if (returnAge < particleDelay) {
-            // Still waiting — gentle damping, almost stationary
-            velocities[i * 3] *= 0.96
-            velocities[i * 3 + 1] *= 0.96
-            velocities[i * 3 + 2] *= 0.96
-            posArr[i * 3] += velocities[i * 3]
-            posArr[i * 3 + 1] += velocities[i * 3 + 1]
-            posArr[i * 3 + 2] += velocities[i * 3 + 2]
-            continue
+          if (age >= DESTROY_TOTAL) {
+            // Fully rebuilt
+            destroyedAt[i] = 0
+            destroyOffsets[i3] = 0
+            destroyOffsets[i3 + 1] = 0
+            destroyOffsets[i3 + 2] = 0
+            destroyVelocities[i3] = 0
+            destroyVelocities[i3 + 1] = 0
+            destroyVelocities[i3 + 2] = 0
+          } else if (age < DESTROY_FLY_PHASE) {
+            // Phase 1: flying outward with drag
+            destroyVelocities[i3] *= 0.985
+            destroyVelocities[i3 + 1] *= 0.985
+            destroyVelocities[i3 + 2] *= 0.985
+            // Slight upward drift
+            destroyVelocities[i3 + 1] += 0.0005
+            destroyOffsets[i3] += destroyVelocities[i3]
+            destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
+            destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
+          } else if (age < DESTROY_FLY_PHASE + DESTROY_RETURN_PHASE) {
+            // Phase 2: gradual return (staggered start)
+            const returnAge =
+              (age - DESTROY_FLY_PHASE) / DESTROY_RETURN_PHASE
+            const particleDelay = returnDelays[i] * 0.6 // max 60% of phase as delay
+            if (returnAge > particleDelay) {
+              const t =
+                (returnAge - particleDelay) / (1 - particleDelay)
+              const strength = 0.01 + t * t * 0.06
+              destroyOffsets[i3] *= 1 - strength
+              destroyOffsets[i3 + 1] *= 1 - strength
+              destroyOffsets[i3 + 2] *= 1 - strength
+            }
+            // Gentle velocity decay
+            destroyVelocities[i3] *= 0.995
+            destroyVelocities[i3 + 1] *= 0.995
+            destroyVelocities[i3 + 2] *= 0.995
+            destroyOffsets[i3] += destroyVelocities[i3]
+            destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
+            destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
+          } else {
+            // Phase 3: accelerated snap
+            const snapProgress =
+              (age - DESTROY_FLY_PHASE - DESTROY_RETURN_PHASE) /
+              DESTROY_SNAP_PHASE
+            const strength = 0.08 + snapProgress * 0.25
+            destroyOffsets[i3] *= 1 - strength
+            destroyOffsets[i3 + 1] *= 1 - strength
+            destroyOffsets[i3 + 2] *= 1 - strength
           }
 
-          // Active return — spring strength increases over time
-          const effectiveReturnDur = RETURN_PHASE - particleDelay
-          const t = Math.min((returnAge - particleDelay) / effectiveReturnDur, 1.0)
-          const springK = 0.02 + t * t * 0.15
-
-          const dx = homePositions[i * 3] - posArr[i * 3]
-          const dy = homePositions[i * 3 + 1] - posArr[i * 3 + 1]
-          const dz = homePositions[i * 3 + 2] - posArr[i * 3 + 2]
-
-          // Spring force
-          velocities[i * 3] += dx * springK
-          velocities[i * 3 + 1] += dy * springK
-          velocities[i * 3 + 2] += dz * springK
-
-          // Damping (increases over time for settling)
-          const damping = 0.85 + t * 0.09
-          velocities[i * 3] *= damping
-          velocities[i * 3 + 1] *= damping
-          velocities[i * 3 + 2] *= damping
-
-          posArr[i * 3] += velocities[i * 3]
-          posArr[i * 3 + 1] += velocities[i * 3 + 1]
-          posArr[i * 3 + 2] += velocities[i * 3 + 2]
-
-          // Early snap when settled (close + slow + well into return)
-          const distSq = dx * dx + dy * dy + dz * dz
-          const velSq = velocities[i * 3] * velocities[i * 3]
-            + velocities[i * 3 + 1] * velocities[i * 3 + 1]
-            + velocities[i * 3 + 2] * velocities[i * 3 + 2]
-          if (distSq < 0.01 && velSq < 0.0001 && t > 0.3) {
-            posArr[i * 3] = homePositions[i * 3]
-            posArr[i * 3 + 1] = homePositions[i * 3 + 1]
-            posArr[i * 3 + 2] = homePositions[i * 3 + 2]
-            velocities[i * 3] = velocities[i * 3 + 1] = velocities[i * 3 + 2] = 0
-            destroyedFlags[i] = 0
-          }
+          tx += destroyOffsets[i3]
+          ty += destroyOffsets[i3 + 1]
+          tz += destroyOffsets[i3 + 2]
         }
+
+        // Mosquito jitter
+        if (mJitter > 0) {
+          const freq = 5 + r * 15
+          const angle1 = elapsed * freq + r * 100
+          const angle2 = elapsed * (freq * 1.3) + r * 200
+          mosquitoOffsets[i3] +=
+            (Math.sin(angle1) * mJitter * 0.15 -
+              mosquitoOffsets[i3] * 0.02)
+          mosquitoOffsets[i3 + 1] +=
+            (Math.cos(angle2) * mJitter * 0.15 -
+              mosquitoOffsets[i3 + 1] * 0.02)
+          mosquitoOffsets[i3 + 2] +=
+            (Math.sin(angle1 * 0.7) * mJitter * 0.05 -
+              mosquitoOffsets[i3 + 2] * 0.02)
+        }
+
+        tx += mosquitoOffsets[i3]
+        ty += mosquitoOffsets[i3 + 1]
+        tz += mosquitoOffsets[i3 + 2]
+
+        positionArray[i3] = tx
+        positionArray[i3 + 1] = ty
+        positionArray[i3 + 2] = tz
       }
 
       posAttr.needsUpdate = true
@@ -570,54 +611,7 @@ export default function EmberHero() {
       animationId = requestAnimationFrame(() => animate(startTime))
     }
 
-    function handleClick(e: MouseEvent) {
-      // Guard — init must be complete
-      if (!camera || !geometry || !material) return
-
-      const now = performance.now()
-
-      // Prune expired click timestamps
-      while (recentClicks.length > 0 && now - recentClicks[0] > TOTAL_REBUILD) {
-        recentClicks.shift()
-      }
-      if (recentClicks.length >= MAX_ACTIVE_CLICKS) return
-
-      // Dedicated raycaster for click (not shared with animation loop)
-      const ndcX = (e.clientX / window.innerWidth) * 2 - 1
-      const ndcY = -(e.clientY / window.innerHeight) * 2 + 1
-      clickRaycaster.setFromCamera(new THREE.Vector2(ndcX, ndcY), camera)
-      const clickPos = new THREE.Vector3()
-      if (!clickRaycaster.ray.intersectPlane(mousePlane, clickPos)) return
-
-      const destroyR = DESTROY_RADIUS_FRAC * textWorldWidth
-      const posArr = (geometry.getAttribute('position') as THREE.BufferAttribute).array as Float32Array
-
-      let hitCount = 0
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        const dx = posArr[i * 3] - clickPos.x
-        const dy = posArr[i * 3 + 1] - clickPos.y
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < destroyR) {
-          hitCount++
-          // (Re-)destroy — works on both alive and already-destroyed particles
-          destroyedFlags[i] = now
-          returnDelays[i] = Math.random() * RETURN_STAGGER
-          const ang = Math.random() * Math.PI * 2
-          const speed = 0.25 + Math.random() * 0.7
-          const f = 1 - dist / destroyR
-          velocities[i * 3] = Math.cos(ang) * speed * (0.5 + f)
-          velocities[i * 3 + 1] = (Math.sin(ang) + 0.3 + Math.random() * 0.3) * speed * (0.5 + f)
-          velocities[i * 3 + 2] = (Math.random() - 0.5) * speed * 0.5
-        }
-      }
-
-      if (hitCount > 0) {
-        recentClicks.push(now)
-        // Trigger shockwave visual
-        material.uniforms.uShockwaveCenter.value.copy(clickPos)
-        shockwaveStartTime = now
-      }
-    }
+    /* ── interactions ── */
 
     function handleMouseMove(e: MouseEvent) {
       mouseNDC.x = (e.clientX / window.innerWidth) * 2 - 1
@@ -629,7 +623,73 @@ export default function EmberHero() {
       mouseActive = false
     }
 
-    let resizeTimeout: number
+    function handleClick(e: MouseEvent) {
+      if (!camera || !geometry || !material) return
+
+      const now = performance.now()
+
+      // Prune + limit
+      while (
+        recentDestroys.length > 0 &&
+        now - recentDestroys[0] > DESTROY_TOTAL
+      ) {
+        recentDestroys.shift()
+      }
+      if (recentDestroys.length >= MAX_ACTIVE_DESTROYS) return
+
+      // Raycast to click position
+      const ndcX = (e.clientX / window.innerWidth) * 2 - 1
+      const ndcY = -(e.clientY / window.innerHeight) * 2 + 1
+      clickRaycaster.setFromCamera(
+        new THREE.Vector2(ndcX, ndcY),
+        camera,
+      )
+      const clickPos = new THREE.Vector3()
+      if (!clickRaycaster.ray.intersectPlane(mousePlane, clickPos))
+        return
+
+      const destroyR = DESTROY_RADIUS_FACTOR * textWorldWidth
+
+      let hitCount = 0
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const i3 = i * 3
+        const dx = positionArray[i3] - clickPos.x
+        const dy = positionArray[i3 + 1] - clickPos.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < destroyR) {
+          hitCount++
+          destroyedAt[i] = now
+          returnDelays[i] = Math.random()
+          // Explode outward
+          const angle = Math.random() * Math.PI * 2
+          const speed = 0.2 + Math.random() * 0.6
+          const falloff = 1 - dist / destroyR
+          destroyVelocities[i3] =
+            Math.cos(angle) * speed * (0.4 + falloff * 0.6)
+          destroyVelocities[i3 + 1] =
+            (Math.sin(angle) + 0.2 + Math.random() * 0.3) *
+            speed *
+            (0.4 + falloff * 0.6)
+          destroyVelocities[i3 + 2] =
+            (Math.random() - 0.5) * speed * 0.3
+          destroyOffsets[i3] = 0
+          destroyOffsets[i3 + 1] = 0
+          destroyOffsets[i3 + 2] = 0
+        }
+      }
+
+      if (hitCount > 0) {
+        recentDestroys.push(now)
+      }
+    }
+
+    function handleContextMenu(e: MouseEvent) {
+      e.preventDefault()
+      // Trigger mosquito mode
+      mosquitoActive = true
+      mosquitoStartTime = performance.now()
+    }
+
     function handleResize() {
       clearTimeout(resizeTimeout)
       resizeTimeout = window.setTimeout(() => {
@@ -639,66 +699,16 @@ export default function EmberHero() {
         renderer.setSize(w, h)
         camera.aspect = w / h
         camera.updateProjectionMatrix()
-        rebuildParticles(w, h)
-      }, 200)
+        buildParticles(w, h)
+      }, 300) as unknown as number
     }
 
-    function rebuildParticles(w: number, h: number) {
-      const sampled = sampleTextPositions('IVERSO', w, h)
-      const fovRad = (camera.fov * Math.PI) / 180
-      const visH = 2 * Math.tan(fovRad / 2) * CAMERA_Z
-      const visW = visH * camera.aspect
-
-      let minX = Infinity, maxX = -Infinity
-      for (const p of sampled) {
-        if (p.x < minX) minX = p.x
-        if (p.x > maxX) maxX = p.x
-      }
-
-      const useSampled = sampled.length >= PARTICLE_COUNT
-        ? selectRandom(sampled, PARTICLE_COUNT)
-        : sampled
-
-      const posArr = (geometry.getAttribute('position') as THREE.BufferAttribute).array as Float32Array
-
-      // Text particles
-      for (let i = 0; i < useSampled.length; i++) {
-        const x = useSampled[i].x * visW
-        const y = useSampled[i].y * visH
-        const z = (Math.random() - 0.5) * 0.6
-        posArr[i * 3] = x
-        posArr[i * 3 + 1] = y
-        posArr[i * 3 + 2] = z
-        homePositions[i * 3] = x
-        homePositions[i * 3 + 1] = y
-        homePositions[i * 3 + 2] = z
-      }
-      // Halo particles
-      for (let i = useSampled.length; i < PARTICLE_COUNT; i++) {
-        const base = useSampled[Math.floor(Math.random() * useSampled.length)]
-        const ang = Math.random() * Math.PI * 2
-        const r = Math.random() * 0.035 + 0.005
-        const x = (base.x + Math.cos(ang) * r) * visW
-        const y = (base.y + Math.sin(ang) * r) * visH
-        const z = (Math.random() - 0.5) * 1.6
-        posArr[i * 3] = x
-        posArr[i * 3 + 1] = y
-        posArr[i * 3 + 2] = z
-        homePositions[i * 3] = x
-        homePositions[i * 3 + 1] = y
-        homePositions[i * 3 + 2] = z
-      }
-      ;(geometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true
-      textWorldWidth = (maxX - minX) * visW
-      destroyedFlags.fill(0)
-      velocities.fill(0)
-      returnDelays.fill(0)
-    }
-
+    /* ── event listeners ── */
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseleave', handleMouseLeave)
     window.addEventListener('resize', handleResize)
     container.addEventListener('click', handleClick)
+    container.addEventListener('contextmenu', handleContextMenu)
 
     init()
 
@@ -710,6 +720,7 @@ export default function EmberHero() {
       window.removeEventListener('mouseleave', handleMouseLeave)
       window.removeEventListener('resize', handleResize)
       container.removeEventListener('click', handleClick)
+      container.removeEventListener('contextmenu', handleContextMenu)
       if (geometry) geometry.dispose()
       if (material) material.dispose()
       if (renderer) {
