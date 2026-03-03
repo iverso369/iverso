@@ -1,0 +1,113 @@
+/* ── Home ── */
+
+.home {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 1-2. jelenet: Hero spacer ── */
+
+.heroSpacer {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+}
+
+/* ── 3. jelenet: Demó előzetesek — stagger rise ── */
+
+.demos {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+  padding: 100px 0;
+  position: relative;
+}
+
+.demoItem {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.demos.visible .demoItem {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.demos.visible .demoItem:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+.demos.visible .demoItem:nth-child(3) {
+  transition-delay: 0.24s;
+}
+
+.demos.visible .demoItem:nth-child(4) {
+  transition-delay: 0.36s;
+}
+
+/* ── 4. jelenet: Folyamat — node sequence ── */
+
+.processScene {
+  padding: 100px 0;
+}
+
+/* ── 5. jelenet: Építős — block drop ── */
+
+.builderScene {
+  padding: 100px 0;
+}
+
+/* ── 6. jelenet: CTA — glow reveal + bubble pop ── */
+
+.ctaScene {
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.ctaScene.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── 7. jelenet: Footer — simple fade ── */
+
+.footerScene {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.footerScene.visible {
+  opacity: 1;
+}
+
+/* ── responsive ── */
+
+@media (max-width: 768px) {
+  .demos {
+    gap: 80px;
+    padding: 72px 0;
+  }
+
+  .processScene {
+    padding: 72px 0;
+  }
+
+  .builderScene {
+    padding: 72px 0;
+  }
+}
+
+/* ── reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .demoItem,
+  .ctaScene,
+  .footerScene {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
