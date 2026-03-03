@@ -1,0 +1,164 @@
+/* ── KpiCard ── */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: #111114;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── size variants ── */
+
+.small {
+  padding: 16px 14px;
+  min-width: 120px;
+}
+
+.large {
+  padding: 24px 20px;
+  min-width: 160px;
+}
+
+/* ── donut ring ── */
+
+.donut {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.small .donut {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 4px;
+}
+
+.large .donut {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 8px;
+}
+
+.donutCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.donutPercent {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text);
+  z-index: 1;
+}
+
+.small .donutPercent {
+  font-size: 12px;
+}
+
+.large .donutPercent {
+  font-size: 15px;
+}
+
+/* ── icon ── */
+
+.icon {
+  color: var(--accent);
+  line-height: 0;
+}
+
+.small .icon {
+  font-size: 18px;
+}
+
+.large .icon {
+  font-size: 24px;
+}
+
+.icon svg {
+  width: 1em;
+  height: 1em;
+  stroke-width: 1.5px;
+}
+
+/* ── value (main number) ── */
+
+.value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.small .value {
+  font-size: 22px;
+}
+
+.large .value {
+  font-size: 32px;
+}
+
+/* ── label ── */
+
+.label {
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.small .label {
+  font-size: 11px;
+}
+
+.large .label {
+  font-size: 13px;
+}
+
+/* ── change indicator ── */
+
+.change {
+  font-family: var(--font-body);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.small .change {
+  font-size: 11px;
+}
+
+.large .change {
+  font-size: 13px;
+}
+
+.positive {
+  color: #34D399;
+}
+
+.negative {
+  color: #F87171;
+}
+
+/* ── reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
