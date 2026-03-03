@@ -31,6 +31,14 @@
       "greeting": "Szia! Miben segíthetek?",
       "userQuestion": "Mik az árak?",
       "botAnswer": "Az árainkat megtalálod a weboldalunkon, de szívesen segítek személyre szabott ajánlattal is!"
+    },
+    "automation": {
+      "title": "Automatizáció",
+      "description": "Hogy ne te csináld amit a gép is tud",
+      "node1": "Email",
+      "node2": "Feldolgozás",
+      "node3": "Adatbázis",
+      "node4": "Értesítés"
     }
   },
   "common": {

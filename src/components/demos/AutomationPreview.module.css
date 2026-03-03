@@ -1,0 +1,201 @@
+/* ── AutomationPreview ── */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ── title + description ── */
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.description {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: -12px;
+}
+
+/* ── MiniWebsite wrapper ── */
+
+.browser {
+  width: 100%;
+}
+
+/* ── workflow layout ── */
+
+.workflow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  transition: opacity 0.35s ease;
+}
+
+.fading {
+  opacity: 0;
+}
+
+/* ── node group (node + connector pair) ── */
+
+.nodeGroup {
+  display: flex;
+  align-items: center;
+}
+
+/* ── connectors ── */
+
+.connector {
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.connectorHorizontal {
+  width: 40px;
+  height: 24px;
+  margin: 0 2px;
+}
+
+.connectorVertical {
+  width: 24px;
+  height: 32px;
+  margin: 2px 0;
+}
+
+.connectorLine {
+  stroke: rgba(136, 136, 154, 0.25);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.connectorArrow {
+  stroke: rgba(136, 136, 154, 0.25);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+/* active connector */
+
+.connectorActive .connectorLine {
+  stroke: var(--accent);
+  transition: stroke 0.4s ease;
+}
+
+.connectorActive .connectorArrow {
+  stroke: var(--accent);
+  transition: stroke 0.4s ease;
+}
+
+/* ── flow dot (traveling glow) ── */
+
+.flowDot {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 6px rgba(247, 127, 10, 0.6));
+  opacity: 0;
+}
+
+.connectorHorizontal.connectorActive .flowDot {
+  opacity: 1;
+  animation: flowHorizontal 0.8s ease-out forwards;
+}
+
+.connectorVertical.connectorActive .flowDot {
+  opacity: 1;
+  animation: flowVertical 0.8s ease-out forwards;
+}
+
+/* ── "Tovább →" link ── */
+
+.moreLink {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--accent);
+  transition: opacity 0.2s;
+}
+
+.moreLink:hover {
+  opacity: 0.8;
+}
+
+/* ── responsive ── */
+
+@media (max-width: 768px) {
+  .section {
+    gap: 20px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .workflow {
+    flex-direction: column;
+    padding: 24px 16px;
+  }
+
+  .nodeGroup {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* ── animations ── */
+
+@keyframes flowHorizontal {
+  0% {
+    cx: 0;
+    opacity: 1;
+  }
+  100% {
+    cx: 42;
+    opacity: 0;
+  }
+}
+
+@keyframes flowVertical {
+  0% {
+    cy: 0;
+    opacity: 1;
+  }
+  100% {
+    cy: 34;
+    opacity: 0;
+  }
+}
+
+/* ── reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .workflow {
+    transition: none;
+  }
+
+  .connectorActive .connectorLine,
+  .connectorActive .connectorArrow {
+    transition: none;
+  }
+
+  .connectorHorizontal.connectorActive .flowDot,
+  .connectorVertical.connectorActive .flowDot {
+    animation: none;
+    opacity: 0;
+  }
+}

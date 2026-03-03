@@ -31,6 +31,14 @@
       "greeting": "Hallo! Wie kann ich helfen?",
       "userQuestion": "Was kosten Ihre Leistungen?",
       "botAnswer": "Unsere Preise findest du auf der Webseite, aber ich helfe dir gerne auch mit einem individuellen Angebot!"
+    },
+    "automation": {
+      "title": "Automatisierung",
+      "description": "Damit du nicht machst, was die Maschine kann",
+      "node1": "E-Mail",
+      "node2": "Verarbeitung",
+      "node3": "Datenbank",
+      "node4": "Benachrichtigung"
     }
   },
   "common": {
