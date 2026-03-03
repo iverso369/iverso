@@ -31,6 +31,14 @@
       "greeting": "Hi! How can I help?",
       "userQuestion": "What are your prices?",
       "botAnswer": "You can find our prices on the website, but I'm happy to help with a custom quote too!"
+    },
+    "automation": {
+      "title": "Automation",
+      "description": "So you don't do what machines can",
+      "node1": "Email",
+      "node2": "Processing",
+      "node3": "Database",
+      "node4": "Notification"
     }
   },
   "common": {
