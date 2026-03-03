@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import CustomCursor from './components/ui/CustomCursor'
 
 const Home = lazy(() => import('./pages/Home'))
 const Dashboards = lazy(() => import('./pages/Dashboards'))
@@ -14,6 +15,7 @@ const Privacy = lazy(() => import('./pages/Privacy'))
 function App() {
   return (
     <BrowserRouter>
+      <CustomCursor />
       <Suspense fallback={<></>}>
         <Routes>
           <Route path="/" element={<Home />} />
