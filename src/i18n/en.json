@@ -62,6 +62,22 @@
     "title": "Let's build something",
     "dragPrompt": "Drag me in!"
   },
+  "cta": {
+    "title": "Got an idea?",
+    "subtitle": "Let's build it.",
+    "button": "Let's talk →",
+    "amelia": [
+      "Hey! Tell me, what's on your mind?",
+      "So, what are you thinking about?",
+      "Norbi sent me to work again... so here I am for you.",
+      "Hi! Got a minute? Because I do.",
+      "Curious what you'd build!"
+    ]
+  },
+  "footer": {
+    "impressum": "Legal Notice",
+    "privacy": "Privacy Policy"
+  },
   "common": {
     "more": "More →",
     "impressum": "Legal Notice",

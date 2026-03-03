@@ -62,6 +62,22 @@
     "title": "Let's build something",
     "dragPrompt": "Zieh mich rein!"
   },
+  "cta": {
+    "title": "Hast du eine Idee?",
+    "subtitle": "Lass sie uns bauen.",
+    "button": "Lass uns reden →",
+    "amelia": [
+      "Hi! Erzähl mal, was hast du vor?",
+      "Na, was geht dir durch den Kopf?",
+      "Norbi hat mich wieder arbeiten geschickt... also bin ich hier für dich.",
+      "Hallo! Hast du eine Minute? Ich schon.",
+      "Ich bin gespannt, was du bauen würdest!"
+    ]
+  },
+  "footer": {
+    "impressum": "Impressum",
+    "privacy": "Datenschutz"
+  },
   "common": {
     "more": "Weiter →",
     "impressum": "Impressum",
