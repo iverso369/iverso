@@ -1,18 +1,17 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import ChatBubble from '../ui/ChatBubble'
-import MiniWebsite from '../ui/MiniWebsite'
 import styles from './AiChatPreview.module.css'
 
 /*
-  Animation steps (desktop):
+  Animation steps (per panel):
   0 — empty
   1 — bot typing
   2 — bot greeting shown
-  3 — user question shown
+  3 — user question shown (slides in from right)
   4 — bot typing (answer)
   5 — bot answer shown
-  then pause → fade → reset to 0
+  then pause → fade → reset to 0 → loop
 */
 
 const STEP_DELAYS = [
@@ -24,27 +23,61 @@ const STEP_DELAYS = [
   3000,  // 5→0  hold, then loop reset
 ] as const
 
-export default function AiChatPreview() {
+/* ── SVG icons (thin line, 1.5px stroke) ── */
+
+function GlobeIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M2 12h20" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </svg>
+  )
+}
+
+function BuildingIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="2" width="16" height="20" rx="2" />
+      <path d="M9 22v-4h6v4" />
+      <path d="M8 6h.01" />
+      <path d="M16 6h.01" />
+      <path d="M12 6h.01" />
+      <path d="M12 10h.01" />
+      <path d="M12 14h.01" />
+      <path d="M16 10h.01" />
+      <path d="M16 14h.01" />
+      <path d="M8 10h.01" />
+      <path d="M8 14h.01" />
+    </svg>
+  )
+}
+
+function SendIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 2L11 13" />
+      <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+    </svg>
+  )
+}
+
+/* ── ChatPanel — one chat widget with its own animation ── */
+
+interface ChatPanelProps {
+  mode: 'ext' | 'int'
+  staggerDelay: number
+}
+
+function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
   const { t } = useTranslation()
   const wrapperRef = useRef<HTMLDivElement>(null)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const [isDesktop, setIsDesktop] = useState(false)
   const [inView, setInView] = useState(false)
   const [step, setStep] = useState(0)
   const [fading, setFading] = useState(false)
   const [started, setStarted] = useState(false)
-
-  // Detect desktop
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 769px)')
-    setIsDesktop(mq.matches)
-    function handler(e: MediaQueryListEvent) {
-      setIsDesktop(e.matches)
-    }
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
 
   // Detect in-view
   useEffect(() => {
@@ -62,22 +95,20 @@ export default function AiChatPreview() {
   // Advance to next step
   const advance = useCallback((currentStep: number) => {
     if (currentStep >= 5) {
-      if (isDesktop) {
+      timeoutRef.current = setTimeout(() => {
+        setFading(true)
         timeoutRef.current = setTimeout(() => {
-          setFading(true)
-          timeoutRef.current = setTimeout(() => {
-            setStep(0)
-            setFading(false)
-          }, 400)
-        }, STEP_DELAYS[5])
-      }
+          setStep(0)
+          setFading(false)
+        }, 400)
+      }, STEP_DELAYS[5])
       return
     }
 
     timeoutRef.current = setTimeout(() => {
       setStep(currentStep + 1)
     }, STEP_DELAYS[currentStep])
-  }, [isDesktop])
+  }, [])
 
   // Drive the sequence when step changes
   useEffect(() => {
@@ -88,7 +119,7 @@ export default function AiChatPreview() {
     }
   }, [step, started, advance])
 
-  // Start when in view
+  // Start when in view (with stagger delay)
   useEffect(() => {
     if (!inView) return
 
@@ -103,44 +134,88 @@ export default function AiChatPreview() {
     }
 
     if (!started) {
-      setStarted(true)
+      const timer = setTimeout(() => setStarted(true), staggerDelay)
+      return () => clearTimeout(timer)
     }
-  }, [inView, started])
+  }, [inView, started, staggerDelay])
+
+  const prefix = `demos.ai.${mode}`
 
   return (
-    <div ref={wrapperRef} className={styles.wrapper}>
-      <MiniWebsite className={styles.browser}>
-        <div className={`${styles.chatArea} ${fading ? styles.fading : ''}`}>
-          {/* Slot 0: bot greeting (typing → message) */}
-          <div className={step >= 1 ? styles.msgVisible : styles.msgHidden}>
-            <div className={styles.messageStack}>
-              <div className={step >= 1 && step < 2 ? styles.stackShow : styles.stackHide}>
-                <ChatBubble role="bot" typing />
-              </div>
-              <div className={step >= 2 ? styles.stackShow : styles.stackHide}>
-                <ChatBubble role="bot" message={t('demos.ai.greeting')} />
-              </div>
+    <div ref={wrapperRef} className={styles.widget}>
+      {/* Widget header */}
+      <div className={styles.widgetHeader}>
+        <span className={styles.statusDot} />
+        <span className={styles.botName}>{t('demos.ai.botName')}</span>
+        <span className={styles.statusText}>{t('demos.ai.statusOnline')}</span>
+      </div>
+
+      {/* Messages area */}
+      <div className={`${styles.messages} ${fading ? styles.fading : ''}`}>
+        {/* Slot 0: bot greeting (typing → message) */}
+        <div className={step >= 1 ? styles.msgVisible : styles.msgHidden}>
+          <div className={styles.messageStack}>
+            <div className={step >= 1 && step < 2 ? styles.stackShow : styles.stackHide}>
+              <ChatBubble role="bot" typing />
             </div>
-          </div>
-
-          {/* Slot 1: user question */}
-          <div className={step >= 3 ? styles.msgVisible : styles.msgHidden}>
-            <ChatBubble role="user" message={t('demos.ai.userQuestion')} />
-          </div>
-
-          {/* Slot 2: bot answer (typing → message) */}
-          <div className={step >= 4 ? styles.msgVisible : styles.msgHidden}>
-            <div className={styles.messageStack}>
-              <div className={step >= 4 && step < 5 ? styles.stackShow : styles.stackHide}>
-                <ChatBubble role="bot" typing />
-              </div>
-              <div className={step >= 5 ? styles.stackShow : styles.stackHide}>
-                <ChatBubble role="bot" message={t('demos.ai.botAnswer')} />
-              </div>
+            <div className={step >= 2 ? styles.stackShow : styles.stackHide}>
+              <ChatBubble role="bot" message={t(`${prefix}.greeting`)} />
             </div>
           </div>
         </div>
-      </MiniWebsite>
+
+        {/* Slot 1: user question — slides from right */}
+        <div className={step >= 3 ? styles.userMsgVisible : styles.userMsgHidden}>
+          <ChatBubble role="user" message={t(`${prefix}.userQuestion`)} />
+        </div>
+
+        {/* Slot 2: bot answer (typing → message) */}
+        <div className={step >= 4 ? styles.msgVisible : styles.msgHidden}>
+          <div className={styles.messageStack}>
+            <div className={step >= 4 && step < 5 ? styles.stackShow : styles.stackHide}>
+              <ChatBubble role="bot" typing />
+            </div>
+            <div className={step >= 5 ? styles.stackShow : styles.stackHide}>
+              <ChatBubble role="bot" message={t(`${prefix}.botAnswer`)} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Decorative input bar */}
+      <div className={styles.widgetInput}>
+        <span className={styles.inputPlaceholder}>{t('demos.ai.inputPlaceholder')}</span>
+        <span className={styles.sendButton}>
+          <SendIcon />
+        </span>
+      </div>
+    </div>
+  )
+}
+
+/* ── Main component — two panels side by side ── */
+
+export default function AiChatPreview() {
+  const { t } = useTranslation()
+
+  return (
+    <div className={styles.wrapper}>
+      <div className={styles.grid}>
+        <div className={styles.column}>
+          <div className={styles.badge}>
+            <GlobeIcon />
+            <span>{t('demos.ai.extLabel')}</span>
+          </div>
+          <ChatPanel mode="ext" staggerDelay={0} />
+        </div>
+        <div className={styles.column}>
+          <div className={styles.badge}>
+            <BuildingIcon />
+            <span>{t('demos.ai.intLabel')}</span>
+          </div>
+          <ChatPanel mode="int" staggerDelay={600} />
+        </div>
+      </div>
     </div>
   )
 }

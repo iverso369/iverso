@@ -4,23 +4,96 @@
   width: 100%;
 }
 
-/* ── MiniWebsite wrapper ── */
+/* ── two-column grid ── */
 
-.browser {
-  width: 100%;
+.grid {
+  display: flex;
+  gap: 20px;
 }
 
-/* ── chat area inside browser ── */
+.column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-.chatArea {
+/* ── context badge ── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.badge svg {
+  flex-shrink: 0;
+}
+
+/* ── chat widget ── */
+
+.widget {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111114;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── widget header ── */
+
+.widgetHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #151518;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #28C840;
+  flex-shrink: 0;
+}
+
+.botName {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.statusText {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+/* ── messages area ── */
+
+.messages {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: 12px;
-  padding: 20px 16px;
-  height: 300px;
-  width: 100%;
-  min-width: 0;
+  gap: 10px;
+  padding: 16px 12px;
+  height: 260px;
   overflow: hidden;
   transition: opacity 0.35s ease;
 }
@@ -32,7 +105,9 @@
 /* ── instant hide during fade-reset (prevents flash) ── */
 
 .fading .msgVisible,
-.fading .msgHidden {
+.fading .msgHidden,
+.fading .userMsgVisible,
+.fading .userMsgHidden {
   transition: none;
   opacity: 0;
 }
@@ -43,7 +118,7 @@
   opacity: 0;
 }
 
-/* ── message slot visibility ── */
+/* ── bot message slot visibility (slide up) ── */
 
 .msgVisible {
   display: flex;
@@ -60,6 +135,27 @@
   flex-shrink: 0;
   opacity: 0;
   transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+/* ── user message slot visibility (slide from right) ── */
+
+.userMsgVisible {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.userMsgHidden {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: translateX(20px);
   transition: opacity 0.4s ease, transform 0.4s ease;
   pointer-events: none;
 }
@@ -86,15 +182,49 @@
   pointer-events: none;
 }
 
+/* ── decorative input bar ── */
+
+.widgetInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #151518;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.inputPlaceholder {
+  flex: 1;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.sendButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--text);
+  flex-shrink: 0;
+}
+
 /* ── reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
-  .chatArea {
+  .messages {
     transition: none;
   }
 
   .msgVisible,
-  .msgHidden {
+  .msgHidden,
+  .userMsgVisible,
+  .userMsgHidden {
     transition: none;
   }
 
