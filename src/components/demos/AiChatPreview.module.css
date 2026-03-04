@@ -102,6 +102,10 @@
   display: none;
 }
 
+.spacer {
+  flex: 1;
+}
+
 .fading {
   opacity: 0;
 }
