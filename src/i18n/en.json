@@ -35,7 +35,10 @@
       "ext": {
         "greeting": "Ask us anything!",
         "userQuestion": "What are your Saturday hours?",
-        "botAnswer": "We're open Saturday 10 AM – 10 PM. Reservations: smith-co.com/booking"
+        "botAnswer": "We're open Saturday 10 AM – 10 PM.",
+        "actionBook": "Book a table",
+        "actionCall": "+1 555 0123",
+        "actionHours": "Opening hours"
       },
       "int": {
         "greeting": "Hi! What should we look at?",

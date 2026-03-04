@@ -35,7 +35,10 @@
       "ext": {
         "greeting": "Kérdezz bármit rólunk!",
         "userQuestion": "Mikor nyittok szombaton?",
-        "botAnswer": "Szombaton 10:00–22:00 között vagyunk nyitva. Asztalfoglalás: kovacs-kft.hu/foglalas"
+        "botAnswer": "Szombaton 10:00–22:00 között vagyunk nyitva.",
+        "actionBook": "Asztalfoglalás",
+        "actionCall": "+36 1 234 5678",
+        "actionHours": "Nyitvatartás"
       },
       "int": {
         "greeting": "Szia! Mit nézzünk?",

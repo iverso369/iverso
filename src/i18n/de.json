@@ -35,7 +35,10 @@
       "ext": {
         "greeting": "Frag uns einfach!",
         "userQuestion": "Wann haben Sie samstags geöffnet?",
-        "botAnswer": "Samstags sind wir von 10:00 bis 22:00 Uhr geöffnet. Reservierung: mueller-gmbh.de/reservierung"
+        "botAnswer": "Samstags sind wir von 10:00 bis 22:00 Uhr geöffnet.",
+        "actionBook": "Tisch reservieren",
+        "actionCall": "+49 30 1234567",
+        "actionHours": "Öffnungszeiten"
       },
       "int": {
         "greeting": "Hallo! Was schauen wir uns an?",
