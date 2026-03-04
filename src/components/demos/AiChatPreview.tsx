@@ -171,16 +171,15 @@ function LinkIcon() {
 
 interface ChatPanelProps {
   mode: 'ext' | 'int'
-  staggerDelay: number
+  active: boolean
+  onComplete: () => void
 }
 
-function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
+function ChatPanel({ mode, active, onComplete }: ChatPanelProps) {
   const { t } = useTranslation()
-  const wrapperRef = useRef<HTMLDivElement>(null)
   const messagesRef = useRef<HTMLDivElement>(null)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const [inView, setInView] = useState(false)
   const [step, setStep] = useState(0)
   const [fading, setFading] = useState(false)
   const [started, setStarted] = useState(false)
@@ -189,31 +188,20 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
   const delays = mode === 'ext' ? EXT_DELAYS : INT_DELAYS
   const lastStep = totalSteps - 1
 
-  // Detect in-view
-  useEffect(() => {
-    const el = wrapperRef.current
-    if (!el) return
-    const io = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.15 }
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-
   // Advance steps
   const advance = useCallback((currentStep: number) => {
     if (currentStep >= lastStep) {
-      // Final hold → fade → reset → loop
+      // Final hold → fade → reset → notify parent
       timeoutRef.current = setTimeout(() => {
         setFading(true)
         timeoutRef.current = setTimeout(() => {
           setStep(0)
           setFading(false)
-          // Reset scroll to top for next loop
+          setStarted(false)
           if (messagesRef.current) {
             messagesRef.current.scrollTop = 0
           }
+          onComplete()
         }, 400)
       }, delays[currentStep] || 4000)
       return
@@ -222,7 +210,7 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
     timeoutRef.current = setTimeout(() => {
       setStep(currentStep + 1)
     }, delays[currentStep] || 1000)
-  }, [lastStep, delays])
+  }, [lastStep, delays, onComplete])
 
   // Drive sequence
   useEffect(() => {
@@ -242,9 +230,9 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
     })
   }, [step])
 
-  // Start when in view
+  // Start when active becomes true
   useEffect(() => {
-    if (!inView) return
+    if (!active || started) return
 
     const prefersReduced = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
@@ -252,20 +240,17 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
 
     if (prefersReduced) {
       setStep(lastStep)
-      setStarted(false)
       return
     }
 
-    if (!started) {
-      const timer = setTimeout(() => setStarted(true), staggerDelay)
-      return () => clearTimeout(timer)
-    }
-  }, [inView, started, staggerDelay, lastStep])
+    const timer = setTimeout(() => setStarted(true), 300)
+    return () => clearTimeout(timer)
+  }, [active, started, lastStep])
 
   const prefix = `demos.ai.${mode}`
 
   return (
-    <div ref={wrapperRef} className={styles.widget}>
+    <div className={styles.widget}>
       {/* Widget header */}
       <div className={styles.widgetHeader}>
         <span className={styles.statusDot} />
@@ -337,23 +322,55 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
 
 export default function AiChatPreview() {
   const { t } = useTranslation()
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const [inView, setInView] = useState(false)
+  const [activePanel, setActivePanel] = useState<'ext' | 'int'>('ext')
+
+  // Detect in-view (once)
+  useEffect(() => {
+    const el = wrapperRef.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true)
+          io.disconnect()
+        }
+      },
+      { threshold: 0.15 }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
+  const handleComplete = useCallback(() => {
+    setActivePanel(prev => prev === 'ext' ? 'int' : 'ext')
+  }, [])
 
   return (
-    <div className={styles.wrapper}>
+    <div ref={wrapperRef} className={styles.wrapper}>
       <div className={styles.grid}>
         <div className={styles.column}>
           <div className={styles.badge}>
             <GlobeIcon />
             <span>{t('demos.ai.extLabel')}</span>
           </div>
-          <ChatPanel mode="ext" staggerDelay={0} />
+          <ChatPanel
+            mode="ext"
+            active={inView && activePanel === 'ext'}
+            onComplete={handleComplete}
+          />
         </div>
         <div className={styles.column}>
           <div className={styles.badge}>
             <BuildingIcon />
             <span>{t('demos.ai.intLabel')}</span>
           </div>
-          <ChatPanel mode="int" staggerDelay={600} />
+          <ChatPanel
+            mode="int"
+            active={inView && activePanel === 'int'}
+            onComplete={handleComplete}
+          />
         </div>
       </div>
     </div>
