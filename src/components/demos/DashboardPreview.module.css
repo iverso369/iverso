@@ -13,11 +13,16 @@
 .layout {
   display: flex;
   min-height: 340px;
-  transition: opacity 0.4s ease;
 }
 
-.fading {
+/* ── Content fade (only the main area, not sidebar) ── */
+
+.contentFading .main {
   opacity: 0;
+}
+
+.main {
+  transition: opacity 0.35s ease;
 }
 
 /* ── Sidebar ── */
@@ -276,7 +281,7 @@
 /* ── Reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
-  .layout {
+  .main {
     transition: none;
   }
   .bar {

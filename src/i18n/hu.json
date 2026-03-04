@@ -29,34 +29,56 @@
       "tabWeek": "Hét",
       "tabMonth": "Hónap",
       "tabYear": "Év",
-      "revenueLabel": "Bevétel",
-      "revenueValue": "9,2M Ft",
-      "clientsLabel": "Ügyfelek",
-      "clientsValue": "847",
-      "conversionLabel": "Konverzió",
-      "conversionValue": "68%",
-      "revenueChange": "+12.5%",
-      "clientsChange": "+3.2%",
-      "conversionChange": "-1.8%",
-      "colClient": "Ügyfél",
-      "colProject": "Projekt",
-      "colStatus": "Státusz",
-      "colValue": "Érték",
-      "statusActive": "Aktív",
-      "statusProgress": "Folyamatban",
-      "statusPlanning": "Tervezés",
-      "row1Client": "Nagy Építő Bt",
-      "row1Project": "Dashboard",
-      "row1Value": "1,2M Ft",
-      "row2Client": "Szabó és Társa",
-      "row2Project": "Chatbot",
-      "row2Value": "680k Ft",
-      "row3Client": "Molnár Szerviz",
-      "row3Project": "Weboldal",
-      "row3Value": "940k Ft",
-      "row4Client": "Tóth Vendéglátó",
-      "row4Project": "Automatizáció",
-      "row4Value": "1,5M Ft"
+      "p0": {
+        "kpi1Label": "Bevétel", "kpi1Value": "9,2M Ft", "kpi1Change": "+12.5%",
+        "kpi2Label": "Ügyfelek", "kpi2Value": "847", "kpi2Change": "+3.2%",
+        "kpi3Label": "Konverzió", "kpi3Value": "68%", "kpi3Change": "-1.8%",
+        "col1": "Ügyfél", "col2": "Projekt", "col3": "Státusz", "col4": "Érték",
+        "r1c1": "Nagy Építő Bt", "r1c2": "Dashboard", "r1c3": "Aktív", "r1c4": "1,2M Ft",
+        "r2c1": "Szabó és Társa", "r2c2": "Chatbot", "r2c3": "Aktív", "r2c4": "680k Ft",
+        "r3c1": "Molnár Szerviz", "r3c2": "Weboldal", "r3c3": "Folyamatban", "r3c4": "940k Ft",
+        "r4c1": "Tóth Vendéglátó", "r4c2": "Automatizáció", "r4c3": "Tervezés", "r4c4": "1,5M Ft"
+      },
+      "p1": {
+        "kpi1Label": "Összes ügyfél", "kpi1Value": "847", "kpi1Change": "+3.2%",
+        "kpi2Label": "Új (hónap)", "kpi2Value": "23", "kpi2Change": "+15%",
+        "kpi3Label": "Visszatérő", "kpi3Value": "91%", "kpi3Change": "+2.1%",
+        "col1": "Név", "col2": "Cég", "col3": "Típus", "col4": "Utolsó",
+        "r1c1": "Kovács P.", "r1c2": "Nagy Építő Bt", "r1c3": "VIP", "r1c4": "Ma",
+        "r2c1": "Szabó A.", "r2c2": "Szabó és Társa", "r2c3": "Aktív", "r2c4": "Tegnap",
+        "r3c1": "Molnár É.", "r3c2": "Molnár Szerviz", "r3c3": "Aktív", "r3c4": "Feb. 28",
+        "r4c1": "Tóth G.", "r4c2": "Tóth Vendéglátó", "r4c3": "Új", "r4c4": "Márc. 1"
+      },
+      "p2": {
+        "kpi1Label": "Nyitott", "kpi1Value": "12",
+        "kpi2Label": "Befejezett", "kpi2Value": "38", "kpi2Change": "+8%",
+        "kpi3Label": "Határidős", "kpi3Value": "3",
+        "col1": "Feladat", "col2": "Felelős", "col3": "Prioritás", "col4": "Határidő",
+        "r1c1": "Landing page", "r1c2": "N.P.", "r1c3": "Magas", "r1c4": "Márc. 8",
+        "r2c1": "API integráció", "r2c2": "B.T.", "r2c3": "Közepes", "r2c4": "Márc. 12",
+        "r3c1": "Chatbot teszt", "r3c2": "N.P.", "r3c3": "Magas", "r3c4": "Márc. 6",
+        "r4c1": "Árajánlat", "r4c2": "B.T.", "r4c3": "Alacsony", "r4c4": "Márc. 15"
+      },
+      "p3": {
+        "kpi1Label": "Ezen a héten", "kpi1Value": "5",
+        "kpi2Label": "Találkozó", "kpi2Value": "3",
+        "kpi3Label": "Határidő", "kpi3Value": "2",
+        "col1": "Esemény", "col2": "Dátum", "col3": "Idő", "col4": "Típus",
+        "r1c1": "Kickoff meeting", "r1c2": "Márc. 5", "r1c3": "10:00", "r1c4": "Meeting",
+        "r2c1": "Design review", "r2c2": "Márc. 6", "r2c3": "14:00", "r2c4": "Meeting",
+        "r3c1": "Sprint záró", "r3c2": "Márc. 7", "r3c3": "16:00", "r3c4": "Meeting",
+        "r4c1": "API deadline", "r4c2": "Márc. 12", "r4c3": "—", "r4c4": "Határidő"
+      },
+      "p4": {
+        "kpi1Label": "Havi bevétel", "kpi1Value": "9,2M Ft", "kpi1Change": "+12.5%",
+        "kpi2Label": "Növekedés", "kpi2Value": "24%", "kpi2Change": "+5.1%",
+        "kpi3Label": "Átl. projekt", "kpi3Value": "2,1M Ft", "kpi3Change": "+3.8%",
+        "col1": "Riport", "col2": "Időszak", "col3": "Státusz", "col4": "Típus",
+        "r1c1": "Havi összesítő", "r1c2": "Február", "r1c3": "Kész", "r1c4": "PDF",
+        "r2c1": "Ügyfél riport", "r2c2": "Q1 2026", "r2c3": "Folyamatban", "r2c4": "Excel",
+        "r3c1": "Pénzügyi kim.", "r3c2": "Február", "r3c3": "Kész", "r3c4": "PDF",
+        "r4c1": "Éves előrejelzés", "r4c2": "2026", "r4c3": "Tervezés", "r4c4": "—"
+      }
     },
     "ai": {
       "title": "AI megoldások",
@@ -68,16 +90,24 @@
       "intLabel": "Cégen belül",
       "ext": {
         "greeting": "Kérdezz bármit rólunk!",
-        "userQuestion": "Mikor nyittok szombaton?",
-        "botAnswer": "Szombaton 10:00–22:00 között vagyunk nyitva. Foglaljak asztalt?",
+        "q1": "Mikor nyittok szombaton?",
+        "a1": "Szombaton 10:00–22:00 között vagyunk nyitva. Foglaljak asztalt?",
         "actionBook": "Asztalfoglalás",
         "actionCall": "+36 1 234 5678",
-        "actionHours": "Nyitvatartás"
+        "actionHours": "Nyitvatartás",
+        "q2": "Igen, szombat este 7-re, 4 főre",
+        "a2": "Rendben! Milyen névre foglaljam?",
+        "q3": "Kovács Márton",
+        "a3": "Kész! Kovács Márton, szo. 19:00, 4 fő. Várjuk!"
       },
       "int": {
         "greeting": "Szia! Mit nézzünk?",
-        "userQuestion": "Hány rendelés volt tegnap?",
-        "botAnswer": "Tegnap 47 rendelés érkezett, 12%-kal több mint egy héttel ezelőtt."
+        "q1": "Hány rendelés volt tegnap?",
+        "a1": "Tegnap 47 rendelés érkezett, 12%-kal több mint egy héttel ezelőtt.",
+        "q2": "Melyik volt a legnagyobb?",
+        "a2": "Nagy Építő Bt — 3 tétel, összesen 847.000 Ft.",
+        "q3": "Küldj nekik egy köszönő emailt",
+        "a3": "Elküldtem! Tárgy: 'Köszönjük a rendelést' — Kovács Péternek."
       }
     },
     "automation": {
