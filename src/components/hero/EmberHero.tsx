@@ -5,7 +5,7 @@ import styles from './EmberHero.module.css'
 /* ========================================
    CONSTANTS
    ======================================== */
-const PARTICLE_COUNT = 60000
+const PARTICLE_COUNT = 72000
 const CAMERA_Z = 35
 const CAMERA_FOV = 75
 
@@ -593,7 +593,7 @@ export default function EmberHero() {
     }
     function handleMouseLeave() { mouseActive = false }
 
-    function doDestroy(cx: number, cy: number) {
+    function doDestroy(cx: number, cy: number, radiusMul = 1.0) {
       if (!camera || !geometry || !material) return
       const now = performance.now()
       while (recentDestroys.length > 0 && now - recentDestroys[0] > DESTROY_TOTAL) recentDestroys.shift()
@@ -604,7 +604,7 @@ export default function EmberHero() {
       const clickPos = new THREE.Vector3()
       if (!clickRC.ray.intersectPlane(mousePlane, clickPos)) return
 
-      const dR = DESTROY_RADIUS_FACTOR * textWorldWidth
+      const dR = DESTROY_RADIUS_FACTOR * textWorldWidth * radiusMul
       let hitCount = 0
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         const i3 = i * 3
@@ -619,28 +619,28 @@ export default function EmberHero() {
         // Squared probability falloff — no sharp boundary
         const normDist = dist / effectiveR
         const hitChance = (1 - normDist * normDist)
-        // Near-center survival: particles close to cursor have up to 50% chance to stay
-        const centerSurvival = 0.5 * (1 - normDist) * (1 - normDist)
-        if (Math.random() > hitChance || Math.random() < centerSurvival) continue
+        if (Math.random() > hitChance) continue
+
+        // Skip particles already flying (rapid clicks don't restart them)
+        if (destroyedAt[i] > 0) continue
 
         hitCount++
         destroyedAt[i] = now
         returnDelays[i] = Math.random()
 
-        // Radial outward from click + 30% random jitter
-        const rdist = dist || 0.001
-        const nx = dx / rdist
-        const ny = dy / rdist
-        const jitterAngle = Math.random() * Math.PI * 2
-        const vx = nx * 0.7 + Math.cos(jitterAngle) * 0.3
-        const vy = ny * 0.7 + Math.sin(jitterAngle) * 0.3
+        // 90% fully random direction, 10% radial outward
+        const randomAngle = Math.random() * Math.PI * 2
+        const radialDist = dist || 0.001
+        const radX = dx / radialDist
+        const radY = dy / radialDist
+        const vx = Math.cos(randomAngle) * 0.9 + radX * 0.1
+        const vy = Math.sin(randomAngle) * 0.9 + radY * 0.1
         const vlen = Math.sqrt(vx * vx + vy * vy) || 1
 
-        const speed = 0.2 + Math.random() * 0.6
-        const falloff = (1 - normDist) * (1 - normDist)
-        destroyVelocities[i3] = (vx / vlen) * speed * (0.3 + falloff * 0.7)
-        destroyVelocities[i3 + 1] = (vy / vlen) * speed * (0.3 + falloff * 0.7)
-        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5
+        const speed = 0.15 + Math.random() * 0.5
+        destroyVelocities[i3] = (vx / vlen) * speed
+        destroyVelocities[i3 + 1] = (vy / vlen) * speed
+        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.3
         destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
       }
       if (hitCount > 0) recentDestroys.push(now)
@@ -654,47 +654,10 @@ export default function EmberHero() {
       doDestroy(e.clientX, e.clientY)
     }
 
-    function doDestroyAll() {
-      if (!camera || !geometry || !material) return
-      const now = performance.now()
-
-      // Calculate text center (average of home positions)
-      let cx = 0, cy = 0
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        cx += homePositions[i * 3]
-        cy += homePositions[i * 3 + 1]
-      }
-      cx /= PARTICLE_COUNT
-      cy /= PARTICLE_COUNT
-
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        const i3 = i * 3
-        destroyedAt[i] = now
-        returnDelays[i] = Math.random()
-
-        // Radial outward from text center + jitter
-        const dx = positionArray[i3] - cx
-        const dy = positionArray[i3 + 1] - cy
-        const dist = Math.sqrt(dx * dx + dy * dy) || 0.001
-        const nx = dx / dist
-        const ny = dy / dist
-        const jitterAngle = Math.random() * Math.PI * 2
-        const vx = nx * 0.7 + Math.cos(jitterAngle) * 0.3
-        const vy = ny * 0.7 + Math.sin(jitterAngle) * 0.3
-        const vlen = Math.sqrt(vx * vx + vy * vy) || 1
-
-        const speed = 0.08 + Math.random() * 0.15
-        destroyVelocities[i3] = (vx / vlen) * speed
-        destroyVelocities[i3 + 1] = (vy / vlen) * speed
-        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5
-        destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
-      }
-      recentDestroys.push(now)
-    }
-
     function handleContextMenu(e: MouseEvent) {
       e.preventDefault()
-      doDestroyAll()
+      // Right-click = same as left-click but with much bigger radius (4x)
+      doDestroy(e.clientX, e.clientY, 4.0)
     }
 
     function handleResize() {
