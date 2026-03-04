@@ -90,6 +90,7 @@
 .messages {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 10px;
   padding: 16px 12px;
   height: 320px;
@@ -100,10 +101,6 @@
 
 .messages::-webkit-scrollbar {
   display: none;
-}
-
-.spacer {
-  flex: 1;
 }
 
 .fading {
