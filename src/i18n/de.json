@@ -35,7 +35,7 @@
       "ext": {
         "greeting": "Frag uns einfach!",
         "userQuestion": "Wann haben Sie samstags geöffnet?",
-        "botAnswer": "Samstags sind wir von 10:00 bis 22:00 Uhr geöffnet.",
+        "botAnswer": "Samstags von 10:00 bis 22:00 Uhr. Soll ich einen Tisch reservieren?",
         "actionBook": "Tisch reservieren",
         "actionCall": "+49 30 1234567",
         "actionHours": "Öffnungszeiten"
