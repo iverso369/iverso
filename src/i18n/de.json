@@ -30,7 +30,8 @@
       "botName": "Assistent",
       "greeting": "Hallo! Wie kann ich helfen?",
       "userQuestion": "Was kosten Ihre Leistungen?",
-      "botAnswer": "Unsere Preise findest du auf der Webseite, aber ich helfe dir gerne auch mit einem individuellen Angebot!"
+      "botAnswer": "Unsere Preise findest du auf der Webseite, aber ich helfe dir gerne auch mit einem individuellen Angebot!",
+      "inputPlaceholder": "Nachricht schreiben..."
     },
     "automation": {
       "title": "Automatisierung",
