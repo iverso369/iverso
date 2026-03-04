@@ -550,6 +550,26 @@ export default function EmberHero() {
             destroyOffsets[i3 + 1] *= 1 - s
             destroyOffsets[i3 + 2] *= 1 - s
           }
+          // Clamp destroy offsets so particles stay within viewport
+          const halfW = storedVisW * 0.52
+          const halfH = storedVisH * 0.52
+          const homeX = homePositions[i3]
+          const homeY = homePositions[i3 + 1]
+          if (homeX + destroyOffsets[i3] > halfW) {
+            destroyOffsets[i3] = halfW - homeX
+            destroyVelocities[i3] *= -0.3
+          } else if (homeX + destroyOffsets[i3] < -halfW) {
+            destroyOffsets[i3] = -halfW - homeX
+            destroyVelocities[i3] *= -0.3
+          }
+          if (homeY + destroyOffsets[i3 + 1] > halfH) {
+            destroyOffsets[i3 + 1] = halfH - homeY
+            destroyVelocities[i3 + 1] *= -0.3
+          } else if (homeY + destroyOffsets[i3 + 1] < -halfH) {
+            destroyOffsets[i3 + 1] = -halfH - homeY
+            destroyVelocities[i3 + 1] *= -0.3
+          }
+
           tx += destroyOffsets[i3]
           ty += destroyOffsets[i3 + 1]
           tz += destroyOffsets[i3 + 2]
@@ -599,7 +619,9 @@ export default function EmberHero() {
         // Squared probability falloff — no sharp boundary
         const normDist = dist / effectiveR
         const hitChance = (1 - normDist * normDist)
-        if (Math.random() > hitChance) continue
+        // Near-center survival: particles close to cursor have up to 50% chance to stay
+        const centerSurvival = 0.5 * (1 - normDist) * (1 - normDist)
+        if (Math.random() > hitChance || Math.random() < centerSurvival) continue
 
         hitCount++
         destroyedAt[i] = now
