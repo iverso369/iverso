@@ -91,7 +91,6 @@ export default function AutomationPreview() {
   const [isDesktop, setIsDesktop] = useState(false)
   const [inView, setInView] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
-  const [fading, setFading] = useState(false)
   const [started, setStarted] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -151,31 +150,27 @@ export default function AutomationPreview() {
     }
 
     // Desktop: continuous loop
-    if (activeIndex === -1 && !fading) {
+    if (activeIndex === -1) {
       setStarted(true)
       timeoutRef.current = setTimeout(() => setActiveIndex(0), 400)
     } else if (activeIndex >= 0 && activeIndex < 3) {
       timeoutRef.current = setTimeout(() => setActiveIndex(activeIndex + 1), 1000)
     } else if (activeIndex === 3) {
-      // Hold at full, then reset
+      // Hold at full, then reset (no fade — nodes stay visible)
       timeoutRef.current = setTimeout(() => {
-        setFading(true)
-        timeoutRef.current = setTimeout(() => {
-          setActiveIndex(-1)
-          setFading(false)
-        }, 400)
+        setActiveIndex(-1)
       }, 2500)
     }
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [inView, isDesktop, activeIndex, fading, started])
+  }, [inView, isDesktop, activeIndex, started])
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
       <MiniWebsite className={styles.browser}>
-        <div className={`${styles.workflow} ${fading ? styles.fading : ''}`}>
+        <div className={styles.workflow}>
           {NODE_DEFS.map((def, i) => (
             <div key={def.key} className={styles.nodeGroup}>
               <WorkflowNode
