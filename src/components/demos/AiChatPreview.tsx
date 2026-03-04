@@ -275,7 +275,6 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
 
       {/* Messages area */}
       <div ref={messagesRef} className={`${styles.messages} ${fading ? styles.fading : ''}`}>
-        <div className={styles.spacer} />
         {slots.map((slot, i) => {
           if (slot.role === 'bot') {
             const visible = step >= slot.typingAtStep
