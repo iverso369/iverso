@@ -12,7 +12,7 @@ import styles from './DashboardPreview.module.css'
 const BAR_HEIGHTS = [45, 65, 38, 80, 55, 72, 60]
 const MENU_KEYS = ['menuOverview', 'menuClients', 'menuTasks', 'menuCalendar', 'menuReports'] as const
 const PAGE_COUNT = 5
-const HOLD_MS = 7000
+const HOLD_MS = 4000
 
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3)
