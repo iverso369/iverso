@@ -550,6 +550,26 @@ export default function EmberHero() {
             destroyOffsets[i3 + 1] *= 1 - s
             destroyOffsets[i3 + 2] *= 1 - s
           }
+          // Clamp destroy offsets so particles stay within viewport
+          const halfW = storedVisW * 0.52
+          const halfH = storedVisH * 0.52
+          const homeX = homePositions[i3]
+          const homeY = homePositions[i3 + 1]
+          if (homeX + destroyOffsets[i3] > halfW) {
+            destroyOffsets[i3] = halfW - homeX
+            destroyVelocities[i3] *= -0.3
+          } else if (homeX + destroyOffsets[i3] < -halfW) {
+            destroyOffsets[i3] = -halfW - homeX
+            destroyVelocities[i3] *= -0.3
+          }
+          if (homeY + destroyOffsets[i3 + 1] > halfH) {
+            destroyOffsets[i3 + 1] = halfH - homeY
+            destroyVelocities[i3 + 1] *= -0.3
+          } else if (homeY + destroyOffsets[i3 + 1] < -halfH) {
+            destroyOffsets[i3 + 1] = -halfH - homeY
+            destroyVelocities[i3 + 1] *= -0.3
+          }
+
           tx += destroyOffsets[i3]
           ty += destroyOffsets[i3 + 1]
           tz += destroyOffsets[i3 + 2]
@@ -618,12 +638,9 @@ export default function EmberHero() {
 
         const speed = 0.2 + Math.random() * 0.6
         const falloff = (1 - normDist) * (1 - normDist)
-        // Near-center particles get less speed so they don't fly far
-        const centerDampen = 0.3 + normDist * 0.7
-        const finalSpeed = speed * (0.3 + falloff * 0.7) * centerDampen
-        destroyVelocities[i3] = (vx / vlen) * finalSpeed
-        destroyVelocities[i3 + 1] = (vy / vlen) * finalSpeed
-        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * finalSpeed * 0.5
+        destroyVelocities[i3] = (vx / vlen) * speed * (0.3 + falloff * 0.7)
+        destroyVelocities[i3 + 1] = (vy / vlen) * speed * (0.3 + falloff * 0.7)
+        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5
         destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
       }
       if (hitCount > 0) recentDestroys.push(now)
