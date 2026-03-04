@@ -4,27 +4,6 @@ import ChatBubble from '../ui/ChatBubble'
 import MiniWebsite from '../ui/MiniWebsite'
 import styles from './AiChatPreview.module.css'
 
-/* ── Bot avatar — thin-line SVG ── */
-
-function BotIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="11" width="18" height="10" rx="2" />
-      <path d="M12 2v4" />
-      <circle cx="12" cy="6" r="2" />
-      <circle cx="8" cy="16" r="1" />
-      <circle cx="16" cy="16" r="1" />
-    </svg>
-  )
-}
-
 /*
   Animation steps (desktop):
   0 — empty
@@ -56,8 +35,6 @@ export default function AiChatPreview() {
   const [fading, setFading] = useState(false)
   const [started, setStarted] = useState(false)
 
-  const botAvatar = <BotIcon />
-
   // Detect desktop
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 769px)')
@@ -85,7 +62,6 @@ export default function AiChatPreview() {
   // Advance to next step
   const advance = useCallback((currentStep: number) => {
     if (currentStep >= 5) {
-      // Last step — fade out then reset (desktop) or stop (mobile)
       if (isDesktop) {
         timeoutRef.current = setTimeout(() => {
           setFading(true)
@@ -112,7 +88,7 @@ export default function AiChatPreview() {
     }
   }, [step, started, advance])
 
-  // Start when in view (drive effect handles all advance calls)
+  // Start when in view
   useEffect(() => {
     if (!inView) return
 
@@ -134,89 +110,33 @@ export default function AiChatPreview() {
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
       <MiniWebsite className={styles.browser}>
-        <div className={styles.chatWindow}>
-          {/* ── chat header ── */}
-          <div className={styles.chatHeader}>
-            <div className={styles.headerAvatar}>{botAvatar}</div>
-            <div className={styles.headerInfo}>
-              <span className={styles.headerName}>{t('demos.ai.botName')}</span>
-              <span className={styles.headerStatus}>
-                <span className={styles.statusDot} />
-                Online
-              </span>
-            </div>
-          </div>
-
-          {/* ── messages ── */}
-          <div className={`${styles.chatArea} ${fading ? styles.fading : ''}`}>
-            {/* Slot 0: bot greeting (typing at step 1, message at step >= 2) */}
+        <div className={`${styles.chatArea} ${fading ? styles.fading : ''}`}>
+          {/* Slot 0: bot greeting (typing → message) */}
           <div className={step >= 1 ? styles.msgVisible : styles.msgHidden}>
             <div className={styles.messageStack}>
               <div className={step >= 1 && step < 2 ? styles.stackShow : styles.stackHide}>
-                <ChatBubble
-                  role="bot"
-                  typing
-                  name={t('demos.ai.botName')}
-                  avatar={botAvatar}
-                />
+                <ChatBubble role="bot" typing />
               </div>
               <div className={step >= 2 ? styles.stackShow : styles.stackHide}>
-                <ChatBubble
-                  role="bot"
-                  message={t('demos.ai.greeting')}
-                  name={t('demos.ai.botName')}
-                  avatar={botAvatar}
-                />
+                <ChatBubble role="bot" message={t('demos.ai.greeting')} />
               </div>
             </div>
           </div>
 
           {/* Slot 1: user question */}
           <div className={step >= 3 ? styles.msgVisible : styles.msgHidden}>
-            <ChatBubble
-              role="user"
-              message={t('demos.ai.userQuestion')}
-            />
+            <ChatBubble role="user" message={t('demos.ai.userQuestion')} />
           </div>
 
-          {/* Slot 2: bot answer (typing at step 4, message at step >= 5) */}
+          {/* Slot 2: bot answer (typing → message) */}
           <div className={step >= 4 ? styles.msgVisible : styles.msgHidden}>
             <div className={styles.messageStack}>
               <div className={step >= 4 && step < 5 ? styles.stackShow : styles.stackHide}>
-                <ChatBubble
-                  role="bot"
-                  typing
-                  name={t('demos.ai.botName')}
-                  avatar={botAvatar}
-                />
+                <ChatBubble role="bot" typing />
               </div>
               <div className={step >= 5 ? styles.stackShow : styles.stackHide}>
-                <ChatBubble
-                  role="bot"
-                  message={t('demos.ai.botAnswer')}
-                  name={t('demos.ai.botName')}
-                  avatar={botAvatar}
-                />
+                <ChatBubble role="bot" message={t('demos.ai.botAnswer')} />
               </div>
-            </div>
-          </div>
-          </div>
-
-          {/* ── input bar (decorative) ── */}
-          <div className={styles.chatInput}>
-            <span className={styles.inputField}>{t('demos.ai.inputPlaceholder')}</span>
-            <div className={styles.sendButton}>
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="22" y1="2" x2="11" y2="13" />
-                <polygon points="22 2 15 22 11 13 2 9 22 2" />
-              </svg>
             </div>
           </div>
         </div>

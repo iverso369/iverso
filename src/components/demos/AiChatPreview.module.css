@@ -10,128 +10,18 @@
   width: 100%;
 }
 
-/* ── chat window layout ── */
-
-.chatWindow {
-  display: flex;
-  flex-direction: column;
-  height: 340px;
-}
-
-/* ── chat header ── */
-
-.chatHeader {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  background: #151518;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  flex-shrink: 0;
-}
-
-.headerAvatar {
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent);
-  background: rgba(247, 127, 10, 0.08);
-  border-radius: 50%;
-}
-
-.headerAvatar svg {
-  width: 18px;
-  height: 18px;
-}
-
-.headerInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.headerName {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 13px;
-  color: var(--text);
-  line-height: 1.2;
-}
-
-.headerStatus {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.2;
-}
-
-.statusDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
 /* ── chat area inside browser ── */
 
 .chatArea {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 16px;
-  flex: 1;
-  min-height: 0;
+  padding: 20px 16px;
+  height: 300px;
   width: 100%;
   min-width: 0;
   overflow: hidden;
   transition: opacity 0.35s ease;
-}
-
-/* ── chat input bar (decorative) ── */
-
-.chatInput {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  background: #151518;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  flex-shrink: 0;
-}
-
-.inputField {
-  flex: 1;
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.4;
-}
-
-.sendButton {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  color: var(--accent);
-  cursor: default;
-  padding: 0;
-}
-
-.sendButton svg {
-  width: 18px;
-  height: 18px;
 }
 
 .fading {
@@ -179,23 +69,6 @@
   opacity: 0;
   transition: opacity 0.25s ease;
   pointer-events: none;
-}
-
-/* ── responsive ── */
-
-@media (max-width: 768px) {
-  .chatWindow {
-    height: 300px;
-  }
-
-  .chatHeader,
-  .chatInput {
-    padding: 8px 12px;
-  }
-
-  .chatArea {
-    padding: 12px;
-  }
 }
 
 /* ── reduced motion ── */
