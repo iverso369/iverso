@@ -28,9 +28,20 @@
       "title": "AI Solutions",
       "description": "Responds when you can't",
       "botName": "Assistant",
-      "greeting": "Hi! How can I help?",
-      "userQuestion": "What are your prices?",
-      "botAnswer": "You can find our prices on the website, but I'm happy to help with a custom quote too!"
+      "statusOnline": "Online",
+      "inputPlaceholder": "Type a message...",
+      "extLabel": "On your website",
+      "intLabel": "Inside your company",
+      "ext": {
+        "greeting": "Hi! How can I help?",
+        "userQuestion": "What are your prices?",
+        "botAnswer": "You can find our prices on the website, but I'm happy to help with a custom quote too!"
+      },
+      "int": {
+        "greeting": "Hi! What should we look at?",
+        "userQuestion": "How many orders came in yesterday?",
+        "botAnswer": "Yesterday there were 47 orders, 12% more than last week."
+      }
     },
     "automation": {
       "title": "Automation",

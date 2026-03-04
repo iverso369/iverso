@@ -28,9 +28,20 @@
       "title": "AI megoldások",
       "description": "Válaszol, amikor te nem érsz rá",
       "botName": "Asszisztens",
-      "greeting": "Szia! Miben segíthetek?",
-      "userQuestion": "Mik az árak?",
-      "botAnswer": "Az árainkat megtalálod a weboldalunkon, de szívesen segítek személyre szabott ajánlattal is!"
+      "statusOnline": "Online",
+      "inputPlaceholder": "Írj üzenetet...",
+      "extLabel": "Weboldalon",
+      "intLabel": "Cégen belül",
+      "ext": {
+        "greeting": "Szia! Miben segíthetek?",
+        "userQuestion": "Mik az árak?",
+        "botAnswer": "Az árainkat megtalálod a weboldalunkon, de szívesen segítek személyre szabott ajánlattal is!"
+      },
+      "int": {
+        "greeting": "Szia! Mit nézzünk?",
+        "userQuestion": "Hány rendelés volt tegnap?",
+        "botAnswer": "Tegnap 47 rendelés érkezett, 12%-kal több mint egy héttel ezelőtt."
+      }
     },
     "automation": {
       "title": "Automatizáció",
