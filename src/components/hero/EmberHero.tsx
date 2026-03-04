@@ -5,12 +5,12 @@ import styles from './EmberHero.module.css'
 /* ========================================
    CONSTANTS
    ======================================== */
-const PARTICLE_COUNT = 50000
+const PARTICLE_COUNT = 60000
 const CAMERA_Z = 35
 const CAMERA_FOV = 75
 
 // Destroy radius
-const DESTROY_RADIUS_FACTOR = 0.09
+const DESTROY_RADIUS_FACTOR = 0.135
 
 // Destroy timeline (ms) — 10s total
 const DESTROY_FLY_PHASE = 1500
@@ -18,8 +18,6 @@ const DESTROY_HOLD_PHASE = 2000
 const DESTROY_RETURN_PHASE = 5000
 const DESTROY_SNAP_PHASE = 1500
 const DESTROY_TOTAL = DESTROY_FLY_PHASE + DESTROY_HOLD_PHASE + DESTROY_RETURN_PHASE + DESTROY_SNAP_PHASE
-
-const MOSQUITO_DURATION = 3000
 
 // Scroll thresholds
 const SCROLL_DISPERSE_START = 0.15
@@ -70,7 +68,7 @@ const vertexShader = /* glsl */ `
     float pulse = sin(uTime * 1.5 + aRandom * 6.2832) * 0.15
                 + sin(uTime * 0.7 + aRandom * 3.14) * 0.08 + 1.0;
     pulse *= uBreathing;
-    float edgeSizeBoost = 1.0 + (1.0 - aEdgeDist) * 0.35;
+    float edgeSizeBoost = 1.0 + (1.0 - aEdgeDist) * 0.15;
     float hoverBoost = 1.0 + vMouseGlow * 0.15;
 
     gl_PointSize = baseSize * pulse * hoverBoost * edgeSizeBoost * (150.0 / -mvPosition.z);
@@ -94,10 +92,10 @@ const fragmentShader = /* glsl */ `
     float dist = length(center);
     if (dist > 0.5) discard;
 
-    float sharpness = mix(16.0, 8.0, vSizeClass);
+    float sharpness = mix(19.2, 9.6, vSizeClass);
     float glow = exp(-dist * sharpness);
-    float core = exp(-dist * 20.0);
-    float edgeBrightness = 1.0 + (1.0 - vEdgeDist) * 0.8;
+    float core = exp(-dist * 24.0);
+    float edgeBrightness = 1.0 + (1.0 - vEdgeDist) * 0.3;
 
     vec3 color = vColor * glow * edgeBrightness
                + vec3(1.0, 0.85, 0.65) * core * 0.25 * edgeBrightness;
@@ -106,8 +104,8 @@ const fragmentShader = /* glsl */ `
     color = mix(color, hoverColor * (glow + core * 0.5) * 1.5, vMouseGlow * 0.15);
 
     float baseAlpha = mix(0.85, 0.35, vSizeClass);
-    float softEdge = smoothstep(0.5, 0.05, dist);
-    float edgeAlpha = 1.0 + (1.0 - vEdgeDist) * 0.4;
+    float softEdge = smoothstep(0.5, 0.02, dist);
+    float edgeAlpha = 1.0 + (1.0 - vEdgeDist) * 0.15;
     float alpha = softEdge * glow * baseAlpha * vAlpha * edgeAlpha;
     alpha *= 1.0 + vMouseGlow * 0.5;
 
@@ -249,9 +247,6 @@ export default function EmberHero() {
     const raycaster = new THREE.Raycaster()
     let mouseActive = false
     const recentDestroys: number[] = []
-    let mosquitoActive = false
-    let mosquitoStartTime = 0
-    let mosquitoOffsets: Float32Array
     const clickRC = new THREE.Raycaster()
 
     async function init() {
@@ -298,7 +293,6 @@ export default function EmberHero() {
       destroyVelocities = new Float32Array(count * 3)
       destroyOffsets = new Float32Array(count * 3)
       returnDelays = new Float32Array(count)
-      mosquitoOffsets = new Float32Array(count * 3)
       scrollVelocities = new Float32Array(count * 3)
       scrollOffsets = new Float32Array(count * 3)
       scrollDirections = new Float32Array(count * 3)
@@ -437,15 +431,6 @@ export default function EmberHero() {
       if (raycaster.ray.intersectPlane(mousePlane, _hit)) mouse3D.copy(_hit)
       ;(material.uniforms.uMouse3D.value as THREE.Vector3).lerp(mouse3D, 0.12)
 
-      let mJitter = 0
-      if (mosquitoActive) {
-        const mAge = (now - mosquitoStartTime) / 1000
-        const mDur = MOSQUITO_DURATION / 1000
-        if (mAge > mDur + 1) { mosquitoActive = false; mosquitoOffsets.fill(0) }
-        else if (mAge > mDur) { for (let i = 0; i < PARTICLE_COUNT * 3; i++) mosquitoOffsets[i] *= 0.85 }
-        else mJitter = Math.max(0, 1 - mAge / mDur)
-      }
-
       while (recentDestroys.length > 0 && now - recentDestroys[0] > DESTROY_TOTAL) recentDestroys.shift()
 
       const wrapX = storedVisW * 0.7
@@ -572,18 +557,6 @@ export default function EmberHero() {
           tz += destroyOffsets[i3 + 2]
         }
 
-        // Mosquito
-        if (mJitter > 0) {
-          const freq = 5 + r * 15
-          const a1 = elapsed * freq + r * 100, a2 = elapsed * (freq * 1.3) + r * 200
-          mosquitoOffsets[i3] += Math.sin(a1) * mJitter * 0.15 - mosquitoOffsets[i3] * 0.02
-          mosquitoOffsets[i3 + 1] += Math.cos(a2) * mJitter * 0.15 - mosquitoOffsets[i3 + 1] * 0.02
-          mosquitoOffsets[i3 + 2] += Math.sin(a1 * 0.7) * mJitter * 0.05 - mosquitoOffsets[i3 + 2] * 0.02
-        }
-        tx += mosquitoOffsets[i3]
-        ty += mosquitoOffsets[i3 + 1]
-        tz += mosquitoOffsets[i3 + 2]
-
         positionArray[i3] = tx
         positionArray[i3 + 1] = ty
         positionArray[i3 + 2] = tz
@@ -661,10 +634,47 @@ export default function EmberHero() {
       doDestroy(e.clientX, e.clientY)
     }
 
+    function doDestroyAll() {
+      if (!camera || !geometry || !material) return
+      const now = performance.now()
+
+      // Calculate text center (average of home positions)
+      let cx = 0, cy = 0
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        cx += homePositions[i * 3]
+        cy += homePositions[i * 3 + 1]
+      }
+      cx /= PARTICLE_COUNT
+      cy /= PARTICLE_COUNT
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const i3 = i * 3
+        destroyedAt[i] = now
+        returnDelays[i] = Math.random()
+
+        // Radial outward from text center + jitter
+        const dx = positionArray[i3] - cx
+        const dy = positionArray[i3 + 1] - cy
+        const dist = Math.sqrt(dx * dx + dy * dy) || 0.001
+        const nx = dx / dist
+        const ny = dy / dist
+        const jitterAngle = Math.random() * Math.PI * 2
+        const vx = nx * 0.7 + Math.cos(jitterAngle) * 0.3
+        const vy = ny * 0.7 + Math.sin(jitterAngle) * 0.3
+        const vlen = Math.sqrt(vx * vx + vy * vy) || 1
+
+        const speed = 0.3 + Math.random() * 0.7
+        destroyVelocities[i3] = (vx / vlen) * speed
+        destroyVelocities[i3 + 1] = (vy / vlen) * speed
+        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5
+        destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
+      }
+      recentDestroys.push(now)
+    }
+
     function handleContextMenu(e: MouseEvent) {
       e.preventDefault()
-      mosquitoActive = true
-      mosquitoStartTime = performance.now()
+      doDestroyAll()
     }
 
     function handleResize() {
