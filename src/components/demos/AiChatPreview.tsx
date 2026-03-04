@@ -177,6 +177,7 @@ interface ChatPanelProps {
 function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
   const { t } = useTranslation()
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const messagesRef = useRef<HTMLDivElement>(null)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [inView, setInView] = useState(false)
@@ -209,6 +210,10 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
         timeoutRef.current = setTimeout(() => {
           setStep(0)
           setFading(false)
+          // Reset scroll to top for next loop
+          if (messagesRef.current) {
+            messagesRef.current.scrollTop = 0
+          }
         }, 400)
       }, delays[currentStep] || 4000)
       return
@@ -227,6 +232,15 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
   }, [step, started, advance])
+
+  // Auto-scroll messages to bottom when step changes
+  useEffect(() => {
+    const el = messagesRef.current
+    if (!el || step === 0) return
+    requestAnimationFrame(() => {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+    })
+  }, [step])
 
   // Start when in view
   useEffect(() => {
@@ -260,7 +274,7 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
       </div>
 
       {/* Messages area */}
-      <div className={`${styles.messages} ${fading ? styles.fading : ''}`}>
+      <div ref={messagesRef} className={`${styles.messages} ${fading ? styles.fading : ''}`}>
         {slots.map((slot, i) => {
           if (slot.role === 'bot') {
             const visible = step >= slot.typingAtStep
