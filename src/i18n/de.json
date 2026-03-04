@@ -78,6 +78,22 @@
     "impressum": "Impressum",
     "privacy": "Datenschutz"
   },
+  "dashboards": {
+    "title": "Alle Daten an einem Ort",
+    "subtitle": "Ein eigenes Dashboard — alles live, alles so wie du es willst."
+  },
+  "ai": {
+    "title": "Antwortet, wenn du keine Zeit hast",
+    "subtitle": "Chatbots und interne KI-Tools — vom FAQ-Bot bis zum komplexen System."
+  },
+  "automation": {
+    "title": "Damit du nicht machst, was die Maschine kann",
+    "subtitle": "Workflows die von alleine laufen."
+  },
+  "websites": {
+    "title": "Der erste Eindruck in deiner Hand",
+    "subtitle": "Moderne Webseiten die nicht nur gut aussehen — sondern auch für dich arbeiten."
+  },
   "common": {
     "more": "Weiter →",
     "impressum": "Impressum",

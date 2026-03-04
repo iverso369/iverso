@@ -78,6 +78,22 @@
     "impressum": "Legal Notice",
     "privacy": "Privacy Policy"
   },
+  "dashboards": {
+    "title": "All your data in one place",
+    "subtitle": "Your own dashboard — live data, your way."
+  },
+  "ai": {
+    "title": "Responds when you can't",
+    "subtitle": "Chatbots and internal AI tools — from FAQ bots to complex systems."
+  },
+  "automation": {
+    "title": "So you don't do what machines can",
+    "subtitle": "Workflows that run themselves."
+  },
+  "websites": {
+    "title": "First impressions in your hands",
+    "subtitle": "Modern websites that don't just look good — they work for you."
+  },
   "common": {
     "more": "More →",
     "impressum": "Legal Notice",

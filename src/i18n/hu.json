@@ -78,6 +78,22 @@
     "impressum": "Impressum",
     "privacy": "Adatvédelem"
   },
+  "dashboards": {
+    "title": "Minden adat, egy helyen",
+    "subtitle": "Egy saját felület ahol minden élőben frissül, és úgy néz ki ahogy te akarod."
+  },
+  "ai": {
+    "title": "Válaszol, amikor te nem érsz rá",
+    "subtitle": "Chatbotok és belső AI eszközök — a GYIK-bottól a komplex rendszerig."
+  },
+  "automation": {
+    "title": "Hogy ne te csináld amit a gép is tud",
+    "subtitle": "Munkafolyamatok amik maguktól futnak."
+  },
+  "websites": {
+    "title": "Az első benyomás a te kezedben",
+    "subtitle": "Modern weboldalak amik nem csak jól néznek ki — hanem dolgoznak is érted."
+  },
   "common": {
     "more": "Tovább →",
     "impressum": "Impressum",

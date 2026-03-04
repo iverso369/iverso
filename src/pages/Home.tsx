@@ -1,5 +1,6 @@
 import EmberHero from '../components/hero/EmberHero'
 import Nav from '../components/nav/Nav'
+import DemoCard from '../components/demos/DemoCard'
 import DashboardPreview from '../components/demos/DashboardPreview'
 import AiChatPreview from '../components/demos/AiChatPreview'
 import AutomationPreview from '../components/demos/AutomationPreview'
@@ -12,7 +13,6 @@ import useIntersection from '../hooks/useIntersection'
 import styles from './Home.module.css'
 
 export default function Home() {
-  const demos = useIntersection({ threshold: 0.1 })
   const process = useIntersection({ threshold: 0.15 })
   const cta = useIntersection({ threshold: 0.15 })
   const footer = useIntersection({ threshold: 0.15 })
@@ -28,15 +28,39 @@ export default function Home() {
       {/* Nav — scroll-aware, hero-nál rejtett, scrollra megjelenik */}
       <Nav heroElementId="hero-area" />
 
-      {/* 3. jelenet: 4 demó előzetes — stagger rise */}
-      <section
-        ref={demos.ref}
-        className={`${styles.demos} ${demos.isVisible ? styles.visible : ''}`}
-      >
-        <div className={styles.demoItem}><DashboardPreview /></div>
-        <div className={styles.demoItem}><AiChatPreview /></div>
-        <div className={styles.demoItem}><AutomationPreview /></div>
-        <div className={styles.demoItem}><WebsitePreview /></div>
+      {/* 3. jelenet: 4 demó előzetes */}
+      <section className={styles.demosSection}>
+        <DemoCard
+          titleKey="dashboards.title"
+          subtitleKey="dashboards.subtitle"
+          linkTo="/dashboardok"
+        >
+          <DashboardPreview />
+        </DemoCard>
+
+        <DemoCard
+          titleKey="ai.title"
+          subtitleKey="ai.subtitle"
+          linkTo="/ai"
+        >
+          <AiChatPreview />
+        </DemoCard>
+
+        <DemoCard
+          titleKey="automation.title"
+          subtitleKey="automation.subtitle"
+          linkTo="/automatizacio"
+        >
+          <AutomationPreview />
+        </DemoCard>
+
+        <DemoCard
+          titleKey="websites.title"
+          subtitleKey="websites.subtitle"
+          linkTo="/weboldalak"
+        >
+          <WebsitePreview />
+        </DemoCard>
       </section>
 
       {/* 4. jelenet: Folyamat — node sequence */}
