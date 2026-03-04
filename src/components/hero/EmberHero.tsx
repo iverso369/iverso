@@ -599,7 +599,9 @@ export default function EmberHero() {
         // Squared probability falloff — no sharp boundary
         const normDist = dist / effectiveR
         const hitChance = (1 - normDist * normDist)
-        if (Math.random() > hitChance) continue
+        // Near-center survival: particles close to cursor have up to 50% chance to stay
+        const centerSurvival = 0.5 * (1 - normDist) * (1 - normDist)
+        if (Math.random() > hitChance || Math.random() < centerSurvival) continue
 
         hitCount++
         destroyedAt[i] = now
@@ -616,9 +618,12 @@ export default function EmberHero() {
 
         const speed = 0.2 + Math.random() * 0.6
         const falloff = (1 - normDist) * (1 - normDist)
-        destroyVelocities[i3] = (vx / vlen) * speed * (0.3 + falloff * 0.7)
-        destroyVelocities[i3 + 1] = (vy / vlen) * speed * (0.3 + falloff * 0.7)
-        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5
+        // Near-center particles get less speed so they don't fly far
+        const centerDampen = 0.3 + normDist * 0.7
+        const finalSpeed = speed * (0.3 + falloff * 0.7) * centerDampen
+        destroyVelocities[i3] = (vx / vlen) * finalSpeed
+        destroyVelocities[i3 + 1] = (vy / vlen) * finalSpeed
+        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * finalSpeed * 0.5
         destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
       }
       if (hitCount > 0) recentDestroys.push(now)
