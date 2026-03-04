@@ -30,8 +30,7 @@
       "botName": "Asszisztens",
       "greeting": "Szia! Miben segíthetek?",
       "userQuestion": "Mik az árak?",
-      "botAnswer": "Az árainkat megtalálod a weboldalunkon, de szívesen segítek személyre szabott ajánlattal is!",
-      "inputPlaceholder": "Írj egy üzenetet..."
+      "botAnswer": "Az árainkat megtalálod a weboldalunkon, de szívesen segítek személyre szabott ajánlattal is!"
     },
     "automation": {
       "title": "Automatizáció",
