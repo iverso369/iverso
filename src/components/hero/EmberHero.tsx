@@ -593,7 +593,7 @@ export default function EmberHero() {
     }
     function handleMouseLeave() { mouseActive = false }
 
-    function doDestroy(cx: number, cy: number, radiusMul = 1.0) {
+    function doDestroy(cx: number, cy: number, destroyAll = false) {
       if (!camera || !geometry || !material) return
       const now = performance.now()
       while (recentDestroys.length > 0 && now - recentDestroys[0] > DESTROY_TOTAL) recentDestroys.shift()
@@ -604,31 +604,39 @@ export default function EmberHero() {
       const clickPos = new THREE.Vector3()
       if (!clickRC.ray.intersectPlane(mousePlane, clickPos)) return
 
-      const dR = DESTROY_RADIUS_FACTOR * textWorldWidth * radiusMul
+      const dR = destroyAll ? 9999 : DESTROY_RADIUS_FACTOR * textWorldWidth
       let hitCount = 0
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         const i3 = i * 3
-        const dx = positionArray[i3] - clickPos.x
-        const dy = positionArray[i3 + 1] - clickPos.y
+
+        // Use current position (home + any existing offset) so scattered particles also get hit
+        const curX = positionArray[i3]
+        const curY = positionArray[i3 + 1]
+        const dx = curX - clickPos.x
+        const dy = curY - clickPos.y
         const dist = Math.sqrt(dx * dx + dy * dy)
 
-        // Per-particle radius variation for organic edge (±40%)
-        const effectiveR = dR * (0.6 + Math.random() * 0.8)
-        if (dist >= effectiveR) continue
+        if (!destroyAll) {
+          // Per-particle radius variation for organic edge (±40%)
+          const effectiveR = dR * (0.6 + Math.random() * 0.8)
+          if (dist >= effectiveR) continue
 
-        // Squared probability falloff — no sharp boundary
-        const normDist = dist / effectiveR
-        const hitChance = (1 - normDist * normDist)
-        if (Math.random() > hitChance) continue
-
-        // Skip particles already flying (rapid clicks don't restart them)
-        if (destroyedAt[i] > 0) continue
+          // Squared probability falloff — no sharp boundary
+          const normDist = dist / effectiveR
+          const hitChance = (1 - normDist * normDist)
+          if (Math.random() > hitChance) continue
+        }
 
         hitCount++
-        destroyedAt[i] = now
-        returnDelays[i] = Math.random()
 
-        // 90% fully random direction, 10% radial outward
+        // Shockwave physics: closer particles get MORE speed (inverse distance)
+        // Like a water ripple or supernova — epicenter = fastest
+        const maxDist = destroyAll ? textWorldWidth * 0.8 : dR
+        const normDist = Math.min(dist / maxDist, 1)
+        // Inverse: close = fast, far = slow (with minimum so edge particles still move)
+        const distanceFactor = 1.0 - normDist * 0.7
+
+        // 90% random direction, 10% radial outward from click
         const randomAngle = Math.random() * Math.PI * 2
         const radialDist = dist || 0.001
         const radX = dx / radialDist
@@ -637,11 +645,25 @@ export default function EmberHero() {
         const vy = Math.sin(randomAngle) * 0.9 + radY * 0.1
         const vlen = Math.sqrt(vx * vx + vy * vy) || 1
 
-        const speed = 0.15 + Math.random() * 0.5
-        destroyVelocities[i3] = (vx / vlen) * speed
-        destroyVelocities[i3 + 1] = (vy / vlen) * speed
-        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.3
-        destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
+        const baseSpeed = destroyAll ? 0.12 + Math.random() * 0.25 : 0.15 + Math.random() * 0.4
+        const speed = baseSpeed * distanceFactor
+
+        // If already flying, add new velocity on top (don't reset offset)
+        if (destroyedAt[i] > 0) {
+          destroyVelocities[i3] += (vx / vlen) * speed
+          destroyVelocities[i3 + 1] += (vy / vlen) * speed
+          destroyVelocities[i3 + 2] += (Math.random() - 0.5) * speed * 0.3
+          // Reset timer so fly phase restarts with new velocity
+          destroyedAt[i] = now
+          returnDelays[i] = Math.random()
+        } else {
+          destroyedAt[i] = now
+          returnDelays[i] = Math.random()
+          destroyVelocities[i3] = (vx / vlen) * speed
+          destroyVelocities[i3 + 1] = (vy / vlen) * speed
+          destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.3
+          destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
+        }
       }
       if (hitCount > 0) recentDestroys.push(now)
     }
@@ -656,8 +678,8 @@ export default function EmberHero() {
 
     function handleContextMenu(e: MouseEvent) {
       e.preventDefault()
-      // Right-click = same as left-click but with much bigger radius (4x)
-      doDestroy(e.clientX, e.clientY, 4.0)
+      // Right-click = destroy ALL particles from click position
+      doDestroy(e.clientX, e.clientY, true)
     }
 
     function handleResize() {
