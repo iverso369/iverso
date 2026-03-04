@@ -20,7 +20,7 @@ const STEP_DELAYS = [
   800,   // 2→3  pause then user question
   1000,  // 3→4  pause then bot starts typing answer
   1600,  // 4→5  typing → answer appears
-  3000,  // 5→0  hold, then loop reset
+  4000,  // 5→0  hold, then loop reset
 ] as const
 
 /* ── SVG icons (thin line, 1.5px stroke) ── */
