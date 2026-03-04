@@ -1,0 +1,77 @@
+/* ── DemoCard — közös kártya wrapper ── */
+
+.card {
+  width: 100%;
+  max-width: 900px;
+  min-height: 500px;
+  margin: 0 auto;
+  padding: 48px 40px;
+
+  background: #111114;
+  border: 1px solid rgba(247, 127, 10, 0.08);
+  border-radius: 16px;
+
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 2rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 32px;
+  max-width: 480px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 16px;
+}
+
+.link {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.link:hover {
+  opacity: 0.8;
+}
+
+/* ── Mobil ── */
+
+@media (max-width: 768px) {
+  .card {
+    min-height: 400px;
+    padding: 32px 20px;
+    border-radius: 12px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+}

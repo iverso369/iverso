@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import KpiCard from '../ui/KpiCard'
 import MiniWebsite from '../ui/MiniWebsite'
@@ -59,7 +58,7 @@ function StarIcon() {
 
 export default function DashboardPreview() {
   const { t } = useTranslation()
-  const sectionRef = useRef<HTMLElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const [isDesktop, setIsDesktop] = useState(false)
   const [inView, setInView] = useState(false)
@@ -79,7 +78,7 @@ export default function DashboardPreview() {
 
   // Detect in-view
   useEffect(() => {
-    const el = sectionRef.current
+    const el = wrapperRef.current
     if (!el) return
 
     const io = new IntersectionObserver(
@@ -111,10 +110,7 @@ export default function DashboardPreview() {
   }, [isDesktop, inView])
 
   return (
-    <section ref={sectionRef} className={styles.section}>
-      <h2 className={styles.title}>{t('demos.dashboard.title')}</h2>
-      <p className={styles.description}>{t('demos.dashboard.description')}</p>
-
+    <div ref={wrapperRef} className={styles.wrapper}>
       <MiniWebsite className={styles.browser}>
         <div className={`${styles.cardGrid} ${fading ? styles.fading : ''}`}>
           <KpiCard
@@ -149,10 +145,6 @@ export default function DashboardPreview() {
           />
         </div>
       </MiniWebsite>
-
-      <Link to="/dashboardok" className={styles.moreLink}>
-        {t('demos.more')}
-      </Link>
-    </section>
+    </div>
   )
 }

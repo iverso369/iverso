@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import MiniWebsite from '../ui/MiniWebsite'
 import styles from './WebsitePreview.module.css'
@@ -38,7 +37,7 @@ const STEP_COUNT = 7 // nav, heroTitle, heroSub, cta, card0, card1, card2
 
 export default function WebsitePreview() {
   const { t } = useTranslation()
-  const sectionRef = useRef<HTMLElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const [isDesktop, setIsDesktop] = useState(false)
   const [inView, setInView] = useState(false)
@@ -60,7 +59,7 @@ export default function WebsitePreview() {
 
   // Detect in-view
   useEffect(() => {
-    const el = sectionRef.current
+    const el = wrapperRef.current
     if (!el) return
     const io = new IntersectionObserver(
       ([entry]) => setInView(entry.isIntersecting),
@@ -137,10 +136,7 @@ export default function WebsitePreview() {
   }
 
   return (
-    <section ref={sectionRef} className={styles.section}>
-      <h2 className={styles.title}>{t('demos.websites.title')}</h2>
-      <p className={styles.description}>{t('demos.websites.description')}</p>
-
+    <div ref={wrapperRef} className={styles.wrapper}>
       <MiniWebsite className={styles.browser}>
         <div className={`${styles.page} ${fading ? styles.fading : ''}`}>
           {/* mini nav */}
@@ -181,10 +177,6 @@ export default function WebsitePreview() {
           </div>
         </div>
       </MiniWebsite>
-
-      <Link to="/weboldalak" className={styles.moreLink}>
-        {t('demos.more')}
-      </Link>
-    </section>
+    </div>
   )
 }

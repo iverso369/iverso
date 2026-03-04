@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ChatBubble from '../ui/ChatBubble'
 import MiniWebsite from '../ui/MiniWebsite'
@@ -48,7 +47,7 @@ const STEP_DELAYS = [
 
 export default function AiChatPreview() {
   const { t } = useTranslation()
-  const sectionRef = useRef<HTMLElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [isDesktop, setIsDesktop] = useState(false)
@@ -72,7 +71,7 @@ export default function AiChatPreview() {
 
   // Detect in-view
   useEffect(() => {
-    const el = sectionRef.current
+    const el = wrapperRef.current
     if (!el) return
 
     const io = new IntersectionObserver(
@@ -138,10 +137,7 @@ export default function AiChatPreview() {
   }, [inView, step, fading, isDesktop, started, advance])
 
   return (
-    <section ref={sectionRef} className={styles.section}>
-      <h2 className={styles.title}>{t('demos.ai.title')}</h2>
-      <p className={styles.description}>{t('demos.ai.description')}</p>
-
+    <div ref={wrapperRef} className={styles.wrapper}>
       <MiniWebsite className={styles.browser}>
         <div className={`${styles.chatArea} ${fading ? styles.fading : ''}`}>
           {/* Step 1: bot typing */}
@@ -193,10 +189,6 @@ export default function AiChatPreview() {
           )}
         </div>
       </MiniWebsite>
-
-      <Link to="/ai" className={styles.moreLink}>
-        {t('demos.more')}
-      </Link>
-    </section>
+    </div>
   )
 }

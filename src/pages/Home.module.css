@@ -38,38 +38,17 @@
   }
 }
 
-/* ── 3. jelenet: Demó előzetesek — stagger rise ── */
+/* ── 3. jelenet: Demó előzetesek ── */
 
-.demos {
+.demosSection {
   display: flex;
   flex-direction: column;
-  gap: 120px;
-  padding: 100px 0;
+  gap: 80px;
+  padding: 80px 24px;
+  max-width: 960px;
+  margin: 0 auto;
   position: relative;
   z-index: 1;
-}
-
-.demoItem {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.demos.visible .demoItem {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.demos.visible .demoItem:nth-child(2) {
-  transition-delay: 0.12s;
-}
-
-.demos.visible .demoItem:nth-child(3) {
-  transition-delay: 0.24s;
-}
-
-.demos.visible .demoItem:nth-child(4) {
-  transition-delay: 0.36s;
 }
 
 /* ── 4. jelenet: Folyamat — node sequence ── */
@@ -119,9 +98,9 @@
 /* ── responsive ── */
 
 @media (max-width: 768px) {
-  .demos {
-    gap: 80px;
-    padding: 72px 0;
+  .demosSection {
+    gap: 60px;
+    padding: 72px 16px;
   }
 
   .processScene {
@@ -136,7 +115,6 @@
 /* ── reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
-  .demoItem,
   .ctaScene,
   .footerScene {
     opacity: 1 !important;

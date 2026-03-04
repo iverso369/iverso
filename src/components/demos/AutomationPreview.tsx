@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import WorkflowNode from '../ui/WorkflowNode'
 import MiniWebsite from '../ui/MiniWebsite'
@@ -87,7 +86,7 @@ const NODE_DEFS = [
 
 export default function AutomationPreview() {
   const { t } = useTranslation()
-  const sectionRef = useRef<HTMLElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const [isDesktop, setIsDesktop] = useState(false)
   const [inView, setInView] = useState(false)
@@ -109,7 +108,7 @@ export default function AutomationPreview() {
 
   // Detect in-view
   useEffect(() => {
-    const el = sectionRef.current
+    const el = wrapperRef.current
     if (!el) return
 
     const io = new IntersectionObserver(
@@ -174,10 +173,7 @@ export default function AutomationPreview() {
   }, [inView, isDesktop, activeIndex, fading, started])
 
   return (
-    <section ref={sectionRef} className={styles.section}>
-      <h2 className={styles.title}>{t('demos.automation.title')}</h2>
-      <p className={styles.description}>{t('demos.automation.description')}</p>
-
+    <div ref={wrapperRef} className={styles.wrapper}>
       <MiniWebsite className={styles.browser}>
         <div className={`${styles.workflow} ${fading ? styles.fading : ''}`}>
           {NODE_DEFS.map((def, i) => (
@@ -197,10 +193,6 @@ export default function AutomationPreview() {
           ))}
         </div>
       </MiniWebsite>
-
-      <Link to="/automatizacio" className={styles.moreLink}>
-        {t('demos.more')}
-      </Link>
-    </section>
+    </div>
   )
 }
