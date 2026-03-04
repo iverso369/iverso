@@ -31,12 +31,18 @@
 /* ── message slot visibility ── */
 
 .msgVisible {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .msgHidden {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 0.4s ease, transform 0.4s ease;
