@@ -134,8 +134,22 @@ export default function AiChatPreview() {
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
       <MiniWebsite className={styles.browser}>
-        <div className={`${styles.chatArea} ${fading ? styles.fading : ''}`}>
-          {/* Slot 0: bot greeting (typing at step 1, message at step >= 2) */}
+        <div className={styles.chatWindow}>
+          {/* ── chat header ── */}
+          <div className={styles.chatHeader}>
+            <div className={styles.headerAvatar}>{botAvatar}</div>
+            <div className={styles.headerInfo}>
+              <span className={styles.headerName}>{t('demos.ai.botName')}</span>
+              <span className={styles.headerStatus}>
+                <span className={styles.statusDot} />
+                Online
+              </span>
+            </div>
+          </div>
+
+          {/* ── messages ── */}
+          <div className={`${styles.chatArea} ${fading ? styles.fading : ''}`}>
+            {/* Slot 0: bot greeting (typing at step 1, message at step >= 2) */}
           <div className={step >= 1 ? styles.msgVisible : styles.msgHidden}>
             <div className={styles.messageStack}>
               <div className={step >= 1 && step < 2 ? styles.stackShow : styles.stackHide}>
@@ -184,6 +198,25 @@ export default function AiChatPreview() {
                   avatar={botAvatar}
                 />
               </div>
+            </div>
+          </div>
+          </div>
+
+          {/* ── input bar (decorative) ── */}
+          <div className={styles.chatInput}>
+            <span className={styles.inputField}>{t('demos.ai.inputPlaceholder')}</span>
+            <div className={styles.sendButton}>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
             </div>
           </div>
         </div>

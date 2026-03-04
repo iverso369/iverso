@@ -30,7 +30,8 @@
       "botName": "Assistant",
       "greeting": "Hi! How can I help?",
       "userQuestion": "What are your prices?",
-      "botAnswer": "You can find our prices on the website, but I'm happy to help with a custom quote too!"
+      "botAnswer": "You can find our prices on the website, but I'm happy to help with a custom quote too!",
+      "inputPlaceholder": "Type a message..."
     },
     "automation": {
       "title": "Automation",
