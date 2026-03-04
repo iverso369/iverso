@@ -145,56 +145,75 @@ export default function DashboardPreview() {
     return () => io.disconnect()
   }, [])
 
+  const isFirstRunRef = useRef(true)
+
   // Run the full animation sequence, then loop
   const runSequence = useCallback(() => {
     if (unmountedRef.current) return
 
-    // Reset state
+    // Reset state (fading stays true from previous loop — content invisible)
     setCountProgress(0)
     setBarsAnimated(false)
     setVisibleRows(0)
-    setFading(false)
 
-    // Phase 1: count-up
-    const countDuration = 1500
-    const countStart = performance.now()
-
-    function tick(now: number) {
+    const startCountUp = () => {
       if (unmountedRef.current) return
-      const elapsed = now - countStart
-      const p = Math.min(elapsed / countDuration, 1)
-      setCountProgress(easeOutCubic(p))
 
-      if (p < 1) {
-        rafRef.current = requestAnimationFrame(tick)
-      } else {
-        setCountProgress(1)
-        // Phase 2: bar chart
-        setBarsAnimated(true)
-        schedule(() => {
-          if (unmountedRef.current) return
-          // Phase 3: table rows stagger
-          for (let r = 1; r <= 4; r++) {
-            schedule(() => {
-              if (unmountedRef.current) return
-              setVisibleRows(r)
-            }, (r - 1) * 200)
-          }
-          // Phase 4: hold then fade and loop
+      const countDuration = 1500
+      const countStart = performance.now()
+
+      function tick(now: number) {
+        if (unmountedRef.current) return
+        const elapsed = now - countStart
+        const p = Math.min(elapsed / countDuration, 1)
+        setCountProgress(easeOutCubic(p))
+
+        if (p < 1) {
+          rafRef.current = requestAnimationFrame(tick)
+        } else {
+          setCountProgress(1)
+          // Phase 2: bar chart
+          setBarsAnimated(true)
           schedule(() => {
             if (unmountedRef.current) return
-            setFading(true)
+            // Phase 3: table rows stagger
+            for (let r = 1; r <= 4; r++) {
+              schedule(() => {
+                if (unmountedRef.current) return
+                setVisibleRows(r)
+              }, (r - 1) * 200)
+            }
+            // Phase 4: hold then fade and loop
             schedule(() => {
               if (unmountedRef.current) return
-              cleanup()
-              runSequence()
-            }, 400)
-          }, 4 * 200 + 5000)
-        }, 600)
+              setFading(true)
+              schedule(() => {
+                if (unmountedRef.current) return
+                cleanup()
+                runSequence()
+              }, 400)
+            }, 4 * 200 + 5000)
+          }, 600)
+        }
       }
+
+      rafRef.current = requestAnimationFrame(tick)
     }
 
-    rafRef.current = requestAnimationFrame(tick)
+    if (isFirstRunRef.current) {
+      // First run: no fade-in needed, start immediately
+      isFirstRunRef.current = false
+      setFading(false)
+      startCountUp()
+    } else {
+      // Loop restart: wait for reset to render while hidden, then fade in
+      rafRef.current = requestAnimationFrame(() => {
+        if (unmountedRef.current) return
+        setFading(false)
+        // Wait for fade-in transition before starting count-up
+        schedule(startCountUp, 420)
+      })
+    }
   }, [schedule, cleanup])
 
   // Start when in view
