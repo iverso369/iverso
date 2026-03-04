@@ -98,12 +98,12 @@ const STATUS_KEY_MAP: Record<string, string> = {
 export default function DashboardPreview() {
   const { t } = useTranslation()
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
   const rafRef = useRef<number | null>(null)
+  const unmountedRef = useRef(false)
 
   const [inView, setInView] = useState(false)
   const [started, setStarted] = useState(false)
-  const [phase, setPhase] = useState(0)
   const [fading, setFading] = useState(false)
 
   // Count-up state
@@ -114,6 +114,23 @@ export default function DashboardPreview() {
 
   // Table rows visible count
   const [visibleRows, setVisibleRows] = useState(0)
+
+  // Helper: schedule a timeout (tracked for cleanup)
+  const schedule = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(fn, ms)
+    timersRef.current.push(id)
+    return id
+  }, [])
+
+  // Cleanup all timers + RAF
+  const cleanup = useCallback(() => {
+    timersRef.current.forEach(clearTimeout)
+    timersRef.current = []
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
+    }
+  }, [])
 
   // Detect in-view
   useEffect(() => {
@@ -128,93 +145,57 @@ export default function DashboardPreview() {
     return () => io.disconnect()
   }, [])
 
-  // Count-up animation
-  const runCountUp = useCallback((onDone: () => void) => {
-    const duration = 1500
-    const start = performance.now()
+  // Run the full animation sequence, then loop
+  const runSequence = useCallback(() => {
+    if (unmountedRef.current) return
+
+    // Reset state
+    setCountProgress(0)
+    setBarsAnimated(false)
+    setVisibleRows(0)
+    setFading(false)
+
+    // Phase 1: count-up
+    const countDuration = 1500
+    const countStart = performance.now()
 
     function tick(now: number) {
-      const elapsed = now - start
-      const t = Math.min(elapsed / duration, 1)
-      setCountProgress(easeOutCubic(t))
+      if (unmountedRef.current) return
+      const elapsed = now - countStart
+      const p = Math.min(elapsed / countDuration, 1)
+      setCountProgress(easeOutCubic(p))
 
-      if (t < 1) {
+      if (p < 1) {
         rafRef.current = requestAnimationFrame(tick)
       } else {
         setCountProgress(1)
-        onDone()
+        // Phase 2: bar chart
+        setBarsAnimated(true)
+        schedule(() => {
+          if (unmountedRef.current) return
+          // Phase 3: table rows stagger
+          for (let r = 1; r <= 4; r++) {
+            schedule(() => {
+              if (unmountedRef.current) return
+              setVisibleRows(r)
+            }, (r - 1) * 200)
+          }
+          // Phase 4: hold then fade and loop
+          schedule(() => {
+            if (unmountedRef.current) return
+            setFading(true)
+            schedule(() => {
+              if (unmountedRef.current) return
+              cleanup()
+              runSequence()
+            }, 400)
+          }, 4 * 200 + 5000)
+        }, 600)
       }
     }
 
     rafRef.current = requestAnimationFrame(tick)
-  }, [])
-
-  // Phase sequencer
-  const advance = useCallback((currentPhase: number) => {
-    if (currentPhase === 0) {
-      // Start count-up
-      setPhase(1)
-      setCountProgress(0)
-      setBarsAnimated(false)
-      setVisibleRows(0)
-
-      runCountUp(() => {
-        setPhase(2)
-      })
-      return
-    }
-
-    if (currentPhase === 2) {
-      // Bar chart
-      setBarsAnimated(true)
-      timeoutRef.current = setTimeout(() => {
-        setPhase(3)
-      }, 600)
-      return
-    }
-
-    if (currentPhase === 3) {
-      // Table rows stagger
-      let row = 0
-      const showNext = () => {
-        row++
-        setVisibleRows(row)
-        if (row < 4) {
-          timeoutRef.current = setTimeout(showNext, 200)
-        } else {
-          setPhase(4)
-        }
-      }
-      showNext()
-      return
-    }
-
-    if (currentPhase === 4) {
-      // Hold then fade and reset
-      timeoutRef.current = setTimeout(() => {
-        setFading(true)
-        timeoutRef.current = setTimeout(() => {
-          setPhase(0)
-          setCountProgress(0)
-          setBarsAnimated(false)
-          setVisibleRows(0)
-          setFading(false)
-        }, 400)
-      }, 5000)
-      return
-    }
-  }, [runCountUp])
-
-  // Drive phases
-  useEffect(() => {
-    if (!started) return
-    advance(phase)
-
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-      if (rafRef.current) cancelAnimationFrame(rafRef.current)
-    }
-  }, [phase, started, advance])
+  }, [schedule, cleanup])
 
   // Start when in view
   useEffect(() => {
@@ -228,12 +209,20 @@ export default function DashboardPreview() {
       setCountProgress(1)
       setBarsAnimated(true)
       setVisibleRows(4)
-      setPhase(4)
       return
     }
 
     setStarted(true)
-  }, [inView, started])
+    runSequence()
+  }, [inView, started, runSequence])
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      unmountedRef.current = true
+      cleanup()
+    }
+  }, [cleanup])
 
   // Formatted KPI values using count-up progress
   const revenueDisplay = interpolateValue(t('demos.dashboard.revenueValue'), countProgress)
