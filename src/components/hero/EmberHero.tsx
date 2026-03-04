@@ -10,7 +10,7 @@ const CAMERA_Z = 35
 const CAMERA_FOV = 75
 
 // Destroy radius
-const DESTROY_RADIUS_FACTOR = 0.045
+const DESTROY_RADIUS_FACTOR = 0.09
 
 // Destroy timeline (ms) — 10s total
 const DESTROY_FLY_PHASE = 1500
