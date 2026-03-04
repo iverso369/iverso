@@ -82,33 +82,33 @@ const INT_SLOTS = buildSlots(INT_MESSAGES)
 /* Step delays per mode */
 // ext: 12 steps → 0(empty), 1(typing), 2(greeting), 3(q1), 4(typing), 5(a1+actions), 6(q2), 7(typing), 8(a2), 9(q3), 10(typing), 11(a3)
 const EXT_DELAYS = [
-  400,   // 0→1
-  1200,  // 1→2 typing→greeting
-  1000,  // 2→3 pause→q1
-  1000,  // 3→4 pause→typing
-  1600,  // 4→5 typing→a1+actions
-  3500,  // 5→6 hold (actions, user reads)
-  1000,  // 6→7 pause→typing
-  1200,  // 7→8 typing→a2
-  800,   // 8→9 pause→q3
-  1000,  // 9→10 pause→typing
-  1400,  // 10→11 typing→a3
+  800,   // 0→1  pause before first typing
+  1000,  // 1→2  typing→greeting
+  1800,  // 2→3  greeting visible → q1
+  1500,  // 3→4  q1 visible → typing
+  1000,  // 4→5  typing→a1+actions
+  3500,  // 5→6  hold (actions, user reads)
+  1500,  // 6→7  q2 visible → typing
+  1000,  // 7→8  typing→a2
+  1800,  // 8→9  a2 visible → q3
+  1500,  // 9→10 q3 visible → typing
+  1000,  // 10→11 typing→a3
   4000,  // 11→hold final
 ]
 
 // int: 12 steps → same structure without action button hold
 const INT_DELAYS = [
-  400,   // 0→1
-  1200,  // 1→2 typing→greeting
-  1000,  // 2→3 pause→q1
-  1000,  // 3→4 pause→typing
-  1600,  // 4→5 typing→a1
-  1000,  // 5→6 pause→q2
-  1000,  // 6→7 pause→typing
-  1400,  // 7→8 typing→a2
-  1000,  // 8→9 pause→q3
-  1000,  // 9→10 pause→typing
-  1400,  // 10→11 typing→a3
+  800,   // 0→1  pause before first typing
+  1000,  // 1→2  typing→greeting
+  1800,  // 2→3  greeting visible → q1
+  1500,  // 3→4  q1 visible → typing
+  1000,  // 4→5  typing→a1
+  1800,  // 5→6  a1 visible → q2
+  1500,  // 6→7  q2 visible → typing
+  1000,  // 7→8  typing→a2
+  1800,  // 8→9  a2 visible → q3
+  1500,  // 9→10 q3 visible → typing
+  1000,  // 10→11 typing→a3
   4000,  // 11→hold final
 ]
 
