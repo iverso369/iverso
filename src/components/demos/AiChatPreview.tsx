@@ -140,53 +140,51 @@ export default function AiChatPreview() {
     <div ref={wrapperRef} className={styles.wrapper}>
       <MiniWebsite className={styles.browser}>
         <div className={`${styles.chatArea} ${fading ? styles.fading : ''}`}>
-          {/* Step 1: bot typing */}
-          {step === 1 && (
-            <ChatBubble
-              role="bot"
-              typing
-              name={t('demos.ai.botName')}
-              avatar={botAvatar}
-            />
-          )}
+          {/* Slot 0: bot greeting (typing at step 1, message at step >= 2) */}
+          <div className={step >= 1 ? styles.msgVisible : styles.msgHidden}>
+            {step >= 2 ? (
+              <ChatBubble
+                role="bot"
+                message={t('demos.ai.greeting')}
+                name={t('demos.ai.botName')}
+                avatar={botAvatar}
+              />
+            ) : (
+              <ChatBubble
+                role="bot"
+                typing
+                name={t('demos.ai.botName')}
+                avatar={botAvatar}
+              />
+            )}
+          </div>
 
-          {/* Step 2+: bot greeting */}
-          {step >= 2 && (
-            <ChatBubble
-              role="bot"
-              message={t('demos.ai.greeting')}
-              name={t('demos.ai.botName')}
-              avatar={botAvatar}
-            />
-          )}
-
-          {/* Step 3+: user question */}
-          {step >= 3 && (
+          {/* Slot 1: user question */}
+          <div className={step >= 3 ? styles.msgVisible : styles.msgHidden}>
             <ChatBubble
               role="user"
               message={t('demos.ai.userQuestion')}
             />
-          )}
+          </div>
 
-          {/* Step 4: bot typing answer */}
-          {step === 4 && (
-            <ChatBubble
-              role="bot"
-              typing
-              name={t('demos.ai.botName')}
-              avatar={botAvatar}
-            />
-          )}
-
-          {/* Step 5: bot answer */}
-          {step >= 5 && (
-            <ChatBubble
-              role="bot"
-              message={t('demos.ai.botAnswer')}
-              name={t('demos.ai.botName')}
-              avatar={botAvatar}
-            />
-          )}
+          {/* Slot 2: bot answer (typing at step 4, message at step >= 5) */}
+          <div className={step >= 4 ? styles.msgVisible : styles.msgHidden}>
+            {step >= 5 ? (
+              <ChatBubble
+                role="bot"
+                message={t('demos.ai.botAnswer')}
+                name={t('demos.ai.botName')}
+                avatar={botAvatar}
+              />
+            ) : (
+              <ChatBubble
+                role="bot"
+                typing
+                name={t('demos.ai.botName')}
+                avatar={botAvatar}
+              />
+            )}
+          </div>
         </div>
       </MiniWebsite>
     </div>
