@@ -91,7 +91,6 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: 10px;
   padding: 16px 12px;
   height: 320px;
   overflow-y: scroll;
@@ -107,6 +106,12 @@
   opacity: 0;
 }
 
+/* First visible message shouldn't have top margin */
+.messages > :first-child.msgVisible,
+.messages > :first-child.userMsgVisible {
+  margin-top: 0;
+}
+
 /* ── instant hide during fade-reset (prevents flash) ── */
 
 .fading .msgVisible,
@@ -117,6 +122,9 @@
 .fading .actionsHidden {
   transition: none;
   opacity: 0;
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
 }
 
 .fading .stackShow,
@@ -125,45 +133,55 @@
   opacity: 0;
 }
 
-/* ── bot message slot visibility (slide up) ── */
+/* ── bot message slot visibility (slide up, collapse when hidden) ── */
 
 .msgVisible {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  max-height: 200px;
+  margin-top: 10px;
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: max-height 0.4s ease, margin-top 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
 }
 
 .msgHidden {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  max-height: 0;
+  margin-top: 0;
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  overflow: hidden;
+  transition: max-height 0.4s ease, margin-top 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
   pointer-events: none;
 }
 
-/* ── user message slot visibility (slide from right) ── */
+/* ── user message slot visibility (slide from right, collapse when hidden) ── */
 
 .userMsgVisible {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  max-height: 200px;
+  margin-top: 10px;
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: max-height 0.4s ease, margin-top 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
 }
 
 .userMsgHidden {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  max-height: 0;
+  margin-top: 0;
   opacity: 0;
   transform: translateX(20px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  overflow: hidden;
+  transition: max-height 0.4s ease, margin-top 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
   pointer-events: none;
 }
 
@@ -195,18 +213,23 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  max-height: 100px;
+  margin-top: 6px;
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.4s ease 0.3s, transform 0.4s ease 0.3s;
+  transition: max-height 0.4s ease 0.3s, margin-top 0.4s ease 0.3s, opacity 0.4s ease 0.3s, transform 0.4s ease 0.3s;
 }
 
 .actionsHidden {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  max-height: 0;
+  margin-top: 0;
   opacity: 0;
   transform: translateY(6px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  overflow: hidden;
+  transition: max-height 0.4s ease, margin-top 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
   pointer-events: none;
 }
 
