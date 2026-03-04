@@ -62,6 +62,35 @@ function SendIcon() {
   )
 }
 
+function CalendarIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M16 2v4" />
+      <path d="M8 2v4" />
+      <path d="M3 10h18" />
+    </svg>
+  )
+}
+
+function PhoneIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+    </svg>
+  )
+}
+
+function LinkIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" y1="14" x2="21" y2="3" />
+    </svg>
+  )
+}
+
 /* ── ChatPanel — one chat widget with its own animation ── */
 
 interface ChatPanelProps {
@@ -180,6 +209,26 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
             </div>
           </div>
         </div>
+
+        {/* Slot 3: action buttons (ext only) — appear with delay after answer */}
+        {mode === 'ext' && (
+          <div className={step >= 5 ? styles.actionsVisible : styles.actionsHidden}>
+            <div className={styles.actionButtons}>
+              <span className={styles.actionBtn}>
+                <CalendarIcon />
+                {t(`${prefix}.actionBook`)}
+              </span>
+              <span className={styles.actionBtn}>
+                <PhoneIcon />
+                {t(`${prefix}.actionCall`)}
+              </span>
+              <span className={styles.actionBtn}>
+                <LinkIcon />
+                {t(`${prefix}.actionHours`)}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Decorative input bar */}

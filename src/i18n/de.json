@@ -33,9 +33,12 @@
       "extLabel": "Auf der Webseite",
       "intLabel": "Im Unternehmen",
       "ext": {
-        "greeting": "Hallo! Wie kann ich helfen?",
-        "userQuestion": "Was kosten Ihre Leistungen?",
-        "botAnswer": "Unsere Preise findest du auf der Webseite, aber ich helfe dir gerne auch mit einem individuellen Angebot!"
+        "greeting": "Frag uns einfach!",
+        "userQuestion": "Wann haben Sie samstags geöffnet?",
+        "botAnswer": "Samstags sind wir von 10:00 bis 22:00 Uhr geöffnet.",
+        "actionBook": "Tisch reservieren",
+        "actionCall": "+49 30 1234567",
+        "actionHours": "Öffnungszeiten"
       },
       "int": {
         "greeting": "Hallo! Was schauen wir uns an?",

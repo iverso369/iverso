@@ -33,9 +33,12 @@
       "extLabel": "On your website",
       "intLabel": "Inside your company",
       "ext": {
-        "greeting": "Hi! How can I help?",
-        "userQuestion": "What are your prices?",
-        "botAnswer": "You can find our prices on the website, but I'm happy to help with a custom quote too!"
+        "greeting": "Ask us anything!",
+        "userQuestion": "What are your Saturday hours?",
+        "botAnswer": "We're open Saturday 10 AM – 10 PM.",
+        "actionBook": "Book a table",
+        "actionCall": "+1 555 0123",
+        "actionHours": "Opening hours"
       },
       "int": {
         "greeting": "Hi! What should we look at?",

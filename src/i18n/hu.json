@@ -33,9 +33,12 @@
       "extLabel": "Weboldalon",
       "intLabel": "Cégen belül",
       "ext": {
-        "greeting": "Szia! Miben segíthetek?",
-        "userQuestion": "Mik az árak?",
-        "botAnswer": "Az árainkat megtalálod a weboldalunkon, de szívesen segítek személyre szabott ajánlattal is!"
+        "greeting": "Kérdezz bármit rólunk!",
+        "userQuestion": "Mikor nyittok szombaton?",
+        "botAnswer": "Szombaton 10:00–22:00 között vagyunk nyitva.",
+        "actionBook": "Asztalfoglalás",
+        "actionCall": "+36 1 234 5678",
+        "actionHours": "Nyitvatartás"
       },
       "int": {
         "greeting": "Szia! Mit nézzünk?",
