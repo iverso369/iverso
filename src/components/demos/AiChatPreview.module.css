@@ -49,6 +49,28 @@
   pointer-events: none;
 }
 
+/* ── typing / message overlap (no height snap) ── */
+
+.messageStack {
+  display: grid;
+}
+
+.messageStack > * {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.stackShow {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.stackHide {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
 /* ── responsive ── */
 
 @media (max-width: 768px) {
@@ -67,6 +89,11 @@
 
   .msgVisible,
   .msgHidden {
+    transition: none;
+  }
+
+  .stackShow,
+  .stackHide {
     transition: none;
   }
 }

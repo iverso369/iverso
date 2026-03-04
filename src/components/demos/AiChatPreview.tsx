@@ -112,7 +112,7 @@ export default function AiChatPreview() {
     }
   }, [step, started, advance])
 
-  // Start/restart when in view (or when reset to step 0 on desktop)
+  // Start when in view (drive effect handles all advance calls)
   useEffect(() => {
     if (!inView) return
 
@@ -121,20 +121,15 @@ export default function AiChatPreview() {
     ).matches
 
     if (prefersReduced) {
-      // Show all messages immediately
       setStep(5)
       setStarted(false)
       return
     }
 
-    if (!started || (isDesktop && step === 0 && !fading)) {
+    if (!started) {
       setStarted(true)
-      // Trigger advance from step 0
-      if (step === 0) {
-        advance(0)
-      }
     }
-  }, [inView, step, fading, isDesktop, started, advance])
+  }, [inView, started])
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
@@ -142,21 +137,24 @@ export default function AiChatPreview() {
         <div className={`${styles.chatArea} ${fading ? styles.fading : ''}`}>
           {/* Slot 0: bot greeting (typing at step 1, message at step >= 2) */}
           <div className={step >= 1 ? styles.msgVisible : styles.msgHidden}>
-            {step >= 2 ? (
-              <ChatBubble
-                role="bot"
-                message={t('demos.ai.greeting')}
-                name={t('demos.ai.botName')}
-                avatar={botAvatar}
-              />
-            ) : (
-              <ChatBubble
-                role="bot"
-                typing
-                name={t('demos.ai.botName')}
-                avatar={botAvatar}
-              />
-            )}
+            <div className={styles.messageStack}>
+              <div className={step >= 1 && step < 2 ? styles.stackShow : styles.stackHide}>
+                <ChatBubble
+                  role="bot"
+                  typing
+                  name={t('demos.ai.botName')}
+                  avatar={botAvatar}
+                />
+              </div>
+              <div className={step >= 2 ? styles.stackShow : styles.stackHide}>
+                <ChatBubble
+                  role="bot"
+                  message={t('demos.ai.greeting')}
+                  name={t('demos.ai.botName')}
+                  avatar={botAvatar}
+                />
+              </div>
+            </div>
           </div>
 
           {/* Slot 1: user question */}
@@ -169,21 +167,24 @@ export default function AiChatPreview() {
 
           {/* Slot 2: bot answer (typing at step 4, message at step >= 5) */}
           <div className={step >= 4 ? styles.msgVisible : styles.msgHidden}>
-            {step >= 5 ? (
-              <ChatBubble
-                role="bot"
-                message={t('demos.ai.botAnswer')}
-                name={t('demos.ai.botName')}
-                avatar={botAvatar}
-              />
-            ) : (
-              <ChatBubble
-                role="bot"
-                typing
-                name={t('demos.ai.botName')}
-                avatar={botAvatar}
-              />
-            )}
+            <div className={styles.messageStack}>
+              <div className={step >= 4 && step < 5 ? styles.stackShow : styles.stackHide}>
+                <ChatBubble
+                  role="bot"
+                  typing
+                  name={t('demos.ai.botName')}
+                  avatar={botAvatar}
+                />
+              </div>
+              <div className={step >= 5 ? styles.stackShow : styles.stackHide}>
+                <ChatBubble
+                  role="bot"
+                  message={t('demos.ai.botAnswer')}
+                  name={t('demos.ai.botName')}
+                  avatar={botAvatar}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </MiniWebsite>
