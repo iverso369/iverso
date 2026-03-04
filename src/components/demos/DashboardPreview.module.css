@@ -1,44 +1,288 @@
-/* ── DashboardPreview ── */
+/* ── DashboardPreview — sidebar + KPI + table ── */
 
 .wrapper {
   width: 100%;
 }
 
-/* ── MiniWebsite wrapper ── */
-
 .browser {
   width: 100%;
 }
 
-/* ── KpiCard grid inside browser ── */
+/* ── Layout: sidebar + main ── */
 
-.cardGrid {
+.layout {
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  padding: 24px 16px;
-  transition: opacity 0.35s ease;
+  min-height: 340px;
+  transition: opacity 0.4s ease;
 }
 
 .fading {
   opacity: 0;
 }
 
-/* ── responsive ── */
+/* ── Sidebar ── */
 
-@media (max-width: 768px) {
-  .cardGrid {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding: 20px 12px;
-  }
+.sidebar {
+  width: 140px;
+  min-width: 140px;
+  background: #0d0d10;
+  border-right: 1px solid #1e1e24;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-/* ── reduced motion ── */
+.sidebarLogo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--accent);
+  padding: 0 14px 14px;
+  border-bottom: 1px solid #1e1e24;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  font-size: 11px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  color: var(--muted);
+  cursor: default;
+  border-left: 2px solid transparent;
+  transition: none;
+}
+
+.menuItemActive {
+  composes: menuItem;
+  color: var(--text);
+  background: rgba(247, 127, 10, 0.08);
+  border-left-color: var(--accent);
+  font-weight: 500;
+}
+
+.menuIcon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Main content ── */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Header ── */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headerTitle {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  background: #1a1a20;
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.tab {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: default;
+}
+
+.tabActive {
+  composes: tab;
+  background: var(--accent);
+  color: #0A0A0C;
+}
+
+/* ── KPI cards row ── */
+
+.kpiRow {
+  display: flex;
+  gap: 10px;
+}
+
+.kpiCard {
+  flex: 1;
+  min-width: 0;
+  background: #0d0d10;
+  border: 1px solid #1e1e24;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpiLabel {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.kpiValue {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.kpiChange {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.kpiPositive {
+  color: #28c840;
+}
+
+.kpiNegative {
+  color: #ff5f57;
+}
+
+/* ── Mini bar chart ── */
+
+.barChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 28px;
+  margin-top: 4px;
+}
+
+.bar {
+  flex: 1;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+  transform-origin: bottom;
+  transform: scaleY(0);
+  transition: transform 0.4s ease-out;
+}
+
+.barAnimated {
+  transform: scaleY(1);
+}
+
+/* ── Table ── */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--muted);
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid #1e1e24;
+}
+
+.table th:last-child {
+  text-align: right;
+}
+
+.tableRow {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.tableRowVisible {
+  opacity: 1;
+}
+
+.table td {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text);
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(30, 30, 36, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.table td:last-child {
+  text-align: right;
+  color: var(--muted);
+}
+
+/* ── Status badges ── */
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.statusActive {
+  background: rgba(40, 200, 64, 0.12);
+  color: #28c840;
+}
+
+.statusProgress {
+  background: rgba(254, 188, 46, 0.12);
+  color: #febc2e;
+}
+
+.statusPlanning {
+  background: rgba(136, 136, 154, 0.12);
+  color: var(--muted);
+}
+
+/* ── Reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
-  .cardGrid {
+  .layout {
+    transition: none;
+  }
+  .bar {
+    transition: none;
+  }
+  .tableRow {
     transition: none;
   }
 }
