@@ -4,32 +4,120 @@ import ChatBubble from '../ui/ChatBubble'
 import styles from './AiChatPreview.module.css'
 
 /*
-  Animation steps (per panel):
-  0 — empty
-  1 — bot typing
-  2 — bot greeting shown
-  3 — user question shown (slides in from right)
-  4 — bot typing (answer)
-  5 — bot answer shown
-  then pause → fade → reset to 0 → loop
+  Extended chat conversations:
+  - ext: 7 messages (restaurant booking flow)
+  - int: 7 messages (internal analytics assistant)
+  Each bot message has a typing phase before it.
+  Action buttons appear after the first bot answer in ext mode.
 */
 
-const STEP_DELAYS = [
-  400,   // 0→1  brief pause then bot starts typing
-  1200,  // 1→2  typing → greeting appears
-  800,   // 2→3  pause then user question
-  1000,  // 3→4  pause then bot starts typing answer
-  1600,  // 4→5  typing → answer appears
-  4000,  // 5→0  hold, then loop reset
-] as const
+/* ── Message sequence definitions ── */
 
-/* ── SVG icons (thin line, 1.5px stroke) ── */
+interface MsgDef {
+  role: 'bot' | 'user'
+  key: string
+  showActions?: boolean
+}
+
+const EXT_MESSAGES: MsgDef[] = [
+  { role: 'bot', key: 'greeting' },
+  { role: 'user', key: 'q1' },
+  { role: 'bot', key: 'a1', showActions: true },
+  { role: 'user', key: 'q2' },
+  { role: 'bot', key: 'a2' },
+  { role: 'user', key: 'q3' },
+  { role: 'bot', key: 'a3' },
+]
+
+const INT_MESSAGES: MsgDef[] = [
+  { role: 'bot', key: 'greeting' },
+  { role: 'user', key: 'q1' },
+  { role: 'bot', key: 'a1' },
+  { role: 'user', key: 'q2' },
+  { role: 'bot', key: 'a2' },
+  { role: 'user', key: 'q3' },
+  { role: 'bot', key: 'a3' },
+]
+
+/* Precompute render slots: for each message, at which step does typing start / message appear */
+interface RenderSlot {
+  role: 'bot' | 'user'
+  key: string
+  typingAtStep: number
+  messageAtStep: number
+  showActions?: boolean
+}
+
+function buildSlots(messages: MsgDef[]): { slots: RenderSlot[]; totalSteps: number } {
+  const slots: RenderSlot[] = []
+  let step = 1 // start at 1 (step 0 = empty)
+
+  for (const msg of messages) {
+    if (msg.role === 'bot') {
+      slots.push({
+        role: 'bot',
+        key: msg.key,
+        typingAtStep: step,
+        messageAtStep: step + 1,
+        showActions: msg.showActions,
+      })
+      step += 2
+    } else {
+      slots.push({
+        role: 'user',
+        key: msg.key,
+        typingAtStep: -1,
+        messageAtStep: step,
+      })
+      step += 1
+    }
+  }
+
+  return { slots, totalSteps: step } // totalSteps = last step + 1 (the hold step)
+}
+
+const EXT_SLOTS = buildSlots(EXT_MESSAGES)
+const INT_SLOTS = buildSlots(INT_MESSAGES)
+
+/* Step delays per mode */
+// ext: 12 steps → 0(empty), 1(typing), 2(greeting), 3(q1), 4(typing), 5(a1+actions), 6(q2), 7(typing), 8(a2), 9(q3), 10(typing), 11(a3)
+const EXT_DELAYS = [
+  400,   // 0→1
+  1200,  // 1→2 typing→greeting
+  1000,  // 2→3 pause→q1
+  1000,  // 3→4 pause→typing
+  1600,  // 4→5 typing→a1+actions
+  3500,  // 5→6 hold (actions, user reads)
+  1000,  // 6→7 pause→typing
+  1200,  // 7→8 typing→a2
+  800,   // 8→9 pause→q3
+  1000,  // 9→10 pause→typing
+  1400,  // 10→11 typing→a3
+  4000,  // 11→hold final
+]
+
+// int: 12 steps → same structure without action button hold
+const INT_DELAYS = [
+  400,   // 0→1
+  1200,  // 1→2 typing→greeting
+  1000,  // 2→3 pause→q1
+  1000,  // 3→4 pause→typing
+  1600,  // 4→5 typing→a1
+  1000,  // 5→6 pause→q2
+  1000,  // 6→7 pause→typing
+  1400,  // 7→8 typing→a2
+  1000,  // 8→9 pause→q3
+  1000,  // 9→10 pause→typing
+  1400,  // 10→11 typing→a3
+  4000,  // 11→hold final
+]
+
+/* ── SVG icons ── */
 
 function GlobeIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M2 12h20" />
+      <circle cx="12" cy="12" r="10" /><path d="M2 12h20" />
       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
     </svg>
   )
@@ -38,17 +126,10 @@ function GlobeIcon() {
 function BuildingIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="4" y="2" width="16" height="20" rx="2" />
-      <path d="M9 22v-4h6v4" />
-      <path d="M8 6h.01" />
-      <path d="M16 6h.01" />
-      <path d="M12 6h.01" />
-      <path d="M12 10h.01" />
-      <path d="M12 14h.01" />
-      <path d="M16 10h.01" />
-      <path d="M16 14h.01" />
-      <path d="M8 10h.01" />
-      <path d="M8 14h.01" />
+      <rect x="4" y="2" width="16" height="20" rx="2" /><path d="M9 22v-4h6v4" />
+      <path d="M8 6h.01" /><path d="M16 6h.01" /><path d="M12 6h.01" />
+      <path d="M12 10h.01" /><path d="M12 14h.01" /><path d="M16 10h.01" />
+      <path d="M16 14h.01" /><path d="M8 10h.01" /><path d="M8 14h.01" />
     </svg>
   )
 }
@@ -56,19 +137,15 @@ function BuildingIcon() {
 function SendIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M22 2L11 13" />
-      <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+      <path d="M22 2L11 13" /><path d="M22 2L15 22L11 13L2 9L22 2Z" />
     </svg>
   )
 }
 
-function CalendarIcon() {
+function CalendarIconSmall() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="4" width="18" height="18" rx="2" />
-      <path d="M16 2v4" />
-      <path d="M8 2v4" />
-      <path d="M3 10h18" />
+      <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4" /><path d="M8 2v4" /><path d="M3 10h18" />
     </svg>
   )
 }
@@ -85,13 +162,12 @@ function LinkIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-      <polyline points="15 3 21 3 21 9" />
-      <line x1="10" y1="14" x2="21" y2="3" />
+      <polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
     </svg>
   )
 }
 
-/* ── ChatPanel — one chat widget with its own animation ── */
+/* ── ChatPanel ── */
 
 interface ChatPanelProps {
   mode: 'ext' | 'int'
@@ -108,11 +184,14 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
   const [fading, setFading] = useState(false)
   const [started, setStarted] = useState(false)
 
+  const { slots, totalSteps } = mode === 'ext' ? EXT_SLOTS : INT_SLOTS
+  const delays = mode === 'ext' ? EXT_DELAYS : INT_DELAYS
+  const lastStep = totalSteps - 1
+
   // Detect in-view
   useEffect(() => {
     const el = wrapperRef.current
     if (!el) return
-
     const io = new IntersectionObserver(
       ([entry]) => setInView(entry.isIntersecting),
       { threshold: 0.15 }
@@ -121,25 +200,26 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
     return () => io.disconnect()
   }, [])
 
-  // Advance to next step
+  // Advance steps
   const advance = useCallback((currentStep: number) => {
-    if (currentStep >= 5) {
+    if (currentStep >= lastStep) {
+      // Final hold → fade → reset → loop
       timeoutRef.current = setTimeout(() => {
         setFading(true)
         timeoutRef.current = setTimeout(() => {
           setStep(0)
           setFading(false)
         }, 400)
-      }, STEP_DELAYS[5])
+      }, delays[currentStep] || 4000)
       return
     }
 
     timeoutRef.current = setTimeout(() => {
       setStep(currentStep + 1)
-    }, STEP_DELAYS[currentStep])
-  }, [])
+    }, delays[currentStep] || 1000)
+  }, [lastStep, delays])
 
-  // Drive the sequence when step changes
+  // Drive sequence
   useEffect(() => {
     if (!started) return
     advance(step)
@@ -148,7 +228,7 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
     }
   }, [step, started, advance])
 
-  // Start when in view (with stagger delay)
+  // Start when in view
   useEffect(() => {
     if (!inView) return
 
@@ -157,7 +237,7 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
     ).matches
 
     if (prefersReduced) {
-      setStep(5)
+      setStep(lastStep)
       setStarted(false)
       return
     }
@@ -166,7 +246,7 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
       const timer = setTimeout(() => setStarted(true), staggerDelay)
       return () => clearTimeout(timer)
     }
-  }, [inView, started, staggerDelay])
+  }, [inView, started, staggerDelay, lastStep])
 
   const prefix = `demos.ai.${mode}`
 
@@ -181,54 +261,51 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
 
       {/* Messages area */}
       <div className={`${styles.messages} ${fading ? styles.fading : ''}`}>
-        {/* Slot 0: bot greeting (typing → message) */}
-        <div className={step >= 1 ? styles.msgVisible : styles.msgHidden}>
-          <div className={styles.messageStack}>
-            <div className={step >= 1 && step < 2 ? styles.stackShow : styles.stackHide}>
-              <ChatBubble role="bot" typing />
-            </div>
-            <div className={step >= 2 ? styles.stackShow : styles.stackHide}>
-              <ChatBubble role="bot" message={t(`${prefix}.greeting`)} />
-            </div>
-          </div>
-        </div>
+        {slots.map((slot, i) => {
+          if (slot.role === 'bot') {
+            const visible = step >= slot.typingAtStep
+            const showTyping = step >= slot.typingAtStep && step < slot.messageAtStep
+            const showMessage = step >= slot.messageAtStep
 
-        {/* Slot 1: user question — slides from right */}
-        <div className={step >= 3 ? styles.userMsgVisible : styles.userMsgHidden}>
-          <ChatBubble role="user" message={t(`${prefix}.userQuestion`)} />
-        </div>
-
-        {/* Slot 2: bot answer (typing → message) */}
-        <div className={step >= 4 ? styles.msgVisible : styles.msgHidden}>
-          <div className={styles.messageStack}>
-            <div className={step >= 4 && step < 5 ? styles.stackShow : styles.stackHide}>
-              <ChatBubble role="bot" typing />
-            </div>
-            <div className={step >= 5 ? styles.stackShow : styles.stackHide}>
-              <ChatBubble role="bot" message={t(`${prefix}.botAnswer`)} />
-            </div>
-          </div>
-        </div>
-
-        {/* Slot 3: action buttons (ext only) — appear with delay after answer */}
-        {mode === 'ext' && (
-          <div className={step >= 5 ? styles.actionsVisible : styles.actionsHidden}>
-            <div className={styles.actionButtons}>
-              <span className={styles.actionBtn}>
-                <CalendarIcon />
-                {t(`${prefix}.actionBook`)}
-              </span>
-              <span className={styles.actionBtn}>
-                <PhoneIcon />
-                {t(`${prefix}.actionCall`)}
-              </span>
-              <span className={styles.actionBtn}>
-                <LinkIcon />
-                {t(`${prefix}.actionHours`)}
-              </span>
-            </div>
-          </div>
-        )}
+            return (
+              <div key={i} className={visible ? styles.msgVisible : styles.msgHidden}>
+                <div className={styles.messageStack}>
+                  <div className={showTyping ? styles.stackShow : styles.stackHide}>
+                    <ChatBubble role="bot" typing />
+                  </div>
+                  <div className={showMessage ? styles.stackShow : styles.stackHide}>
+                    <ChatBubble role="bot" message={t(`${prefix}.${slot.key}`)} />
+                  </div>
+                </div>
+                {slot.showActions && mode === 'ext' && (
+                  <div className={showMessage ? styles.actionsVisible : styles.actionsHidden}>
+                    <div className={styles.actionButtons}>
+                      <span className={styles.actionBtn}>
+                        <CalendarIconSmall />
+                        {t(`${prefix}.actionBook`)}
+                      </span>
+                      <span className={styles.actionBtn}>
+                        <PhoneIcon />
+                        {t(`${prefix}.actionCall`)}
+                      </span>
+                      <span className={styles.actionBtn}>
+                        <LinkIcon />
+                        {t(`${prefix}.actionHours`)}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          } else {
+            const visible = step >= slot.messageAtStep
+            return (
+              <div key={i} className={visible ? styles.userMsgVisible : styles.userMsgHidden}>
+                <ChatBubble role="user" message={t(`${prefix}.${slot.key}`)} />
+              </div>
+            )
+          }
+        })}
       </div>
 
       {/* Decorative input bar */}
@@ -242,7 +319,7 @@ function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
   )
 }
 
-/* ── Main component — two panels side by side ── */
+/* ── Main component ── */
 
 export default function AiChatPreview() {
   const { t } = useTranslation()
