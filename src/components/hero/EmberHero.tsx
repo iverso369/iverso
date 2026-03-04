@@ -65,9 +65,7 @@ const vertexShader = /* glsl */ `
       baseSize = 7.0 + aRandom * 6.0;
     }
 
-    float pulse = sin(uTime * 1.5 + aRandom * 6.2832) * 0.15
-                + sin(uTime * 0.7 + aRandom * 3.14) * 0.08 + 1.0;
-    pulse *= uBreathing;
+    float pulse = 1.0;
     float edgeSizeBoost = 1.0 + (1.0 - aEdgeDist) * 0.15;
     float hoverBoost = 1.0 + vMouseGlow * 0.15;
 
@@ -422,7 +420,7 @@ export default function EmberHero() {
 
       material.uniforms.uTime.value = elapsed
       material.uniforms.uOpacity.value = fadeIn * scrollOpacity
-      material.uniforms.uBreathing.value = Math.sin(elapsed * 0.35) * 0.15 + 1.0
+      material.uniforms.uBreathing.value = 1.0
 
       const tgtActive = mouseActive ? 1.0 : 0.0
       material.uniforms.uMouseActive.value += (tgtActive - material.uniforms.uMouseActive.value) * 0.08
@@ -663,7 +661,7 @@ export default function EmberHero() {
         const vy = ny * 0.7 + Math.sin(jitterAngle) * 0.3
         const vlen = Math.sqrt(vx * vx + vy * vy) || 1
 
-        const speed = 0.3 + Math.random() * 0.7
+        const speed = 0.08 + Math.random() * 0.15
         destroyVelocities[i3] = (vx / vlen) * speed
         destroyVelocities[i3 + 1] = (vy / vlen) * speed
         destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5
