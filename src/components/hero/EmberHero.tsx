@@ -10,13 +10,14 @@ const CAMERA_Z = 35
 const CAMERA_FOV = 75
 
 // Destroy radius
-const DESTROY_RADIUS_FACTOR = 0.09
+const DESTROY_RADIUS_FACTOR = 0.045
 
 // Destroy timeline (ms) — 10s total
 const DESTROY_FLY_PHASE = 1500
-const DESTROY_RETURN_PHASE = 6500
-const DESTROY_SNAP_PHASE = 2000
-const DESTROY_TOTAL = DESTROY_FLY_PHASE + DESTROY_RETURN_PHASE + DESTROY_SNAP_PHASE
+const DESTROY_HOLD_PHASE = 2000
+const DESTROY_RETURN_PHASE = 5000
+const DESTROY_SNAP_PHASE = 1500
+const DESTROY_TOTAL = DESTROY_FLY_PHASE + DESTROY_HOLD_PHASE + DESTROY_RETURN_PHASE + DESTROY_SNAP_PHASE
 
 const MOSQUITO_DURATION = 3000
 
@@ -27,7 +28,7 @@ const SCROLL_REFORM_START = 0.85
 const SCROLL_REFORM_END = 0.95
 
 // Scroll physics
-const SCROLL_IMPULSE = 2.0
+const SCROLL_IMPULSE = 1.0
 const SCROLL_DAMPING = 0.96
 const SCROLL_SPRING_K = 0.03
 const DRIFT_FORCE = 0.004
@@ -342,14 +343,17 @@ export default function EmberHero() {
             tmp.lerp(cDarkRed, (1 - t) * 0.3)
           }
         } else {
+          // Reuse text positions — no scatter outside contour
           const base = useSampled[Math.floor(Math.random() * useSampled.length)]
-          const ang = Math.random() * Math.PI * 2
-          const rad = Math.random() * 0.006 + 0.001
-          hx = (base.x + Math.cos(ang) * rad) * visW
-          hy = (base.y + Math.sin(ang) * rad) * visH
-          hz = (Math.random() - 0.5) * 1.0
-          ed = 0.15
-          tmp.copy(cHaloA).lerp(cHaloB, Math.random() * 0.3)
+          hx = base.x * visW
+          hy = base.y * visH
+          hz = (Math.random() - 0.5) * 0.15
+          ed = base.edgeDist
+          if (ed < 0.1) {
+            tmp.copy(cBrightOrange).lerp(cHot, Math.random() * 0.4)
+          } else {
+            tmp.copy(cHaloA).lerp(cHaloB, Math.random() * 0.3)
+          }
         }
 
         homePositions[i * 3] = hx
@@ -453,12 +457,13 @@ export default function EmberHero() {
         const r = randoms[i]
         const hx = homePositions[i3], hy = homePositions[i3 + 1], hz = homePositions[i3 + 2]
 
-        // Scroll physics
-        scrollVelocities[i3] *= SCROLL_DAMPING
-        scrollVelocities[i3 + 1] *= SCROLL_DAMPING
-        scrollVelocities[i3 + 2] *= SCROLL_DAMPING
+        // Scroll physics — extra damping near zero dispersal to prevent trembling
+        const scrollDamp = dispersal < 0.05 ? SCROLL_DAMPING * 0.9 : SCROLL_DAMPING
+        scrollVelocities[i3] *= scrollDamp
+        scrollVelocities[i3 + 1] *= scrollDamp
+        scrollVelocities[i3 + 2] *= scrollDamp
 
-        if (scrollDelta > 0.0005) {
+        if (scrollDelta > 0.005) {
           const imp = scrollDelta * SCROLL_IMPULSE
           scrollVelocities[i3] += scrollDirections[i3] * imp
           scrollVelocities[i3 + 1] += scrollDirections[i3 + 1] * imp
@@ -511,22 +516,35 @@ export default function EmberHero() {
           ty += Math.sin(sa) * (Math.sin(sp) * 0.5 + 0.5) * ss
         }
 
-        // Destroy
+        // Destroy — 4 phases: FLY → HOLD → RETURN → SNAP
         if (destroyedAt[i] > 0) {
           const age = now - destroyedAt[i]
+          const holdEnd = DESTROY_FLY_PHASE + DESTROY_HOLD_PHASE
+          const returnEnd = holdEnd + DESTROY_RETURN_PHASE
+
           if (age >= DESTROY_TOTAL) {
             destroyedAt[i] = 0
             destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
             destroyVelocities[i3] = destroyVelocities[i3 + 1] = destroyVelocities[i3 + 2] = 0
           } else if (age < DESTROY_FLY_PHASE) {
+            // Phase 1: fly outward with drag
             destroyVelocities[i3] *= 0.985
             destroyVelocities[i3 + 1] *= 0.985
             destroyVelocities[i3 + 2] *= 0.985
             destroyOffsets[i3] += destroyVelocities[i3]
             destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
             destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
-          } else if (age < DESTROY_FLY_PHASE + DESTROY_RETURN_PHASE) {
-            const ra = (age - DESTROY_FLY_PHASE) / DESTROY_RETURN_PHASE
+          } else if (age < holdEnd) {
+            // Phase 2: hold — strong damping, particles come to near-stop
+            destroyVelocities[i3] *= 0.95
+            destroyVelocities[i3 + 1] *= 0.95
+            destroyVelocities[i3 + 2] *= 0.95
+            destroyOffsets[i3] += destroyVelocities[i3]
+            destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
+            destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
+          } else if (age < returnEnd) {
+            // Phase 3: gradual return (staggered per particle)
+            const ra = (age - holdEnd) / DESTROY_RETURN_PHASE
             const pd = returnDelays[i] * 0.6
             if (ra > pd) {
               const t = (ra - pd) / (1 - pd)
@@ -542,7 +560,8 @@ export default function EmberHero() {
             destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
             destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
           } else {
-            const sp = (age - DESTROY_FLY_PHASE - DESTROY_RETURN_PHASE) / DESTROY_SNAP_PHASE
+            // Phase 4: accelerated snap back to home
+            const sp = (age - returnEnd) / DESTROY_SNAP_PHASE
             const s = 0.08 + sp * 0.25
             destroyOffsets[i3] *= 1 - s
             destroyOffsets[i3 + 1] *= 1 - s
@@ -601,22 +620,35 @@ export default function EmberHero() {
         const dx = positionArray[i3] - clickPos.x
         const dy = positionArray[i3 + 1] - clickPos.y
         const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < dR) {
-          // Soft edge: particles near the edge have lower chance of being hit
-          const normDist = dist / dR
-          if (normDist > 0.7 && Math.random() > (1 - normDist) / 0.3) continue
 
-          hitCount++
-          destroyedAt[i] = now
-          returnDelays[i] = Math.random()
-          const angle = Math.random() * Math.PI * 2
-          const speed = 0.2 + Math.random() * 0.6
-          const falloff = (1 - normDist) * (1 - normDist) // squared falloff for soft edge
-          destroyVelocities[i3] = Math.cos(angle) * speed * (0.3 + falloff * 0.7)
-          destroyVelocities[i3 + 1] = Math.sin(angle) * speed * (0.3 + falloff * 0.7)
-          destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 1.0
-          destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
-        }
+        // Per-particle radius variation for organic edge (±40%)
+        const effectiveR = dR * (0.6 + Math.random() * 0.8)
+        if (dist >= effectiveR) continue
+
+        // Squared probability falloff — no sharp boundary
+        const normDist = dist / effectiveR
+        const hitChance = (1 - normDist * normDist)
+        if (Math.random() > hitChance) continue
+
+        hitCount++
+        destroyedAt[i] = now
+        returnDelays[i] = Math.random()
+
+        // Radial outward from click + 30% random jitter
+        const rdist = dist || 0.001
+        const nx = dx / rdist
+        const ny = dy / rdist
+        const jitterAngle = Math.random() * Math.PI * 2
+        const vx = nx * 0.7 + Math.cos(jitterAngle) * 0.3
+        const vy = ny * 0.7 + Math.sin(jitterAngle) * 0.3
+        const vlen = Math.sqrt(vx * vx + vy * vy) || 1
+
+        const speed = 0.2 + Math.random() * 0.6
+        const falloff = (1 - normDist) * (1 - normDist)
+        destroyVelocities[i3] = (vx / vlen) * speed * (0.3 + falloff * 0.7)
+        destroyVelocities[i3 + 1] = (vy / vlen) * speed * (0.3 + falloff * 0.7)
+        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5
+        destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
       }
       if (hitCount > 0) recentDestroys.push(now)
     }
