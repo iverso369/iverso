@@ -1,80 +1,119 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import KpiCard from '../ui/KpiCard'
 import MiniWebsite from '../ui/MiniWebsite'
 import styles from './DashboardPreview.module.css'
 
-/* ── SVG thin-line icons (1.5px stroke) ── */
+/*
+  Animation phases:
+  0 — reset (everything hidden)
+  1 — KPI count-up (~1.5s)
+  2 — bar chart grows
+  3 — table rows fade in (stagger)
+  4 — hold
+  then fade → reset to 0 → loop
+*/
 
-function TrendingUpIcon() {
+const BAR_HEIGHTS = [45, 65, 38, 80, 55, 72, 60] // % heights for 7 bars
+
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3)
+}
+
+/* ── SVG icons (thin line, 1.5px stroke) ── */
+
+function LayoutIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-      <polyline points="16 7 22 7 22 13" />
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <path d="M3 9h18" />
+      <path d="M9 21V9" />
     </svg>
   )
 }
 
-function PackageIcon() {
+function UsersIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-      <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-      <line x1="12" y1="22.08" x2="12" y2="12" />
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   )
 }
 
-function StarIcon() {
+function ChecklistIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 11l3 3L22 4" />
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
     </svg>
   )
 }
 
-/* ── component ── */
+function CalendarIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M16 2v4" />
+      <path d="M8 2v4" />
+      <path d="M3 10h18" />
+    </svg>
+  )
+}
+
+function ChartIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 20V10" />
+      <path d="M12 20V4" />
+      <path d="M6 20v-6" />
+    </svg>
+  )
+}
+
+/* ── Table row data ── */
+
+const TABLE_ROWS = [
+  { clientKey: 'row1Client', projectKey: 'row1Project', valueKey: 'row1Value', status: 'active' },
+  { clientKey: 'row2Client', projectKey: 'row2Project', valueKey: 'row2Value', status: 'active' },
+  { clientKey: 'row3Client', projectKey: 'row3Project', valueKey: 'row3Value', status: 'progress' },
+  { clientKey: 'row4Client', projectKey: 'row4Project', valueKey: 'row4Value', status: 'planning' },
+] as const
+
+const STATUS_STYLE_MAP: Record<string, string> = {
+  active: 'statusActive',
+  progress: 'statusProgress',
+  planning: 'statusPlanning',
+}
+
+const STATUS_KEY_MAP: Record<string, string> = {
+  active: 'statusActive',
+  progress: 'statusProgress',
+  planning: 'statusPlanning',
+}
+
+/* ── Component ── */
 
 export default function DashboardPreview() {
   const { t } = useTranslation()
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const rafRef = useRef<number | null>(null)
 
-  const [isDesktop, setIsDesktop] = useState(false)
   const [inView, setInView] = useState(false)
-  const [loopKey, setLoopKey] = useState(0)
+  const [started, setStarted] = useState(false)
+  const [phase, setPhase] = useState(0)
   const [fading, setFading] = useState(false)
 
-  // Detect desktop
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 769px)')
-    setIsDesktop(mq.matches)
-    function handler(e: MediaQueryListEvent) {
-      setIsDesktop(e.matches)
-    }
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
+  // Count-up state
+  const [countProgress, setCountProgress] = useState(0) // 0..1
+
+  // Bar chart animated
+  const [barsAnimated, setBarsAnimated] = useState(false)
+
+  // Table rows visible count
+  const [visibleRows, setVisibleRows] = useState(0)
 
   // Detect in-view
   useEffect(() => {
@@ -83,68 +122,286 @@ export default function DashboardPreview() {
 
     const io = new IntersectionObserver(
       ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.1 }
+      { threshold: 0.15 }
     )
     io.observe(el)
     return () => io.disconnect()
   }, [])
 
-  // Loop animation on desktop while in view
+  // Count-up animation
+  const runCountUp = useCallback((onDone: () => void) => {
+    const duration = 1500
+    const start = performance.now()
+
+    function tick(now: number) {
+      const elapsed = now - start
+      const t = Math.min(elapsed / duration, 1)
+      setCountProgress(easeOutCubic(t))
+
+      if (t < 1) {
+        rafRef.current = requestAnimationFrame(tick)
+      } else {
+        setCountProgress(1)
+        onDone()
+      }
+    }
+
+    rafRef.current = requestAnimationFrame(tick)
+  }, [])
+
+  // Phase sequencer
+  const advance = useCallback((currentPhase: number) => {
+    if (currentPhase === 0) {
+      // Start count-up
+      setPhase(1)
+      setCountProgress(0)
+      setBarsAnimated(false)
+      setVisibleRows(0)
+
+      runCountUp(() => {
+        setPhase(2)
+      })
+      return
+    }
+
+    if (currentPhase === 2) {
+      // Bar chart
+      setBarsAnimated(true)
+      timeoutRef.current = setTimeout(() => {
+        setPhase(3)
+      }, 600)
+      return
+    }
+
+    if (currentPhase === 3) {
+      // Table rows stagger
+      let row = 0
+      const showNext = () => {
+        row++
+        setVisibleRows(row)
+        if (row < 4) {
+          timeoutRef.current = setTimeout(showNext, 200)
+        } else {
+          setPhase(4)
+        }
+      }
+      showNext()
+      return
+    }
+
+    if (currentPhase === 4) {
+      // Hold then fade and reset
+      timeoutRef.current = setTimeout(() => {
+        setFading(true)
+        timeoutRef.current = setTimeout(() => {
+          setPhase(0)
+          setCountProgress(0)
+          setBarsAnimated(false)
+          setVisibleRows(0)
+          setFading(false)
+        }, 400)
+      }, 5000)
+      return
+    }
+  }, [runCountUp])
+
+  // Drive phases
   useEffect(() => {
-    if (!isDesktop || !inView) return
+    if (!started) return
+    advance(phase)
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
+  }, [phase, started, advance])
+
+  // Start when in view
+  useEffect(() => {
+    if (!inView || started) return
 
     const prefersReduced = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches
-    if (prefersReduced) return
 
-    const interval = setInterval(() => {
-      setFading(true)
-      setTimeout(() => {
-        setLoopKey(k => k + 1)
-        setFading(false)
-      }, 400)
-    }, 6000)
+    if (prefersReduced) {
+      setCountProgress(1)
+      setBarsAnimated(true)
+      setVisibleRows(4)
+      setPhase(4)
+      return
+    }
 
-    return () => clearInterval(interval)
-  }, [isDesktop, inView])
+    setStarted(true)
+  }, [inView, started])
+
+  // Formatted KPI values using count-up progress
+  const revenueDisplay = interpolateValue(t('demos.dashboard.revenueValue'), countProgress)
+  const clientsDisplay = interpolateNumber(847, countProgress)
+  const conversionDisplay = interpolateNumber(68, countProgress) + '%'
+
+  const menuItems = [
+    { key: 'menuOverview', icon: <LayoutIcon />, active: true },
+    { key: 'menuClients', icon: <UsersIcon />, active: false },
+    { key: 'menuTasks', icon: <ChecklistIcon />, active: false },
+    { key: 'menuCalendar', icon: <CalendarIcon />, active: false },
+    { key: 'menuReports', icon: <ChartIcon />, active: false },
+  ]
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
       <MiniWebsite className={styles.browser}>
-        <div className={`${styles.cardGrid} ${fading ? styles.fading : ''}`}>
-          <KpiCard
-            key={`rev-${loopKey}`}
-            icon={<TrendingUpIcon />}
-            value={24850}
-            format="currency"
-            label={t('demos.dashboard.revenue')}
-            change={12.5}
-            progress={0.78}
-            size="small"
-          />
-          <KpiCard
-            key={`ord-${loopKey}`}
-            icon={<PackageIcon />}
-            value={1284}
-            format="number"
-            label={t('demos.dashboard.orders')}
-            change={8.2}
-            progress={0.64}
-            size="small"
-          />
-          <KpiCard
-            key={`sat-${loopKey}`}
-            icon={<StarIcon />}
-            value={94.5}
-            format="percent"
-            label={t('demos.dashboard.satisfaction')}
-            change={2.3}
-            progress={0.95}
-            size="small"
-          />
+        <div className={`${styles.layout} ${fading ? styles.fading : ''}`}>
+          {/* Sidebar */}
+          <div className={styles.sidebar}>
+            <div className={styles.sidebarLogo}>
+              {t('demos.dashboard.companyLogo')}
+            </div>
+            {menuItems.map((item) => (
+              <div
+                key={item.key}
+                className={item.active ? styles.menuItemActive : styles.menuItem}
+              >
+                <span className={styles.menuIcon}>{item.icon}</span>
+                {t(`demos.dashboard.${item.key}`)}
+              </div>
+            ))}
+          </div>
+
+          {/* Main content */}
+          <div className={styles.main}>
+            {/* Header */}
+            <div className={styles.header}>
+              <span className={styles.headerTitle}>
+                {t('demos.dashboard.menuOverview')}
+              </span>
+              <div className={styles.tabs}>
+                <span className={styles.tabActive}>
+                  {t('demos.dashboard.tabWeek')}
+                </span>
+                <span className={styles.tab}>
+                  {t('demos.dashboard.tabMonth')}
+                </span>
+                <span className={styles.tab}>
+                  {t('demos.dashboard.tabYear')}
+                </span>
+              </div>
+            </div>
+
+            {/* KPI cards */}
+            <div className={styles.kpiRow}>
+              {/* Revenue */}
+              <div className={styles.kpiCard}>
+                <span className={styles.kpiLabel}>
+                  {t('demos.dashboard.revenueLabel')}
+                </span>
+                <span className={styles.kpiValue}>{revenueDisplay}</span>
+                <span className={`${styles.kpiChange} ${styles.kpiPositive}`}>
+                  ▲ {t('demos.dashboard.revenueChange')}
+                </span>
+              </div>
+
+              {/* Clients */}
+              <div className={styles.kpiCard}>
+                <span className={styles.kpiLabel}>
+                  {t('demos.dashboard.clientsLabel')}
+                </span>
+                <span className={styles.kpiValue}>{clientsDisplay}</span>
+                <span className={`${styles.kpiChange} ${styles.kpiPositive}`}>
+                  ▲ {t('demos.dashboard.clientsChange')}
+                </span>
+              </div>
+
+              {/* Conversion */}
+              <div className={styles.kpiCard}>
+                <span className={styles.kpiLabel}>
+                  {t('demos.dashboard.conversionLabel')}
+                </span>
+                <span className={styles.kpiValue}>{conversionDisplay}</span>
+                <span className={`${styles.kpiChange} ${styles.kpiNegative}`}>
+                  ▼ {t('demos.dashboard.conversionChange')}
+                </span>
+                <div className={styles.barChart}>
+                  {BAR_HEIGHTS.map((h, i) => (
+                    <div
+                      key={i}
+                      className={`${styles.bar} ${barsAnimated ? styles.barAnimated : ''}`}
+                      style={{
+                        height: `${h}%`,
+                        transitionDelay: barsAnimated ? `${i * 0.1}s` : '0s',
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Table */}
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>{t('demos.dashboard.colClient')}</th>
+                  <th>{t('demos.dashboard.colProject')}</th>
+                  <th>{t('demos.dashboard.colStatus')}</th>
+                  <th>{t('demos.dashboard.colValue')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {TABLE_ROWS.map((row, i) => (
+                  <tr
+                    key={row.clientKey}
+                    className={`${styles.tableRow} ${i < visibleRows ? styles.tableRowVisible : ''}`}
+                  >
+                    <td>{t(`demos.dashboard.${row.clientKey}`)}</td>
+                    <td>{t(`demos.dashboard.${row.projectKey}`)}</td>
+                    <td>
+                      <span className={`${styles.statusBadge} ${styles[STATUS_STYLE_MAP[row.status]]}`}>
+                        {t(`demos.dashboard.${STATUS_KEY_MAP[row.status]}`)}
+                      </span>
+                    </td>
+                    <td>{t(`demos.dashboard.${row.valueKey}`)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </MiniWebsite>
     </div>
   )
+}
+
+/* ── Helpers ── */
+
+/** Interpolate a number from 0 to target based on progress (0..1) */
+function interpolateNumber(target: number, progress: number): string {
+  return Math.round(target * progress).toString()
+}
+
+/** Interpolate a localized value string — extracts the number, animates it */
+function interpolateValue(finalStr: string, progress: number): string {
+  // Match patterns like "9,2M Ft", "€24.8k", "68%"
+  const match = finalStr.match(/([€$]?)([0-9.,]+)\s*([A-Za-z%]*\s*[A-Za-z]*)/)
+  if (!match) return finalStr
+
+  const prefix = match[1]
+  const numStr = match[2]
+  const suffix = match[3].trim()
+
+  // Parse the number (handle both , and . as decimal separator)
+  const num = parseFloat(numStr.replace(',', '.'))
+  if (isNaN(num)) return finalStr
+
+  const current = num * progress
+
+  // Format back with original style
+  if (numStr.includes(',')) {
+    // Comma decimal (e.g. "9,2")
+    const formatted = current.toFixed(1).replace('.', ',')
+    return `${prefix}${formatted}${suffix ? ' ' + suffix : ''}`
+  } else {
+    // Dot decimal (e.g. "24.8")
+    const formatted = current.toFixed(1)
+    return `${prefix}${formatted}${suffix}`
+  }
 }
