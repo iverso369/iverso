@@ -42,6 +42,8 @@
 .bot .bubble {
   background: #151518;
   border-bottom-left-radius: 4px;
+  border-left: 2px solid rgba(247, 127, 10, 0.4);
+  box-shadow: 0 0 16px rgba(247, 127, 10, 0.06);
 }
 
 .user .bubble {
@@ -81,7 +83,7 @@
 .text {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text);
   white-space: pre-wrap;
   word-break: break-word;
