@@ -45,8 +45,9 @@
 }
 
 .user .bubble {
-  background: var(--accent);
+  background: #1a1a1f;
   border-bottom-right-radius: 4px;
+  box-shadow: 0 0 12px rgba(247, 127, 10, 0.15);
 }
 
 /* ── avatar ── */
