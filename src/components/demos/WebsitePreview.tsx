@@ -3,37 +3,19 @@ import { useTranslation } from 'react-i18next'
 import MiniWebsite from '../ui/MiniWebsite'
 import styles from './WebsitePreview.module.css'
 
-/* ── SVG thin-line icons (1.5px stroke) ── */
+/* ── Load Lora font for the bakery demo (not Iverso's font) ── */
+const LORA_HREF = 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap'
 
-function UtensilsIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
-      <path d="M7 2v20" />
-      <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7" />
-    </svg>
-  )
+function ensureLora() {
+  if (document.querySelector(`link[href="${LORA_HREF}"]`)) return
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = LORA_HREF
+  document.head.appendChild(link)
 }
 
-function ClockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </svg>
-  )
-}
-
-function PhoneIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-    </svg>
-  )
-}
-
-/* ── Animation step count (0-based indices for each element) ── */
-const STEP_COUNT = 7 // nav, heroTitle, heroSub, cta, card0, card1, card2
+/* ── Animation steps: nav, hero, heroSub, sectionLabel, product0, product1, product2, bottomBar ── */
+const STEP_COUNT = 8
 
 export default function WebsitePreview() {
   const { t } = useTranslation()
@@ -45,6 +27,9 @@ export default function WebsitePreview() {
   const [fading, setFading] = useState(false)
   const [mobileRan, setMobileRan] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Load Lora font on mount
+  useEffect(() => { ensureLora() }, [])
 
   // Detect desktop
   useEffect(() => {
@@ -117,7 +102,7 @@ export default function WebsitePreview() {
           setVisibleStep(-1)
           setFading(false)
         }, 400)
-      }, 3000)
+      }, 4000)
     }
 
     return () => {
@@ -125,10 +110,22 @@ export default function WebsitePreview() {
     }
   }, [inView, isDesktop, visibleStep, fading, mobileRan])
 
-  const cards = [
-    { icon: <UtensilsIcon />, label: t('demos.websites.card1') },
-    { icon: <ClockIcon />, label: t('demos.websites.card2') },
-    { icon: <PhoneIcon />, label: t('demos.websites.card3') },
+  const products = [
+    {
+      name: t('demos.websites.product1Name'),
+      desc: t('demos.websites.product1Desc'),
+      price: t('demos.websites.product1Price'),
+    },
+    {
+      name: t('demos.websites.product2Name'),
+      desc: t('demos.websites.product2Desc'),
+      price: t('demos.websites.product2Price'),
+    },
+    {
+      name: t('demos.websites.product3Name'),
+      desc: t('demos.websites.product3Desc'),
+      price: t('demos.websites.product3Price'),
+    },
   ]
 
   function vis(step: number) {
@@ -139,41 +136,64 @@ export default function WebsitePreview() {
     <div ref={wrapperRef} className={styles.wrapper}>
       <MiniWebsite className={styles.browser}>
         <div className={`${styles.page} ${fading ? styles.fading : ''}`}>
-          {/* mini nav */}
+          {/* nav */}
           <div className={`${styles.miniNav} ${styles.element} ${vis(0)}`}>
-            <span className={styles.restaurantName}>
-              {t('demos.websites.restaurantName')}
+            <span className={styles.bakeryName}>
+              {t('demos.websites.bakeryName')}
             </span>
             <div className={styles.navLinks}>
-              <span className={styles.navLink}>{t('demos.websites.card1')}</span>
-              <span className={styles.navLink}>{t('demos.websites.card3')}</span>
+              <span className={styles.navLink}>{t('demos.websites.navProducts')}</span>
+              <span className={styles.navLink}>{t('demos.websites.navAbout')}</span>
             </div>
           </div>
 
           {/* hero */}
-          <div className={styles.hero}>
-            <h3 className={`${styles.heroTitle} ${styles.element} ${vis(1)}`}>
+          <div className={`${styles.hero} ${styles.element} ${vis(1)}`}>
+            <div className={styles.heroOverlay} />
+            <h3 className={styles.heroTitle}>
               {t('demos.websites.heroTitle')}
             </h3>
             <p className={`${styles.heroSubtitle} ${styles.element} ${vis(2)}`}>
               {t('demos.websites.heroSubtitle')}
             </p>
-            <span className={`${styles.ctaButton} ${styles.element} ${vis(3)}`}>
-              {t('demos.websites.ctaButton')}
-            </span>
           </div>
 
-          {/* 3 cards */}
-          <div className={styles.cardRow}>
-            {cards.map((card, i) => (
-              <div
-                key={i}
-                className={`${styles.card} ${styles.element} ${vis(4 + i)}`}
-              >
-                <div className={styles.cardIcon}>{card.icon}</div>
-                <span className={styles.cardLabel}>{card.label}</span>
-              </div>
-            ))}
+          {/* products */}
+          <div className={styles.productSection}>
+            <p className={`${styles.sectionLabel} ${styles.element} ${vis(3)}`}>
+              {t('demos.websites.sectionLabel')}
+            </p>
+            <div className={styles.productList}>
+              {products.map((product, i) => (
+                <div
+                  key={i}
+                  className={`${styles.productItem} ${styles.element} ${vis(4 + i)}`}
+                >
+                  <div className={styles.productLeft}>
+                    <div className={styles.productDot} />
+                    <div className={styles.productInfo}>
+                      <div className={styles.productName}>{product.name}</div>
+                      <div className={styles.productDesc}>{product.desc}</div>
+                    </div>
+                  </div>
+                  <div className={styles.productPrice}>{product.price}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* bottom bar */}
+          <div className={`${styles.bottomBar} ${styles.element} ${vis(7)}`}>
+            <div className={styles.hoursWrapper}>
+              <span className={styles.clockIcon}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </span>
+              <span className={styles.hoursText}>{t('demos.websites.hours')}</span>
+            </div>
+            <span className={styles.orderBtn}>{t('demos.websites.orderButton')}</span>
           </div>
         </div>
       </MiniWebsite>

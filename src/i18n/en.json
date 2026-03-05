@@ -121,13 +121,24 @@
     "websites": {
       "title": "Websites",
       "description": "First impressions in your hands",
-      "restaurantName": "Smith's Kitchen",
-      "heroTitle": "Harmony of Flavors",
-      "heroSubtitle": "Tradition meets modern cuisine",
-      "ctaButton": "Book a table",
-      "card1": "Menu",
-      "card2": "Hours",
-      "card3": "Contact"
+      "bakeryName": "Baker & Sons",
+      "heroTitle": "Fresh as the morning.",
+      "heroSubtitle": "Artisan baked goods, traditional recipes.",
+      "sectionLabel": "OUR BESTSELLERS",
+      "product1Name": "Sourdough loaf",
+      "product1Desc": "Natural sourdough, 24h fermentation",
+      "product1Price": "€5.00",
+      "product2Name": "Butter croissant",
+      "product2Desc": "French butter, flaky pastry",
+      "product2Price": "€1.80",
+      "product3Name": "Chocolate roll",
+      "product3Desc": "Homemade cocoa cream, brioche dough",
+      "product3Price": "€1.60",
+      "hours": "Mon–Fri: 6:00–18:00 · Sat: 7:00–14:00",
+      "orderButton": "Order →",
+      "navProducts": "Products",
+      "navAbout": "About",
+      "navContact": "Contact"
     }
   },
   "process": {

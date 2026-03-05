@@ -121,13 +121,24 @@
     "websites": {
       "title": "Weboldalak",
       "description": "Az első benyomás a te kezedben",
-      "restaurantName": "Kovács Étterem",
-      "heroTitle": "Ízek harmóniája",
-      "heroSubtitle": "Hagyomány és modern konyha",
-      "ctaButton": "Asztalfoglalás",
-      "card1": "Étlap",
-      "card2": "Nyitvatartás",
-      "card3": "Kapcsolat"
+      "bakeryName": "Molnár Pékség",
+      "heroTitle": "Friss, mint a reggel.",
+      "heroSubtitle": "Kézműves pékáruk, hagyományos receptekkel.",
+      "sectionLabel": "NÉPSZERŰ TERMÉKEINK",
+      "product1Name": "Kovászos kenyér",
+      "product1Desc": "Természetes kovász, 24 órás érlelés",
+      "product1Price": "2.000 Ft",
+      "product2Name": "Vajas croissant",
+      "product2Desc": "Francia vaj, réteges tészta",
+      "product2Price": "700 Ft",
+      "product3Name": "Kakaós csiga",
+      "product3Desc": "Házi kakaókrém, puha briós tészta",
+      "product3Price": "650 Ft",
+      "hours": "H–P: 6:00–18:00 · Szo: 7:00–14:00",
+      "orderButton": "Rendelés →",
+      "navProducts": "Termékeink",
+      "navAbout": "Rólunk",
+      "navContact": "Kapcsolat"
     }
   },
   "process": {
