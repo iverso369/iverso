@@ -14,14 +14,13 @@ export default function DemoCard({ titleKey, subtitleKey, linkTo, children }: De
 
   return (
     <div className={styles.card}>
-      <h2 className={styles.title}>{t(titleKey)}</h2>
-      <p className={styles.subtitle}>{t(subtitleKey)}</p>
-
-      <div className={styles.footer}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>{t(titleKey)}</h2>
         <Link to={linkTo} className={styles.link}>
           {t('common.more')}
         </Link>
       </div>
+      <p className={styles.subtitle}>{t(subtitleKey)}</p>
 
       <div className={styles.content}>
         {children}

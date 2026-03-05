@@ -42,7 +42,7 @@
       "p1": {
         "kpi1Label": "Aktív termék", "kpi1Value": "34", "kpi1Change": "+3%",
         "kpi2Label": "Új (hónap)", "kpi2Value": "3", "kpi2Change": "+50%",
-        "kpi3Label": "Elfogyott", "kpi3Value": "2",
+        "kpi3Label": "Elfogyott", "kpi3Value": "2", "kpi3Change": "-1",
         "col1": "Termék", "col2": "Kategória", "col3": "Ár", "col4": "Készlet",
         "r1c1": "Kovászos kenyér", "r1c2": "Kenyér", "r1c3": "2.000 Ft", "r1c4": "12 db",
         "r2c1": "Croissant", "r2c2": "Pékáru", "r2c3": "700 Ft", "r2c4": "28 db",
