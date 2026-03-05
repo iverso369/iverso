@@ -1,92 +1,7 @@
 # IVERSO — Javítási terv
 
 > 2026.03.03 — Első vizuális review után
-> Frissítve: 2026.03.04
-
----
-
-## Mi a helyzet
-
-Réteg 1 és 3 rendben van. Réteg 4 (jelenetek) mind implementálva, de az első vizuális review komoly problémákat tárt fel. A Réteg 2 (parázs hero) a másik chatben készült és bugos — innentől minden javítás ebben a projekt chatben történik.
-
----
-
-## Azonosított problémák
-
-### P1 — Parázs IVERSO felirat átlóg mindenen (KRITIKUS)
-- A Three.js canvas nincs a hero szekcióba bezárva
-- A parázs felirat a builder szekció, CTA és mindenhol mögött/felett megjelenik
-- Valószínűleg position: fixed vagy rossz z-index
-- **Javítás:** hero konténerbe zárás, overflow: hidden, z-index rendezés
-
-### P2 — DashboardPreview üres (KOMOLY)
-- Csak 3 KPI kártya donut chart-tal — nincs dashboard hangulat
-- Az eredeti vízió: sidebar navigáció, KPI kártyák, táblázat sorokkal, tab váltás
-- Kevés tartalom, nagy üres helyek
-- "Tovább →" gomb a kártyán kívül van
-- **Javítás:** gazdagabb dashboard tartalom, sidebar + táblázat, "Tovább" a kártyába
-
-### P3 — AiChatPreview auto-scroll + kevés tartalom (KOMOLY)
-- Az üzenetek megjelenésekor az oldal automatikusan görget — idegesítő
-- Nincs fix mérete a preview-nak
-- Csak 2-3 buborék jelenik meg, nincs chat felület érzés
-- Az eredeti vízió: teljes chat felület input mezővel, élő érzés
-- **Javítás:** fix méret, nincs auto-scroll, gazdagabb chat tartalom
-
-### P4 — Preview-k mérete nem egységes (KOMOLY)
-- Az AutomationPreview kisebb mint a többi
-- Vizuálisan össze-vissza — az összes preview-nak azonos kártyaméretűnek kellene lennie
-- **Javítás:** egységes kártyaméret mind a 4 preview-nak
-
-### P5 — WebsitePreview üres (KOMOLY)
-- A mini éttermi landing page tartalom nem jön át
-- Vizuálisan nem mutat semmit
-- **Javítás:** átgondolás, gazdagabb tartalom
-
-### P6 — Folyamat szekció — közel jó, de hiányzik valami
-- A 4 node megjelenik, konzisztens az AutomationPreview-val
-- De hiányzik valami — háttér, mélység, valami amitől nem lapos
-- **Javítás:** finom háttér/effekt hozzáadás
-
-### P7 — Építős szekció nem interaktív (KOMOLY)
-- Színes narancs kockák össze-vissza, nincs valódi interakció érzés
-- A morph bugol a Réteg 2 parázs felirat miatt
-- Nehéz érteni mit kell csinálni
-- **Javítás:** a Réteg 2 fix után újratesztelni, interakció javítás
-
-### P8 — "Tovább →" gombok kívül vannak
-- Minden preview-nál a "Tovább →" a kártya alatt van külön sorban
-- Be kellene építeni a kártya aljába
-- **Javítás:** kártyán belülre
-
-### P9 — Navbar nem látszik a hero-nál (VÁLTOZÁS)
-- A storyboard eredetileg úgy szólt: hero-nál nincs nav, scrollra jelenik meg
-- **Új döntés:** a navbar gépen MINDIG látható legyen, hero-nál is
-- A nyelvváltó a nav-ban marad
-- **Javítás:** nav scroll-aware viselkedés kikapcsolása gépen — mindig fix, látható
-
-### P10 — IVERSO hero az egész képernyőt elfoglalja (KOMOLY)
-- A hero szekció jelenleg teljes viewport magasságú — a tartalom csak alatta kezdődik
-- Az IVERSO felirat + "Let's build something" a képernyő közepén van, alatta üres
-- **Elvárt:** a hero a képernyő felső ~40%-át foglalja el, alatta azonnal jöjjön a tartalom
-- A "Let's build something" szöveg az IVERSO felirat alatt legyen (nem effekt, sima szöveg)
-- **Javítás:** hero szekció magasság korlátozása (~40vh), VS Code-ban a hero komponensben
-
----
-
-## Javítási sorrend
-
-1. **Réteg 2 fix** — a parázs hero javítása
-2. **Egységes preview kártyaméret** — mind a 4 azonos méretű wrapper
-3. **DashboardPreview újratervezés** — gazdagabb tartalom
-4. **AiChatPreview fix** — fix méret, nincs auto-scroll, gazdagabb
-5. **WebsitePreview újratervezés** — tartalmasabb mini weboldal
-6. **AutomationPreview méretezés** — egységes a többivel
-7. **Építős szekció javítás** — interaktivitás, morph újrateszt
-8. **Folyamat szekció finomhangolás** — háttér/mélység
-9. **"Tovább" gombok beépítése** — kártyán belülre
-10. **Navbar mindig látható** — gépen scroll-aware kikapcsolás
-11. **Hero magasság** — ~40vh, tartalom alatta, nem teljes viewport
+> Frissítve: 2026.03.05
 
 ---
 
@@ -96,12 +11,91 @@ Réteg 1 és 3 rendben van. Réteg 4 (jelenetek) mind implementálva, de az els�
 |---|---------|---------|
 | 1 | Réteg 2 hero fix (#1-4) | ✅ kész |
 | 2 | Egységes preview méret (DemoCard wrapper) | ✅ kész |
-| 3 | DashboardPreview újra — "A verzió" (sidebar + KPI + táblázat) | 📋 prompt kész |
-| 4 | AiChatPreview — teljes újratervezés (két panel, input, gyorsválasz) | ✅ kész |
-| 5 | WebsitePreview újra | ⬜ |
+| 3 | DashboardPreview újra — sidebar + KPI + táblázat | ✅ kész |
+| 4 | AiChatPreview — két panel, input, gyorsválasz | ✅ kész |
+| 5 | WebsitePreview — v2 A világos krém pékség | ✅ kész — szín finomhangolás később |
 | 6 | AutomationPreview — node-ok mindig láthatók | ✅ kész |
-| 7 | Építős javítás | ⬜ |
+| 7 | Építős szekció javítás | ⬜ |
 | 8 | Folyamat finomhangolás | ⬜ |
-| 9 | "Tovább" gombok beépítése | ✅ kész (DemoCard-ban) |
-| 10 | Navbar mindig látható (gépen) | ⬜ |
-| 11 | Hero magasság korlátozás (~40vh) + tartalom alatta | ⬜ |
+| 9 | "Tovább" gombok beépítése | ✅ kész |
+| 10 | Navbar mindig látható (gépen) | ✅ kész |
+| 11 | Hero magasság ~50vh | ✅ kész |
+| 12 | IVERSO ↔ "Let's build something" pozíció csere + méretezés | ⬜ döntés kell |
+| 13 | Navbar teljes újratervezés (megjelenés + font) | ⬜ döntés kell |
+| 14 | Preview kártyák szélesség 85vw | ✅ kész |
+| 15 | Font váltás (navbar IVERSO + preview címek) | ⬜ döntés kell |
+| 16 | IVERSO felirat a CTA szekció fölé | ⬜ |
+| 17 | Kurzor + jobb klikk menü tiltás | ✅ kész |
+| 18 | Amelia szekció: méret, igazítás, mondatok | ⬜ döntés kell |
+| 19 | Építős: IVERSO parázs átlóg | ⬜ |
+| 20 | Szolgáltatások dropdown: "Weboldalak" hiányzik | ✅ kész |
+| 21 | Építős morph szöveg encoding bug | ✅ kész |
+| 22 | WebsitePreview szín finomhangolás | ⬜ döntés kell |
+
+---
+
+## Javasolt sorrend
+
+### 1. kör — Gyors kód fixek ✅ KÉSZ
+- ~~P14: Preview kártyák szélesség~~ ✅
+- ~~P17: Jobb klikk tiltás + kurzor~~ ✅
+- ~~P20: "Weboldalak" hiányzik a nav dropdown-ból~~ ✅
+- ~~P21: Encoding bug az építős szekcióban~~ ✅
+
+### 2. kör — Design döntések (opciók mutatása, webes Claude)
+- **P13+P15:** Navbar újratervezés + font választás → HTML prototípok
+- **P12:** IVERSO ↔ "Let's build something" pozíció csere + "Let's build something" szélesítés
+- **P16:** IVERSO felirat a CTA fölé
+- **P18:** Amelia szekció újratervezés + mondatok felülvizsgálat
+- **P22:** WebsitePreview szín tónus
+
+### 3. kör — Nehezebb fixek (VS Code)
+- **P19:** Parázs átlógás az építős szekcióba
+- **P7:** Építős szekció interaktivitás
+- **P8:** Folyamat finomhangolás
+
+---
+
+## Részletek
+
+### P12 — IVERSO ↔ "Let's build something" csere
+- Jelenleg: felül "Let's build something", alatta IVERSO parázs
+- Elvárt: felül IVERSO parázs, alatta "Let's build something"
+- A "Let's build something" méretben a parázs V elejétől az S végéig érjen
+- Érinti: Home.module.css, EmberHero.tsx
+
+### P13 — Navbar teljes újratervezés
+- Megjelenés, font, stílus — komplett áttervezés
+- HTML prototípokat kell mutatni
+
+### P14 — Preview kártyák 85vw ✅ KÉSZ
+- Home.module.css .demosSection → width: 85vw
+- Tanulság: `max-width` csak limitál, `width` kényszerít
+
+### P15 — Font váltás
+- Navbar "IVERSO" felirat fontja nem jó
+- Preview kártyák címe fontja sem jó
+- Opciók kellenek
+
+### P16 — IVERSO felirat a CTA fölé
+- "Van egy ötleted?" fölé egy IVERSO felirat
+- Kérdés: sima szöveg vagy parázs? Mekkora?
+
+### P17 — Kurzor + jobb klikk ✅ KÉSZ
+- Jobb klikk context menu tiltás (nem jogi probléma)
+- Custom kurzor stabilizálás
+
+### P18 — Amelia szekció
+- Méret növelés + középre igazítás
+- Amelia mondatok felülvizsgálata
+
+### P19 — Parázs átlógás
+- Az IVERSO parázs a canvas position: fixed miatt átlóg az építős szekcióba
+- Z-index / overflow rendezés kell
+
+### P20 — "Weboldalak" hiányzik a dropdown-ból ✅ KÉSZ
+- Nav.tsx serviceLinks tömb — ellenőrzés
+
+### P21 — Encoding bug ✅ KÉSZ
+- BuilderSection morph szövegek: "\u00E1s" karakter megjelenik
+- i18n kulcs vagy hardcoded szöveg probléma

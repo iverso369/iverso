@@ -1,6 +1,6 @@
 # Réteg 4 — Jelenetek (Napló)
 
-> Utolsó frissítés: 2026.03.04
+> Utolsó frissítés: 2026.03.05
 
 ---
 
@@ -11,37 +11,66 @@ Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 | # | Feladat | Állapot |
 |---|---------|---------|
 | 1 | Nav + Nyelvváltó | ✅ implementálva |
-| 2 | DashboardPreview (3. jelenet) | 🔄 újratervezés — prompt kész |
+| 2 | DashboardPreview (3. jelenet) | ✅ újratervezve, audit fix kész |
 | 3 | AiChatPreview (3. jelenet) | ✅ újratervezve, kész |
 | 4 | AutomationPreview (3. jelenet) | ✅ javítva, kész |
-| 5 | WebsitePreview (3. jelenet) | ⚠️ implementálva, JAVÍTANDÓ |
+| 5 | WebsitePreview (3. jelenet) | ✅ újratervezve — szín finomhangolás később |
 | 6 | Folyamat szekció (4. jelenet) | ⚠️ implementálva, finomhangolás kell |
 | 7 | Építős szekció (5. jelenet) | ⚠️ implementálva, JAVÍTANDÓ |
 | 8 | CTA + Footer (6-7. jelenet) | ✅ implementálva, finomhangolás később |
 | 9 | Home.tsx összeszerelés | ✅ implementálva |
+| 10 | Navbar mindig látható (gépen) | ✅ kész |
+| 11 | Hero magasság ~50vh | ✅ kész |
 
 ---
 
-## Javítások (03.04)
+## Javítások
 
 ### Javítás #01 — DemoCard unifikálás ✅ kész
-- Közös DemoCard wrapper komponens: cím, alcím, content area, "Tovább" link belül
-- Egységes kártyaméret (min-height: 500px, #111114 háttér, narancs border, 16px border-radius)
-- Home.tsx: DemoCard wrapper körbeveszi mind a 4 preview-t
-- i18n: dashboards/ai/automation/websites title+subtitle hozzáadva
 
 ### Javítás #02 — AutomationPreview + AiChatPreview ✅ kész
-- **AutomationPreview:** node-ok (Email, Feldolgozás, Adatbázis, Értesítés) mostantól MINDIG láthatók — az animáció state-je el van választva a node-ok láthatóságától. Csak a fénypont loop-ol a vonalakon.
-- **AiChatPreview:** teljes újratervezés — két panel (Weboldalon / Cégen belül), gyorsválasz gombok, input mező, fix magasságú chat konténer (overflow: hidden), az oldal nem ugrik az animáció loop-olásakor.
 
-### Javítás #03 — DashboardPreview újratervezés 📋 prompt kész
-- **Választott design:** "A verzió" — sidebar + KPI kártyák + táblázat
-- Sidebar: céglogó (nyelvfüggő) + 5 menüpont ikonnal (Áttekintés aktív)
-- Header: cím + Hét/Hónap/Év tab-ok
-- 3 KPI kártya: Bevétel (HU: 9,2M Ft / DE+EN: €24.8k), Ügyfelek (847), Konverzió (68% + mini bar chart)
-- Táblázat: 4 sor nyelvfüggő cégnevekkel + pénznemmel (HU: Ft, DE/EN: €) + státusz badge-ek
-- Animáció: count-up + bar grow + row fade-in, loop-ol ~5-6 mp szünettel
-- **Prompt:** RETEG_4_DASHBOARD_PREVIEW.md
+### Javítás #03 — DashboardPreview újratervezés ✅ kész
+- "A verzió" — sidebar + KPI kártyák + táblázat
+- 5 oldalas ciklikus animáció (Áttekintés, Termékek, Rendelések, Naptár, Riportok)
+- Pénznem nyelvfüggő (HU: Ft, DE/EN: €)
+- Audit fix: Syne→var(--font-display), hardcoded fontok→CSS változók, EN $→€
+
+### Javítás #04 — WebsitePreview újratervezés ✅ kész (szín finomhangolás később)
+- v2 A — világos krém/artisan pékség, saját paletta (NEM Iverso)
+- Saját font (Lora), saját színek
+- Animáció fix: timeout chain cleanup bug javítva
+- Nyitott: szín tónus túl kontrasztos a sötét háttérrel
+
+### Javítás #10+11 — Navbar + Hero magasság ✅ kész
+- Navbar gépen MINDIG látható (scroll-aware kikapcsolva)
+- Hero magasság ~50vh, tartalom görgetés nélkül is látszódik
+
+### Gyors fixek (03.05) ✅ kész
+- P14: Preview kártyák szélesség — `width: 85vw` (a `max-width` nem volt elég, `width` kellett)
+- P17: Jobb klikk context menu tiltás
+- P20: "Weboldalak" hozzáadva a nav dropdown-hoz
+- P21: Építős morph encoding bug javítva
+
+---
+
+## Új problémák (03.05 második review)
+
+Részletes lista: IVERSO_JAVITAS_TERV.md
+
+| # | Probléma | Típus |
+|---|----------|-------|
+| P12 | IVERSO ↔ "Let's build something" pozíció csere | Design döntés |
+| P13 | Navbar teljes újratervezés | Design döntés |
+| P14 | Preview kártyák 75% szélesség | ✅ kész (85vw) |
+| P15 | Font váltás (navbar + preview címek) | Design döntés |
+| P16 | IVERSO felirat a CTA fölé | Design döntés |
+| P17 | Kurzor + jobb klikk tiltás | ✅ kész |
+| P18 | Amelia szekció: méret, igazítás, mondatok | Design döntés |
+| P19 | Építős: parázs átlóg | VS Code fix |
+| P20 | "Weboldalak" hiányzik a dropdown-ból | ✅ kész |
+| P21 | Építős morph encoding bug | ✅ kész |
+| P22 | WebsitePreview szín finomhangolás | Design döntés |
 
 ---
 
@@ -49,22 +78,22 @@ Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 
 | Dátum | Döntés |
 |-------|--------|
-| 03.03 | Prompt bontás: 9 külön prompt (4 demó előzetes egyenként, nem egyben) |
-| 03.03 | AI preview: gyorsválasz gombok NEM a preview-ba (kompakt marad) — **TÖRÖLVE**, az újratervezésnél bekerültek |
-| 03.03 | Website preview: konkrét éttermi landing page (nem wireframe) |
-| 03.03 | Építős szekció: morph eredmény egyszerűsített mini verziók |
-| 03.03 | Építős szekció: teljes drag/drop + auto-play fallback (~8 mp) + nincs gomb a morph-hoz |
-| 03.03 | Az összes preview-nak egységes mérete legyen (DemoCard) |
-| 03.03 | A "Tovább →" gombot a preview kártyába kell beépíteni |
-| 03.04 | AiChatPreview: két panel (Weboldalon / Cégen belül), gyorsválasz gombok, input mező |
-| 03.04 | DashboardPreview: "A verzió" választva — sidebar + KPI + táblázat (3 opcióból) |
-| 03.04 | DashboardPreview: pénznem nyelvfüggő — HU: Ft (forint), DE/EN: € (euró) |
+| 03.03 | DemoCard wrapper: egységes méret, "Tovább" kártyán belül |
+| 03.04 | AiChatPreview: két panel, gyorsválasz gombok, input mező |
+| 03.04 | DashboardPreview: "A verzió" — sidebar + KPI + táblázat |
+| 03.04 | DashboardPreview: pénznem nyelvfüggő — HU: Ft, DE/EN: € |
+| 03.05 | DashboardPreview: cégnevek pékség (Molnár Pékség / Bäckerei Müller / Baker & Sons) |
+| 03.05 | WebsitePreview: v2 A — világos krém pékség, saját paletta+font |
+| 03.05 | WebsitePreview: szín tónus nyitott kérdés (túl kontrasztos) |
+| 03.05 | Navbar: gépen MINDIG látható |
+| 03.05 | Hero magasság: ~50vh |
+| 03.05 | Preview kártyák: width: 85vw (max-width nem elég, explicit width kell) |
+| 03.05 | Jobb klikk: context menu letiltva |
 
 ---
 
-## Mi van még hátra (IVERSO_JAVITAS_TERV.md alapján)
+## Mi van még hátra
 
-- 🔄 **DashboardPreview újratervezés** — prompt kész, implementáció következik
-- ⬜ **WebsitePreview újratervezés** — tartalmasabb mini weboldal
-- ⬜ **Építős szekció javítás** — interaktivitás
-- ⬜ **Folyamat szekció finomhangolás** — háttér/mélység
+- ⬜ **Design döntések** — P12, P13, P15, P16, P18, P22 (opciók kellenek)
+- ⬜ **Építős szekció** — P7, P19
+- ⬜ **Folyamat finomhangolás** — P8

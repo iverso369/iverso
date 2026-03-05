@@ -1,6 +1,6 @@
 # IVERSO — Projekt Napló
 
-> Utolsó frissítés: 2026.03.04
+> Utolsó frissítés: 2026.03.05
 
 ---
 
@@ -51,25 +51,17 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 ## Build plan — 7 réteg
 
 ### Réteg 1 — Alap ✅ KÉSZ
-Projekt, routing, színek, fontok, háttér, i18n váz.
-
 ### Réteg 2 — Háttér + Hero ✅ KÉSZ
-Three.js parázs particle rendszer — 4 javítási körön át.
-- Javítás #1: teljes újraírás (canvas z-index fix) ✅
-- Javítás #2: vizuális finomhangolás (pozíció, élő hatás, custom kurzor) ✅
-- Javítás #3: élő szétszórt részecskék + felirat kontraszt ✅
-- Javítás #4: particle viselkedés + Syne → Playfair Display 900 font váltás ✅
-
 ### Réteg 3 — Építőkockák ✅ KÉSZ
-5 ui/ komponens (KpiCard, ChatBubble, WorkflowNode, MiniWebsite, CompanySizeSlider).
 
 ### Réteg 4 — Jelenetek 🔄 JAVÍTÁS FOLYAMATBAN
-Minden jelenet implementálva, vizuális review után javítások zajlanak.
-- Javítás #01: DemoCard unifikálás, egységes méretek, "Tovább" kártyán belül ✅
-- Javítás #02: AutomationPreview node-ok fix + AiChatPreview teljes újratervezés ✅
-- Javítás #03: DashboardPreview újratervezés — "A verzió" (sidebar + KPI + táblázat) 📋 prompt kész
-- Még hátra: WebsitePreview újratervezés, Építős szekció, Folyamat finomhangolás
-- Részletek: RETEG_4_NAPLO.md + IVERSO_JAVITAS_TERV.md
+- ✅ Nav, DashboardPreview, AiChatPreview, AutomationPreview, WebsitePreview, CTA, Footer
+- ✅ Navbar mindig látható + Hero magasság ~50vh
+- ✅ Audit fixek (EN $→€, Syne CSS, package.json name)
+- ✅ Preview kártyák szélesség (85vw), jobb klikk tiltás, Weboldalak dropdown fix, encoding fix
+- ⬜ Design döntések: Navbar újratervezés, font váltás, IVERSO↔LBS csere, Amelia szekció, WebsitePreview szín
+- ⬜ Építős szekció, Folyamat finomhangolás
+- Részletek: IVERSO_JAVITAS_TERV.md
 
 ### Réteg 5 — Aloldalak ⬜ vár
 ### Réteg 6 — Amelia ⬜ vár
@@ -82,7 +74,17 @@ Minden jelenet implementálva, vizuális review után javítások zajlanak.
 **Repo:** github.com/iverso369/iverso — aktív
 **Deploy:** iverso-orpin.vercel.app
 
-**Amit most csinálunk:** Réteg 4 javítások — DashboardPreview újratervezés (sidebar + KPI kártyák + táblázat). Prompt kész, implementáció Claude Code-ban következik.
+**Amit most csinálunk:** Réteg 4 — gyors fixek kész, következő a 2. kör: design döntések (navbar újratervezés + font, IVERSO↔LBS pozíció csere, IVERSO felirat CTA fölé, Amelia szekció, WebsitePreview szín).
+
+---
+
+## Audit (2026.03.05)
+
+- Build ✅, TypeScript ✅, 238 i18n kulcs szinkronban (HU/DE/EN)
+- ✅ EN pénznem $→€ javítva
+- ✅ DashboardPreview CSS Syne maradék + hardcoded fontok javítva
+- ✅ package.json name javítva
+- **Döntés:** Dashboard demó cégnevek maradnak pékségként (Molnár Pékség / Bäckerei Müller / Baker & Sons)
 
 ---
 

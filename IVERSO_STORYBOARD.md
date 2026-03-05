@@ -1,5 +1,5 @@
 # IVERSO — Scroll Storyboard
-## Utolsó frissítés: 2026.02.28
+## Utolsó frissítés: 2026.03.05
 
 ## Az élmény egy mondatban
 A látogató úgy érezze: *"Hú, ilyet én is akarok a cégemnek."*
@@ -478,7 +478,7 @@ Az előzetesek (főoldal) és az aloldalak **közös építőkockákat** haszná
 
 **MiniWebsite részletek:**
 - Böngésző keret: színes dot-ok (piros/sárga/zöld, klasszikus macOS stílus)
-- URL sáv: nyelvfüggő fiktív domain (HU: kovacs-kft.hu, DE: mueller-gmbh.de, EN: smith-co.com)
+- URL sáv: nyelvfüggő fiktív domain (HU: molnar-pekseg.hu, DE: baeckerei-mueller.de, EN: baker-and-sons.com)
 
 **CompanySizeSlider részletek:**
 - Slider (húzós sáv), nem gombok/tabok
@@ -497,8 +497,8 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 - **Fordítások:** német + angol
 - **"Let's build something"** mindenhol angolul marad, minden nyelven
 - **Demók tartalma is nyelvfüggő:**
-  - HU → magyar cégek (Kovács Kft, Nagy Építő...)
-  - DE → német cégek (Müller GmbH, Schmidt Bau...)
+  - HU → magyar cégek (Molnár Pékség, Nagy Építő...)
+  - DE → német cégek (Bäckerei Müller, Schmidt Bau...)
   - EN → angol/nemzetközi cégek
 - **Nyelvváltás:** automatikus böngésző nyelv alapján + váltó gomb
 
