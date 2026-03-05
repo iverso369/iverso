@@ -45,7 +45,7 @@
   flex-direction: column;
   gap: 120px;
   padding: 100px 24px;
-  max-width: 75vw;
+  width: 75vw;
   margin: 0 auto;
   position: relative;
   z-index: 1;
