@@ -251,8 +251,7 @@
   border: 1px solid rgba(247, 127, 10, 0.12);
   background: rgba(247, 127, 10, 0.08);
   backdrop-filter: blur(4px);
-  color: var(--accent);
-  text-shadow: 0 0 8px rgba(247, 127, 10, 0.3);
+  color: var(--text);
   font-family: var(--font-body);
   font-size: 7px;
   font-weight: 500;
@@ -263,6 +262,7 @@
 .actionBtn svg {
   flex-shrink: 0;
   opacity: 0.8;
+  color: var(--accent);
 }
 
 /* ── decorative input bar ── */
