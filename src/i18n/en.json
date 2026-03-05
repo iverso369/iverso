@@ -42,7 +42,7 @@
       "p1": {
         "kpi1Label": "Active items", "kpi1Value": "34", "kpi1Change": "+3%",
         "kpi2Label": "New (month)", "kpi2Value": "3", "kpi2Change": "+50%",
-        "kpi3Label": "Sold out", "kpi3Value": "2",
+        "kpi3Label": "Sold out", "kpi3Value": "2", "kpi3Change": "-1",
         "col1": "Product", "col2": "Category", "col3": "Price", "col4": "Stock",
         "r1c1": "Sourdough loaf", "r1c2": "Bread", "r1c3": "$4.50", "r1c4": "12 pcs",
         "r2c1": "Croissant", "r2c2": "Pastry", "r2c3": "$2.00", "r2c4": "28 pcs",
