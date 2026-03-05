@@ -9,7 +9,7 @@
     "websites": "Webseiten"
   },
   "miniWebsite": {
-    "domain": "mueller-gmbh.de"
+    "domain": "baeckerei-mueller.de"
   },
   "companySize": {
     "question": "Wie groß ist dein Unternehmen?",
@@ -20,64 +20,64 @@
     "dashboard": {
       "title": "Dashboards",
       "description": "Alle Daten an einem Ort",
-      "companyLogo": "Müller GmbH",
+      "companyLogo": "Bäckerei Müller",
       "menuOverview": "Übersicht",
-      "menuClients": "Kunden",
-      "menuTasks": "Aufgaben",
+      "menuClients": "Produkte",
+      "menuTasks": "Bestellungen",
       "menuCalendar": "Kalender",
       "menuReports": "Berichte",
       "tabWeek": "Woche",
       "tabMonth": "Monat",
       "tabYear": "Jahr",
       "p0": {
-        "kpi1Label": "Umsatz", "kpi1Value": "€24.8k", "kpi1Change": "+12.5%",
-        "kpi2Label": "Kunden", "kpi2Value": "847", "kpi2Change": "+3.2%",
-        "kpi3Label": "Konversion", "kpi3Value": "68%", "kpi3Change": "-1.8%",
-        "col1": "Kunde", "col2": "Projekt", "col3": "Status", "col4": "Wert",
-        "r1c1": "Schmidt Bau GmbH", "r1c2": "Dashboard", "r1c3": "Aktiv", "r1c4": "€3.200",
-        "r2c1": "Weber & Partner", "r2c2": "Chatbot", "r2c3": "Aktiv", "r2c4": "€1.800",
-        "r3c1": "Fischer Technik", "r3c2": "Webseite", "r3c3": "Laufend", "r3c4": "€2.500",
-        "r4c1": "Becker Gastro", "r4c2": "Automatisierung", "r4c3": "Planung", "r4c4": "€4.100"
+        "kpi1Label": "Heute", "kpi1Value": "€1.420", "kpi1Change": "+8.3%",
+        "kpi2Label": "Transaktionen", "kpi2Value": "127", "kpi2Change": "+5.1%",
+        "kpi3Label": "Ø Warenkorb", "kpi3Value": "€11.20", "kpi3Change": "-2.1%",
+        "col1": "Produkt", "col2": "Stück", "col3": "Status", "col4": "Umsatz",
+        "r1c1": "Sauerteigbrot", "r1c2": "84", "r1c3": "Knapp", "r1c4": "€336",
+        "r2c1": "Croissant", "r2c2": "156", "r2c3": "OK", "r2c4": "€312",
+        "r3c1": "Brezeln", "r3c2": "62", "r3c3": "Knapp", "r3c4": "€124",
+        "r4c1": "Apfelstrudel", "r4c2": "43", "r4c3": "Neu", "r4c4": "€172"
       },
       "p1": {
-        "kpi1Label": "Alle Kunden", "kpi1Value": "847", "kpi1Change": "+3.2%",
-        "kpi2Label": "Neu (Monat)", "kpi2Value": "23", "kpi2Change": "+15%",
-        "kpi3Label": "Wiederkehrend", "kpi3Value": "91%", "kpi3Change": "+2.1%",
-        "col1": "Name", "col2": "Firma", "col3": "Typ", "col4": "Letzter",
-        "r1c1": "Schmidt H.", "r1c2": "Schmidt Bau GmbH", "r1c3": "VIP", "r1c4": "Heute",
-        "r2c1": "Weber L.", "r2c2": "Weber & Partner", "r2c3": "Aktiv", "r2c4": "Gestern",
-        "r3c1": "Fischer A.", "r3c2": "Fischer Technik", "r3c3": "Aktiv", "r3c4": "28. Feb.",
-        "r4c1": "Becker T.", "r4c2": "Becker Gastro", "r4c3": "Neu", "r4c4": "1. Mär."
+        "kpi1Label": "Aktive Produkte", "kpi1Value": "34", "kpi1Change": "+3%",
+        "kpi2Label": "Neu (Monat)", "kpi2Value": "3", "kpi2Change": "+50%",
+        "kpi3Label": "Ausverkauft", "kpi3Value": "2",
+        "col1": "Produkt", "col2": "Kategorie", "col3": "Preis", "col4": "Bestand",
+        "r1c1": "Sauerteigbrot", "r1c2": "Brot", "r1c3": "€4,50", "r1c4": "12 Stk.",
+        "r2c1": "Croissant", "r2c2": "Gebäck", "r2c3": "€2,00", "r2c4": "28 Stk.",
+        "r3c1": "Schokoschnecke", "r3c2": "Süß", "r3c3": "€1,80", "r3c4": "15 Stk.",
+        "r4c1": "Käsebrötchen", "r4c2": "Herzhaft", "r4c3": "€1,50", "r4c4": "0 Stk."
       },
       "p2": {
-        "kpi1Label": "Offen", "kpi1Value": "12",
-        "kpi2Label": "Erledigt", "kpi2Value": "38", "kpi2Change": "+8%",
-        "kpi3Label": "Fällig", "kpi3Value": "3",
-        "col1": "Aufgabe", "col2": "Zuständig", "col3": "Priorität", "col4": "Frist",
-        "r1c1": "Landing Page", "r1c2": "N.P.", "r1c3": "Hoch", "r1c4": "8. Mär.",
-        "r2c1": "API-Integration", "r2c2": "B.T.", "r2c3": "Mittel", "r2c4": "12. Mär.",
-        "r3c1": "Chatbot-Test", "r3c2": "N.P.", "r3c3": "Hoch", "r3c4": "6. Mär.",
-        "r4c1": "Angebot", "r4c2": "B.T.", "r4c3": "Niedrig", "r4c4": "15. Mär."
+        "kpi1Label": "Heute", "kpi1Value": "8",
+        "kpi2Label": "Geliefert", "kpi2Value": "6", "kpi2Change": "+12%",
+        "kpi3Label": "Offen", "kpi3Value": "2",
+        "col1": "Besteller", "col2": "Artikel", "col3": "Status", "col4": "Summe",
+        "r1c1": "Café Schmidt", "r1c2": "20x Croissant", "r1c3": "Geliefert", "r1c4": "€40",
+        "r2c1": "Hotel Sonnenschein", "r2c2": "50x Brot", "r2c3": "Laufend", "r2c4": "€225",
+        "r3c1": "Büro Weber", "r3c2": "15x Brötchen", "r3c3": "Geliefert", "r3c4": "€22",
+        "r4c1": "Frau Fischer", "r4c2": "Tortenbestellung", "r4c3": "Wartend", "r4c4": "€85"
       },
       "p3": {
-        "kpi1Label": "Diese Woche", "kpi1Value": "5",
-        "kpi2Label": "Meetings", "kpi2Value": "3",
-        "kpi3Label": "Fristen", "kpi3Value": "2",
+        "kpi1Label": "Diese Woche", "kpi1Value": "4",
+        "kpi2Label": "Lieferungen", "kpi2Value": "3",
+        "kpi3Label": "Event", "kpi3Value": "1",
         "col1": "Termin", "col2": "Datum", "col3": "Zeit", "col4": "Typ",
-        "r1c1": "Kickoff-Meeting", "r1c2": "5. Mär.", "r1c3": "10:00", "r1c4": "Meeting",
-        "r2c1": "Design-Review", "r2c2": "6. Mär.", "r2c3": "14:00", "r2c4": "Meeting",
-        "r3c1": "Sprint-Abschluss", "r3c2": "7. Mär.", "r3c3": "16:00", "r3c4": "Meeting",
-        "r4c1": "API-Frist", "r4c2": "12. Mär.", "r4c3": "—", "r4c4": "Frist"
+        "r1c1": "Hotel-Lieferung", "r1c2": "5. Mär.", "r1c3": "06:00", "r1c4": "Lieferung",
+        "r2c1": "Büro-Paket", "r2c2": "6. Mär.", "r2c3": "07:30", "r2c4": "Lieferung",
+        "r3c1": "Hochzeitstorte", "r3c2": "8. Mär.", "r3c3": "10:00", "r3c4": "Event",
+        "r4c1": "Wochenbestellung", "r4c2": "10. Mär.", "r4c3": "06:00", "r4c4": "Lieferung"
       },
       "p4": {
-        "kpi1Label": "Monatsumsatz", "kpi1Value": "€24.8k", "kpi1Change": "+12.5%",
-        "kpi2Label": "Wachstum", "kpi2Value": "24%", "kpi2Change": "+5.1%",
-        "kpi3Label": "Ø Projekt", "kpi3Value": "€5.6k", "kpi3Change": "+3.8%",
+        "kpi1Label": "Monatsumsatz", "kpi1Value": "€29.4k", "kpi1Change": "+14.2%",
+        "kpi2Label": "Wachstum", "kpi2Value": "14%", "kpi2Change": "+3.1%",
+        "kpi3Label": "Ø Tag", "kpi3Value": "€980", "kpi3Change": "+8.5%",
         "col1": "Bericht", "col2": "Zeitraum", "col3": "Status", "col4": "Typ",
         "r1c1": "Monatsbericht", "r1c2": "Februar", "r1c3": "Fertig", "r1c4": "PDF",
-        "r2c1": "Kundenbericht", "r2c2": "Q1 2026", "r2c3": "Laufend", "r2c4": "Excel",
-        "r3c1": "Finanzbericht", "r3c2": "Februar", "r3c3": "Fertig", "r3c4": "PDF",
-        "r4c1": "Jahresprognose", "r4c2": "2026", "r4c3": "Planung", "r4c4": "—"
+        "r2c1": "Produkt-Ranking", "r2c2": "Q1 2026", "r2c3": "Laufend", "r2c4": "Excel",
+        "r3c1": "Rohstoffkosten", "r3c2": "Februar", "r3c3": "Fertig", "r3c4": "PDF",
+        "r4c1": "Jahresvergleich", "r4c2": "2026", "r4c3": "Planung", "r4c4": "—"
       }
     },
     "ai": {
@@ -89,25 +89,25 @@
       "extLabel": "Auf der Webseite",
       "intLabel": "Im Unternehmen",
       "ext": {
-        "greeting": "Frag uns einfach!",
-        "q1": "Wann haben Sie samstags geöffnet?",
-        "a1": "Samstags von 10:00 bis 22:00 Uhr. Soll ich einen Tisch reservieren?",
-        "actionBook": "Tisch reservieren",
+        "greeting": "Hi! Wie kann ich helfen?",
+        "q1": "Habt ihr samstags offen?",
+        "a1": "Ja! Samstags von 10 bis 22 Uhr. Möchtest du einen Tisch reservieren?",
+        "actionBook": "Reservieren",
         "actionCall": "+49 30 1234567",
         "actionHours": "Öffnungszeiten",
-        "q2": "Ja, Samstag 19 Uhr, für 4 Personen",
-        "a2": "Auf welchen Namen soll ich reservieren?",
+        "q2": "Ja, abends um 7, zu viert",
+        "a2": "Auf welchen Namen?",
         "q3": "Thomas Schmidt",
-        "a3": "Fertig! Schmidt, Sa. 19:00, 4 Pers. Wir freuen uns!"
+        "a3": "Erledigt! Samstag 19:00, 4 Personen, Schmidt. Bis dann!"
       },
       "int": {
-        "greeting": "Hallo! Was schauen wir uns an?",
-        "q1": "Wie viele Bestellungen gab es gestern?",
-        "a1": "Gestern 47 Bestellungen, 12% mehr als letzte Woche.",
+        "greeting": "Hi! Was gibt's?",
+        "q1": "Wie viele Bestellungen kamen gestern rein?",
+        "a1": "47 Bestellungen, letztes Jahr waren es 38.",
         "q2": "Welche war die größte?",
-        "a2": "Schmidt Bau GmbH — 3 Artikel, insgesamt €2.340.",
-        "q3": "Schick ihnen eine Dankes-Mail",
-        "a3": "Erledigt! Betreff: 'Danke für die Bestellung' — an Hans Schmidt."
+        "a2": "Schmidt Bau GmbH, 3 Artikel, €2.340.",
+        "q3": "Schick denen eine Dankes-Mail",
+        "a3": "Fertig! Ging raus an Hans Schmidt."
       }
     },
     "automation": {
