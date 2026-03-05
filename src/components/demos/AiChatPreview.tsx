@@ -86,14 +86,14 @@ const EXT_DELAYS = [
   1200,  // 1→2  typing→greeting
   2200,  // 2→3  greeting visible → q1
   2000,  // 3→4  q1 visible → typing
-  1200,  // 4→5  typing→a1+actions
-  4000,  // 5→6  hold (actions, user reads)
-  2000,  // 6→7  q2 visible → typing
-  1200,  // 7→8  typing→a2
-  2200,  // 8→9  a2 visible → q3
-  2000,  // 9→10 q3 visible → typing
-  1200,  // 10→11 typing→a3
-  5000,  // 11→hold final
+  1400,  // 4→5  typing→a1+actions
+  4500,  // 5→6  hold (actions, user reads)
+  2800,  // 6→7  q2 visible → typing (slower mid-section)
+  1600,  // 7→8  typing→a2
+  3000,  // 8→9  a2 visible → q3 (more reading time)
+  2800,  // 9→10 q3 visible → typing
+  1800,  // 10→11 typing→a3 (longer "thinking")
+  6000,  // 11→hold final
 ]
 
 // int: 12 steps → same structure without action button hold
@@ -102,14 +102,14 @@ const INT_DELAYS = [
   1200,  // 1→2  typing→greeting
   2200,  // 2→3  greeting visible → q1
   2000,  // 3→4  q1 visible → typing
-  1200,  // 4→5  typing→a1
-  2200,  // 5→6  a1 visible → q2
-  2000,  // 6→7  q2 visible → typing
-  1200,  // 7→8  typing→a2
-  2200,  // 8→9  a2 visible → q3
-  2000,  // 9→10 q3 visible → typing
-  1200,  // 10→11 typing→a3
-  5000,  // 11→hold final
+  1400,  // 4→5  typing→a1
+  2800,  // 5→6  a1 visible → q2 (more reading time)
+  2800,  // 6→7  q2 visible → typing (slower mid-section)
+  1600,  // 7→8  typing→a2
+  3000,  // 8→9  a2 visible → q3 (more reading time)
+  2800,  // 9→10 q3 visible → typing
+  1800,  // 10→11 typing→a3 (longer "thinking")
+  6000,  // 11→hold final
 ]
 
 /* ── SVG icons ── */
