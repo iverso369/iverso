@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import MiniWebsite from '../ui/MiniWebsite'
 import styles from './WebsitePreview.module.css'
@@ -16,31 +16,34 @@ function ensureLora() {
 
 /* ── Animation steps: nav, hero, heroSub, sectionLabel, product0, product1, product2, bottomBar ── */
 const STEP_COUNT = 8
+const STEP_DELAY = 250
+const HOLD_MS = 4000
+const FADE_MS = 400
 
 export default function WebsitePreview() {
   const { t } = useTranslation()
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  const unmountedRef = useRef(false)
 
-  const [isDesktop, setIsDesktop] = useState(false)
   const [inView, setInView] = useState(false)
+  const [started, setStarted] = useState(false)
   const [visibleStep, setVisibleStep] = useState(-1)
   const [fading, setFading] = useState(false)
-  const [mobileRan, setMobileRan] = useState(false)
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const schedule = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(fn, ms)
+    timersRef.current.push(id)
+    return id
+  }, [])
+
+  const cleanup = useCallback(() => {
+    timersRef.current.forEach(clearTimeout)
+    timersRef.current = []
+  }, [])
 
   // Load Lora font on mount
   useEffect(() => { ensureLora() }, [])
-
-  // Detect desktop
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 769px)')
-    setIsDesktop(mq.matches)
-    function handler(e: MediaQueryListEvent) {
-      setIsDesktop(e.matches)
-    }
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
 
   // Detect in-view
   useEffect(() => {
@@ -54,9 +57,37 @@ export default function WebsitePreview() {
     return () => io.disconnect()
   }, [])
 
-  // Drive progressive load animation
+  // Run one cycle: stagger in all steps, hold, fade out, restart
+  const runCycle = useCallback(() => {
+    if (unmountedRef.current) return
+
+    setVisibleStep(-1)
+    setFading(false)
+
+    // Stagger each step
+    for (let i = 0; i < STEP_COUNT; i++) {
+      schedule(() => {
+        if (unmountedRef.current) return
+        setVisibleStep(i)
+      }, i * STEP_DELAY)
+    }
+
+    // After all steps + hold → fade out → restart
+    const totalStepTime = STEP_COUNT * STEP_DELAY
+    schedule(() => {
+      if (unmountedRef.current) return
+      setFading(true)
+      schedule(() => {
+        if (unmountedRef.current) return
+        cleanup()
+        runCycle()
+      }, FADE_MS)
+    }, totalStepTime + HOLD_MS)
+  }, [schedule, cleanup])
+
+  // Start when in view
   useEffect(() => {
-    if (!inView) return
+    if (!inView || started) return
 
     const prefersReduced = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
@@ -66,49 +97,17 @@ export default function WebsitePreview() {
       return
     }
 
-    // Mobile: run once, then static
-    if (!isDesktop) {
-      if (mobileRan) return
-      setMobileRan(true)
-      setVisibleStep(-1)
-      let i = 0
-      function step() {
-        timeoutRef.current = setTimeout(() => {
-          setVisibleStep(i)
-          i++
-          if (i < STEP_COUNT) step()
-        }, 180)
-      }
-      step()
-      return
-    }
+    setStarted(true)
+    runCycle()
+  }, [inView, started, runCycle])
 
-    // Desktop: progressive load loop
-    if (visibleStep === -1 && !fading) {
-      let i = 0
-      function step() {
-        timeoutRef.current = setTimeout(() => {
-          setVisibleStep(i)
-          i++
-          if (i < STEP_COUNT) step()
-        }, 250)
-      }
-      step()
-    } else if (visibleStep === STEP_COUNT - 1 && !fading) {
-      // Hold, then fade and restart
-      timeoutRef.current = setTimeout(() => {
-        setFading(true)
-        timeoutRef.current = setTimeout(() => {
-          setVisibleStep(-1)
-          setFading(false)
-        }, 400)
-      }, 4000)
-    }
-
+  // Cleanup on unmount
+  useEffect(() => {
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      unmountedRef.current = true
+      cleanup()
     }
-  }, [inView, isDesktop, visibleStep, fading, mobileRan])
+  }, [cleanup])
 
   const products = [
     {
