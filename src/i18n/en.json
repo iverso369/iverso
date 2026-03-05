@@ -30,34 +30,34 @@
       "tabMonth": "Month",
       "tabYear": "Year",
       "p0": {
-        "kpi1Label": "Today", "kpi1Value": "$1,420", "kpi1Change": "+8.3%",
+        "kpi1Label": "Today", "kpi1Value": "€1,420", "kpi1Change": "+8.3%",
         "kpi2Label": "Transactions", "kpi2Value": "127", "kpi2Change": "+5.1%",
-        "kpi3Label": "Avg. basket", "kpi3Value": "$11.20", "kpi3Change": "-2.1%",
+        "kpi3Label": "Avg. basket", "kpi3Value": "€11.20", "kpi3Change": "-2.1%",
         "col1": "Product", "col2": "Qty", "col3": "Status", "col4": "Revenue",
-        "r1c1": "Sourdough loaf", "r1c2": "84", "r1c3": "Low", "r1c4": "$336",
-        "r2c1": "Croissant", "r2c2": "156", "r2c3": "OK", "r2c4": "$312",
-        "r3c1": "Pretzel", "r3c2": "62", "r3c3": "Low", "r3c4": "$124",
-        "r4c1": "Apple strudel", "r4c2": "43", "r4c3": "New", "r4c4": "$172"
+        "r1c1": "Sourdough loaf", "r1c2": "84", "r1c3": "Low", "r1c4": "€336",
+        "r2c1": "Croissant", "r2c2": "156", "r2c3": "OK", "r2c4": "€312",
+        "r3c1": "Pretzel", "r3c2": "62", "r3c3": "Low", "r3c4": "€124",
+        "r4c1": "Apple strudel", "r4c2": "43", "r4c3": "New", "r4c4": "€172"
       },
       "p1": {
         "kpi1Label": "Active items", "kpi1Value": "34", "kpi1Change": "+3%",
         "kpi2Label": "New (month)", "kpi2Value": "3", "kpi2Change": "+50%",
         "kpi3Label": "Sold out", "kpi3Value": "2", "kpi3Change": "-1",
         "col1": "Product", "col2": "Category", "col3": "Price", "col4": "Stock",
-        "r1c1": "Sourdough loaf", "r1c2": "Bread", "r1c3": "$4.50", "r1c4": "12 pcs",
-        "r2c1": "Croissant", "r2c2": "Pastry", "r2c3": "$2.00", "r2c4": "28 pcs",
-        "r3c1": "Chocolate roll", "r3c2": "Sweet", "r3c3": "$1.80", "r3c4": "15 pcs",
-        "r4c1": "Cheese bun", "r4c2": "Savory", "r4c3": "$1.50", "r4c4": "0 pcs"
+        "r1c1": "Sourdough loaf", "r1c2": "Bread", "r1c3": "€4.50", "r1c4": "12 pcs",
+        "r2c1": "Croissant", "r2c2": "Pastry", "r2c3": "€2.00", "r2c4": "28 pcs",
+        "r3c1": "Chocolate roll", "r3c2": "Sweet", "r3c3": "€1.80", "r3c4": "15 pcs",
+        "r4c1": "Cheese bun", "r4c2": "Savory", "r4c3": "€1.50", "r4c4": "0 pcs"
       },
       "p2": {
         "kpi1Label": "Today", "kpi1Value": "8",
         "kpi2Label": "Delivered", "kpi2Value": "6", "kpi2Change": "+12%",
         "kpi3Label": "Pending", "kpi3Value": "2",
         "col1": "Customer", "col2": "Items", "col3": "Status", "col4": "Total",
-        "r1c1": "Corner Café", "r1c2": "20x croissant", "r1c3": "Delivered", "r1c4": "$40",
-        "r2c1": "Sunrise Hotel", "r2c2": "50x bread", "r2c3": "In Progress", "r2c4": "$225",
-        "r3c1": "Davis Office", "r3c2": "15x buns", "r3c3": "Delivered", "r3c4": "$22",
-        "r4c1": "Mrs. Wilson", "r4c2": "Cake order", "r4c3": "Waiting", "r4c4": "$85"
+        "r1c1": "Corner Café", "r1c2": "20x croissant", "r1c3": "Delivered", "r1c4": "€40",
+        "r2c1": "Sunrise Hotel", "r2c2": "50x bread", "r2c3": "In Progress", "r2c4": "€225",
+        "r3c1": "Davis Office", "r3c2": "15x buns", "r3c3": "Delivered", "r3c4": "€22",
+        "r4c1": "Mrs. Wilson", "r4c2": "Cake order", "r4c3": "Waiting", "r4c4": "€85"
       },
       "p3": {
         "kpi1Label": "This week", "kpi1Value": "4",
@@ -70,9 +70,9 @@
         "r4c1": "Weekly order", "r4c2": "Mar 10", "r4c3": "6:00 AM", "r4c4": "Delivery"
       },
       "p4": {
-        "kpi1Label": "Monthly rev.", "kpi1Value": "$29.4k", "kpi1Change": "+14.2%",
+        "kpi1Label": "Monthly rev.", "kpi1Value": "€29.4k", "kpi1Change": "+14.2%",
         "kpi2Label": "Growth", "kpi2Value": "14%", "kpi2Change": "+3.1%",
-        "kpi3Label": "Avg. day", "kpi3Value": "$980", "kpi3Change": "+8.5%",
+        "kpi3Label": "Avg. day", "kpi3Value": "€980", "kpi3Change": "+8.5%",
         "col1": "Report", "col2": "Period", "col3": "Status", "col4": "Type",
         "r1c1": "Monthly summary", "r1c2": "February", "r1c3": "Done", "r1c4": "PDF",
         "r2c1": "Product ranking", "r2c2": "Q1 2026", "r2c3": "In Progress", "r2c4": "Excel",
@@ -105,7 +105,7 @@
         "q1": "How many orders came in yesterday?",
         "a1": "47 orders, last year it was 38 at this time.",
         "q2": "Which was the biggest?",
-        "a2": "Johnson Corp, 3 items, $2,340 total.",
+        "a2": "Johnson Corp, 3 items, €2,340 total.",
         "q3": "When did their contract last expire?",
         "a3": "December 15, 2025. No renewal has been processed yet."
       }
