@@ -9,44 +9,16 @@ interface NavProps {
   heroElementId?: string
 }
 
-export default function Nav({ heroElementId }: NavProps) {
+export default function Nav({ heroElementId: _heroElementId }: NavProps) {
   const { t } = useTranslation()
   const location = useLocation()
 
-  const isHome = location.pathname === '/'
-  const scrollAware = isHome && !!heroElementId
-
-  const [navVisible, setNavVisible] = useState(!scrollAware)
+  const [navVisible] = useState(true)
   const [servicesOpen, setServicesOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const servicesRef = useRef<HTMLDivElement>(null)
   const servicesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  // Scroll-aware: observe hero element with IntersectionObserver
-  useEffect(() => {
-    if (!scrollAware) {
-      setNavVisible(true)
-      return
-    }
-
-    const heroEl = document.getElementById(heroElementId!)
-    if (!heroEl) {
-      setNavVisible(true)
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Hero visible → hide nav; hero gone → show nav
-        setNavVisible(!entry.isIntersecting)
-      },
-      { threshold: 0.15 }
-    )
-
-    observer.observe(heroEl)
-    return () => observer.disconnect()
-  }, [scrollAware, heroElementId])
 
   // Close services dropdown on outside click
   useEffect(() => {
@@ -98,13 +70,6 @@ export default function Nav({ heroElementId }: NavProps) {
 
   return (
     <>
-      {/* Standalone language switcher — visible when nav is hidden (hero state) */}
-      {scrollAware && !navVisible && (
-        <div className={styles.standaloneLang}>
-          <LanguageSwitcher />
-        </div>
-      )}
-
       {/* Desktop + mobile nav bar */}
       <nav
         className={`${styles.nav} ${navVisible ? styles.navVisible : styles.navHidden}`}

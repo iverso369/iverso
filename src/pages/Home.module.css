@@ -11,13 +11,13 @@
 .heroSpacer {
   position: relative;
   z-index: 1;
-  height: 100vh;
+  height: 50vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 46vh;
+  padding-top: calc(56px + 14vh);   /* nav height (56px) + visual offset */
   pointer-events: none;
 }
 
