@@ -40,15 +40,13 @@
 }
 
 .bot .bubble {
-  background: #1a1a1f;
+  background: #1e1e24;
   border-bottom-left-radius: 4px;
 }
 
 .user .bubble {
-  background: rgba(247, 127, 10, 0.12);
-  border: 1px solid rgba(247, 127, 10, 0.18);
+  background: #2a2a32;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 0 14px rgba(247, 127, 10, 0.08);
 }
 
 /* ── avatar ── */
