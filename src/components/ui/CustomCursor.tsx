@@ -15,6 +15,11 @@ export default function CustomCursor() {
 
     document.body.style.cursor = 'none'
 
+    // Ensure cursor: none applies globally (overrides link/button pointer)
+    const style = document.createElement('style')
+    style.textContent = '*, *::before, *::after { cursor: none !important; }'
+    document.head.appendChild(style)
+
     let mouseX = -100
     let mouseY = -100
     const trail: { x: number; y: number }[] = Array.from(
@@ -63,6 +68,7 @@ export default function CustomCursor() {
 
     return () => {
       document.body.style.cursor = ''
+      document.head.removeChild(style)
       window.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseleave', handleMouseLeave)
       cancelAnimationFrame(rafId)
