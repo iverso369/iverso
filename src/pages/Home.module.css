@@ -95,23 +95,6 @@
   opacity: 1;
 }
 
-/* ── responsive ── */
-
-@media (max-width: 768px) {
-  .demosSection {
-    gap: 80px;
-    padding: 80px 16px;
-  }
-
-  .processScene {
-    padding: 72px 0;
-  }
-
-  .builderScene {
-    padding: 72px 0;
-  }
-}
-
 /* ── reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {

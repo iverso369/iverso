@@ -149,29 +149,6 @@
   opacity: 1 !important;
 }
 
-/* ── responsive ── */
-
-@media (max-width: 768px) {
-  .section {
-    padding: 0 20px;
-  }
-
-  .track {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .stepGroup {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .node {
-    min-width: 200px;
-    max-width: 240px;
-  }
-}
-
 /* ── reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
