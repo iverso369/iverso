@@ -92,7 +92,7 @@
   flex-direction: column;
   justify-content: flex-end;
   padding: 16px 12px;
-  height: 240px;
+  height: 216px;
   overflow-y: scroll;
   scrollbar-width: none;
   transition: opacity 0.35s ease;
