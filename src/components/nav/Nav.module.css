@@ -266,29 +266,6 @@
 }
 
 /* ========================================
-   RESPONSIVE
-   ======================================== */
-
-@media (max-width: 768px) {
-  .desktopLinks {
-    display: none;
-  }
-
-  .desktopLang {
-    display: none;
-  }
-
-  .hamburger {
-    display: flex;
-  }
-
-  .standaloneLang {
-    top: 16px;
-    right: 16px;
-  }
-}
-
-/* ========================================
    ANIMATIONS
    ======================================== */
 
