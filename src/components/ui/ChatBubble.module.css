@@ -33,9 +33,9 @@
 .bubble {
   display: inline-flex;
   align-items: flex-start;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 14px;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 12px;
   line-height: 1.5;
 }
 
@@ -55,8 +55,8 @@
 
 .avatar {
   flex-shrink: 0;
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,14 +65,14 @@
 }
 
 .avatar svg {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   stroke-width: 1.5px;
 }
 
 .avatar img {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -82,7 +82,7 @@
 .text {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 10px;
+  font-size: 8px;
   color: var(--text);
   white-space: pre-wrap;
   word-break: break-word;
@@ -93,13 +93,13 @@
 .dots {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 2px;
+  gap: 4px;
+  padding: 3px 2px;
 }
 
 .dot {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: var(--muted);
   animation: pulse 1.4s ease-in-out infinite;
