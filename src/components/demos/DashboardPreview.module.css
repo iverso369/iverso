@@ -19,11 +19,11 @@
 
 .contentFading .main {
   opacity: 0;
-  visibility: hidden;
+  pointer-events: none;
 }
 
 .main {
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  transition: opacity 0.35s ease;
 }
 
 /* ── Sidebar ── */

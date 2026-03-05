@@ -91,14 +91,14 @@
       "ext": {
         "greeting": "Szia! Miben segíthetek?",
         "q1": "Szombaton nyitva vagytok?",
-        "a1": "Igen! Szombaton 10-től 22-ig. Szeretnél asztalt foglalni?",
+        "a1": "Igen! Szombaton 10-től 22-ig vagyunk nyitva. Foglaljak asztalt?",
         "actionBook": "Foglalás",
         "actionCall": "+36 1 234 5678",
         "actionHours": "Nyitvatartás",
-        "q2": "Ja, este 7-re lennénk négyen",
-        "a2": "Milyen névre foglaljam?",
+        "q2": "Szombat este 7-re, 4 főre kérnék",
+        "a2": "Szívesen! Milyen névre foglaljam?",
         "q3": "Kovács Márton",
-        "a3": "Megvan! Szombat 19:00, 4 fő, Kovács. Várunk!"
+        "a3": "Megvan! Szombat 19:00, 4 fő, Kovács Márton. Várunk szeretettel!"
       },
       "int": {
         "greeting": "Szia! Mi érdekel?",
@@ -106,8 +106,8 @@
         "a1": "47 rendelés, tavaly ilyenkor 38 volt.",
         "q2": "Melyik volt a legnagyobb?",
         "a2": "Nagy Építő Bt, 3 tétel, 847 ezer.",
-        "q3": "Küldj nekik egy köszönő emailt",
-        "a3": "Kész! Elküldtem Kovács Péternek."
+        "q3": "Mikor járt le a szerződésük?",
+        "a3": "2025. december 15-én. Meghosszabbítás még nem történt."
       }
     },
     "automation": {

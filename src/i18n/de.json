@@ -89,25 +89,25 @@
       "extLabel": "Auf der Webseite",
       "intLabel": "Im Unternehmen",
       "ext": {
-        "greeting": "Hi! Wie kann ich helfen?",
-        "q1": "Habt ihr samstags offen?",
-        "a1": "Ja! Samstags von 10 bis 22 Uhr. Möchtest du einen Tisch reservieren?",
+        "greeting": "Hallo! Wie kann ich helfen?",
+        "q1": "Habt ihr samstags geöffnet?",
+        "a1": "Ja! Samstags von 10 bis 22 Uhr. Darf ich einen Tisch reservieren?",
         "actionBook": "Reservieren",
         "actionCall": "+49 30 1234567",
         "actionHours": "Öffnungszeiten",
-        "q2": "Ja, abends um 7, zu viert",
-        "a2": "Auf welchen Namen?",
+        "q2": "Samstag um 19 Uhr, für 4 Personen bitte",
+        "a2": "Gerne! Auf welchen Namen darf ich reservieren?",
         "q3": "Thomas Schmidt",
-        "a3": "Erledigt! Samstag 19:00, 4 Personen, Schmidt. Bis dann!"
+        "a3": "Erledigt! Samstag 19:00, 4 Personen, Schmidt. Wir freuen uns auf Sie!"
       },
       "int": {
-        "greeting": "Hi! Was gibt's?",
+        "greeting": "Hallo! Was interessiert dich?",
         "q1": "Wie viele Bestellungen kamen gestern rein?",
         "a1": "47 Bestellungen, letztes Jahr waren es 38.",
         "q2": "Welche war die größte?",
         "a2": "Schmidt Bau GmbH, 3 Artikel, €2.340.",
-        "q3": "Schick denen eine Dankes-Mail",
-        "a3": "Fertig! Ging raus an Hans Schmidt."
+        "q3": "Wann lief deren Vertrag zuletzt aus?",
+        "a3": "Am 15. Dezember 2025. Eine Verlängerung steht noch aus."
       }
     },
     "automation": {

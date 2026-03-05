@@ -89,25 +89,25 @@
       "extLabel": "On your website",
       "intLabel": "Inside your company",
       "ext": {
-        "greeting": "Hey! How can I help?",
+        "greeting": "Hi! How can I help?",
         "q1": "Are you open on Saturday?",
-        "a1": "Yep! Saturday 10 AM to 10 PM. Want to book a table?",
+        "a1": "Yes! We're open Saturday 10 AM to 10 PM. Shall I reserve a table?",
         "actionBook": "Book table",
         "actionCall": "+1 555 0123",
         "actionHours": "Hours",
-        "q2": "Yeah, 7 PM for four of us",
-        "a2": "What name should I put it under?",
+        "q2": "Saturday at 7 PM for four, please",
+        "a2": "Of course! What name should I put it under?",
         "q3": "James Wilson",
-        "a3": "All set! Saturday 7 PM, 4 guests, Wilson. See you!"
+        "a3": "All set! Saturday 7 PM, 4 guests, Wilson. We look forward to seeing you!"
       },
       "int": {
-        "greeting": "Hey! What's up?",
+        "greeting": "Hi! What would you like to know?",
         "q1": "How many orders came in yesterday?",
         "a1": "47 orders, last year it was 38 at this time.",
         "q2": "Which was the biggest?",
         "a2": "Johnson Corp, 3 items, $2,340 total.",
-        "q3": "Send them a thank you email",
-        "a3": "Done! Sent to Peter Johnson."
+        "q3": "When did their contract last expire?",
+        "a3": "December 15, 2025. No renewal has been processed yet."
       }
     },
     "automation": {

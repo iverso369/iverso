@@ -271,7 +271,7 @@ export default function DashboardPreview() {
                   // Advance to next page
                   pageIndexRef.current = (pIdx + 1) % PAGE_COUNT
                   animatePage(false)
-                }, 400)
+                }, 500)
               }, 4 * 200 + HOLD_MS)
             }, 600)
           }
