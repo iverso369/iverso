@@ -56,8 +56,8 @@ function getMorphType(slot: number): MorphType {
 
 function MiniKpi({ variant }: { variant: 1 | 2 }) {
   const data = variant === 1
-    ? { value: '\u20AC24.8K', label: 'Bev\u00E9tel' }
-    : { value: '94%', label: 'El\u00E9gedetts\u00E9g' }
+    ? { value: '€24.8K', label: 'Bevétel' }
+    : { value: '94%', label: 'Elégedettség' }
 
   return (
     <div className={`${styles.morphed} ${styles.miniKpi}`}>
@@ -71,7 +71,7 @@ function MiniChat() {
   return (
     <div className={`${styles.morphed} ${styles.miniChat}`}>
       <span className={styles.miniChatName}>Asszisztens</span>
-      <span className={styles.miniChatText}>Miben seg\u00EDthetek?</span>
+      <span className={styles.miniChatText}>Miben segíthetek?</span>
     </div>
   )
 }
@@ -104,7 +104,7 @@ function MiniWorkflow() {
       <div className={styles.miniWorkflowIcon}>
         <SettingsIcon />
       </div>
-      <span className={styles.miniWorkflowTitle}>Feldolgoz\u00E1s</span>
+      <span className={styles.miniWorkflowTitle}>Feldolgozás</span>
     </div>
   )
 }
