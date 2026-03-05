@@ -121,13 +121,24 @@
     "websites": {
       "title": "Webseiten",
       "description": "Der erste Eindruck in deiner Hand",
-      "restaurantName": "Restaurant Müller",
-      "heroTitle": "Harmonie der Aromen",
-      "heroSubtitle": "Tradition und moderne Küche",
-      "ctaButton": "Reservieren",
-      "card1": "Speisekarte",
-      "card2": "Öffnungszeiten",
-      "card3": "Kontakt"
+      "bakeryName": "Bäckerei Müller",
+      "heroTitle": "Frisch wie der Morgen.",
+      "heroSubtitle": "Handwerkliche Backwaren, nach traditionellen Rezepten.",
+      "sectionLabel": "UNSERE BELIEBTESTEN",
+      "product1Name": "Sauerteigbrot",
+      "product1Desc": "Natursauerteig, 24h Reifung",
+      "product1Price": "€5,00",
+      "product2Name": "Buttercroissant",
+      "product2Desc": "Französische Butter, Blätterteig",
+      "product2Price": "€1,80",
+      "product3Name": "Schokoladenschnecke",
+      "product3Desc": "Hausgemachte Schokocreme, Brioche",
+      "product3Price": "€1,60",
+      "hours": "Mo–Fr: 6:00–18:00 · Sa: 7:00–14:00",
+      "orderButton": "Bestellen →",
+      "navProducts": "Produkte",
+      "navAbout": "Über uns",
+      "navContact": "Kontakt"
     }
   },
   "process": {

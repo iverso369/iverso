@@ -1,21 +1,20 @@
-/* ── WebsitePreview ── */
+/* ── WebsitePreview — Bakery demo (own palette, NOT Iverso) ── */
 
 .wrapper {
   width: 100%;
 }
 
-/* ── MiniWebsite wrapper ── */
-
 .browser {
   width: 100%;
 }
 
-/* ── mini page inside browser ── */
+/* ── page inside MiniWebsite ── */
 
 .page {
-  background: #0f0f0f;
+  background: #FAF5EE;
   padding: 0;
   transition: opacity 0.35s ease;
+  font-family: 'Lora', 'Georgia', serif;
 }
 
 .fading {
@@ -26,7 +25,7 @@
 
 .element {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(10px);
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
@@ -35,21 +34,21 @@
   transform: translateY(0);
 }
 
-/* ── mini nav ── */
+/* ── nav bar ── */
 
 .miniNav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 8px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid #E8DFD2;
 }
 
-.restaurantName {
-  font-family: var(--font-display);
+.bakeryName {
+  font-family: 'Lora', 'Georgia', serif;
   font-weight: 700;
-  font-size: 9px;
-  color: var(--accent);
+  font-size: 10px;
+  color: #5C3D1E;
   white-space: nowrap;
 }
 
@@ -59,93 +58,190 @@
 }
 
 .navLink {
-  font-family: var(--font-body);
+  font-family: 'Lora', 'Georgia', serif;
   font-weight: 400;
   font-size: 8px;
-  color: var(--muted);
+  color: #8C7A66;
   white-space: nowrap;
 }
 
 /* ── hero section ── */
 
 .hero {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 24px 14px 18px;
+  justify-content: flex-end;
+  min-height: 130px;
+  padding: 0 14px 14px;
   text-align: center;
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(180, 130, 60, 0.25), transparent 70%),
+    radial-gradient(ellipse at 70% 40%, rgba(160, 100, 40, 0.15), transparent 60%),
+    linear-gradient(180deg, #EDE3D4, #D4C4A8);
+  overflow: hidden;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 30%, rgba(250, 245, 238, 0.97) 100%);
+  pointer-events: none;
 }
 
 .heroTitle {
-  font-family: var(--font-display);
+  position: relative;
+  z-index: 1;
+  font-family: 'Lora', 'Georgia', serif;
   font-weight: 700;
-  font-size: 14px;
-  color: var(--text);
+  font-size: 15px;
+  color: #3A2410;
   line-height: 1.2;
+  margin: 0 0 4px;
 }
 
 .heroSubtitle {
-  font-family: var(--font-body);
+  position: relative;
+  z-index: 1;
+  font-family: 'Lora', 'Georgia', serif;
   font-weight: 400;
   font-size: 9px;
-  color: var(--muted);
+  color: #8C7A66;
   line-height: 1.4;
+  margin: 0;
 }
 
-.ctaButton {
-  display: inline-block;
-  margin-top: 6px;
-  padding: 5px 14px;
-  background: var(--accent);
-  color: #0A0A0C;
-  font-family: var(--font-body);
+/* ── product section ── */
+
+.productSection {
+  padding: 12px 14px 8px;
+}
+
+.sectionLabel {
+  font-family: 'Lora', 'Georgia', serif;
   font-weight: 600;
-  font-size: 8px;
-  border-radius: 4px;
-  white-space: nowrap;
+  font-size: 7px;
+  color: #A6896C;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin: 0 0 8px;
 }
 
-/* ── card row ── */
-
-.cardRow {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 0 14px 16px;
-}
-
-.card {
-  flex: 1;
+.productList {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  padding: 10px 6px;
-  background: #1a1a1a;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 6px;
 }
 
-.cardIcon {
+.productItem {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  background: #F3ECE0;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.productLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  min-width: 0;
+}
+
+.productDot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C4956C;
+  margin-top: 4px;
+}
+
+.productInfo {
+  min-width: 0;
+}
+
+.productName {
+  font-family: 'Lora', 'Georgia', serif;
+  font-weight: 600;
+  font-size: 9px;
+  color: #2C2016;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.productDesc {
+  font-family: 'Lora', 'Georgia', serif;
+  font-weight: 400;
+  font-size: 7.5px;
+  color: #8C7A66;
+  line-height: 1.3;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.productPrice {
+  flex-shrink: 0;
+  font-family: 'Lora', 'Georgia', serif;
+  font-weight: 700;
+  font-size: 9px;
+  color: #8B5E3C;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* ── bottom bar ── */
+
+.bottomBar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: var(--accent);
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-top: 1px solid #E8DFD2;
+}
+
+.hoursWrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.clockIcon {
+  display: flex;
+  align-items: center;
+  color: #8C7A66;
   line-height: 0;
 }
 
-.cardIcon svg {
-  width: 14px;
-  height: 14px;
-  stroke-width: 1.5px;
+.clockIcon svg {
+  width: 11px;
+  height: 11px;
 }
 
-.cardLabel {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 8px;
-  color: var(--text);
+.hoursText {
+  font-family: 'Lora', 'Georgia', serif;
+  font-weight: 400;
+  font-size: 7px;
+  color: #8C7A66;
+  white-space: nowrap;
+}
+
+.orderBtn {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #8B5E3C;
+  color: #FAF5EE;
+  font-family: 'Lora', 'Georgia', serif;
+  font-weight: 600;
+  font-size: 7.5px;
+  border-radius: 4px;
   white-space: nowrap;
 }
 
