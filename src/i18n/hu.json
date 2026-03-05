@@ -9,7 +9,7 @@
     "websites": "Weboldalak"
   },
   "miniWebsite": {
-    "domain": "kovacs-kft.hu"
+    "domain": "molnar-pekseg.hu"
   },
   "companySize": {
     "question": "Mekkora a vállalkozásod?",
@@ -20,64 +20,64 @@
     "dashboard": {
       "title": "Dashboardok",
       "description": "Minden adat, egy helyen",
-      "companyLogo": "Kovács Kft",
+      "companyLogo": "Molnár Pékség",
       "menuOverview": "Áttekintés",
-      "menuClients": "Ügyfelek",
-      "menuTasks": "Feladatok",
+      "menuClients": "Termékek",
+      "menuTasks": "Rendelések",
       "menuCalendar": "Naptár",
       "menuReports": "Riportok",
       "tabWeek": "Hét",
       "tabMonth": "Hónap",
       "tabYear": "Év",
       "p0": {
-        "kpi1Label": "Bevétel", "kpi1Value": "9,2M Ft", "kpi1Change": "+12.5%",
-        "kpi2Label": "Ügyfelek", "kpi2Value": "847", "kpi2Change": "+3.2%",
-        "kpi3Label": "Konverzió", "kpi3Value": "68%", "kpi3Change": "-1.8%",
-        "col1": "Ügyfél", "col2": "Projekt", "col3": "Státusz", "col4": "Érték",
-        "r1c1": "Nagy Építő Bt", "r1c2": "Dashboard", "r1c3": "Aktív", "r1c4": "1,2M Ft",
-        "r2c1": "Szabó és Társa", "r2c2": "Chatbot", "r2c3": "Aktív", "r2c4": "680k Ft",
-        "r3c1": "Molnár Szerviz", "r3c2": "Weboldal", "r3c3": "Folyamatban", "r3c4": "940k Ft",
-        "r4c1": "Tóth Vendéglátó", "r4c2": "Automatizáció", "r4c3": "Tervezés", "r4c4": "1,5M Ft"
+        "kpi1Label": "Mai eladás", "kpi1Value": "284k Ft", "kpi1Change": "+8.3%",
+        "kpi2Label": "Tranzakció", "kpi2Value": "127", "kpi2Change": "+5.1%",
+        "kpi3Label": "Átlag kosár", "kpi3Value": "2.240 Ft", "kpi3Change": "-2.1%",
+        "col1": "Termék", "col2": "Darab", "col3": "Státusz", "col4": "Bevétel",
+        "r1c1": "Kovászos kenyér", "r1c2": "84", "r1c3": "Fogy", "r1c4": "168k Ft",
+        "r2c1": "Croissant", "r2c2": "156", "r2c3": "Rendben", "r2c4": "109k Ft",
+        "r3c1": "Lángos", "r3c2": "62", "r3c3": "Fogy", "r3c4": "56k Ft",
+        "r4c1": "Rétes", "r4c2": "43", "r4c3": "Új", "r4c4": "52k Ft"
       },
       "p1": {
-        "kpi1Label": "Összes ügyfél", "kpi1Value": "847", "kpi1Change": "+3.2%",
-        "kpi2Label": "Új (hónap)", "kpi2Value": "23", "kpi2Change": "+15%",
-        "kpi3Label": "Visszatérő", "kpi3Value": "91%", "kpi3Change": "+2.1%",
-        "col1": "Név", "col2": "Cég", "col3": "Típus", "col4": "Utolsó",
-        "r1c1": "Kovács P.", "r1c2": "Nagy Építő Bt", "r1c3": "VIP", "r1c4": "Ma",
-        "r2c1": "Szabó A.", "r2c2": "Szabó és Társa", "r2c3": "Aktív", "r2c4": "Tegnap",
-        "r3c1": "Molnár É.", "r3c2": "Molnár Szerviz", "r3c3": "Aktív", "r3c4": "Feb. 28",
-        "r4c1": "Tóth G.", "r4c2": "Tóth Vendéglátó", "r4c3": "Új", "r4c4": "Márc. 1"
+        "kpi1Label": "Aktív termék", "kpi1Value": "34", "kpi1Change": "+3%",
+        "kpi2Label": "Új (hónap)", "kpi2Value": "3", "kpi2Change": "+50%",
+        "kpi3Label": "Elfogyott", "kpi3Value": "2",
+        "col1": "Termék", "col2": "Kategória", "col3": "Ár", "col4": "Készlet",
+        "r1c1": "Kovászos kenyér", "r1c2": "Kenyér", "r1c3": "2.000 Ft", "r1c4": "12 db",
+        "r2c1": "Croissant", "r2c2": "Pékáru", "r2c3": "700 Ft", "r2c4": "28 db",
+        "r3c1": "Kakaós csiga", "r3c2": "Édes", "r3c3": "650 Ft", "r3c4": "15 db",
+        "r4c1": "Sajtos pogácsa", "r4c2": "Sós", "r4c3": "450 Ft", "r4c4": "0 db"
       },
       "p2": {
-        "kpi1Label": "Nyitott", "kpi1Value": "12",
-        "kpi2Label": "Befejezett", "kpi2Value": "38", "kpi2Change": "+8%",
-        "kpi3Label": "Határidős", "kpi3Value": "3",
-        "col1": "Feladat", "col2": "Felelős", "col3": "Prioritás", "col4": "Határidő",
-        "r1c1": "Landing page", "r1c2": "N.P.", "r1c3": "Magas", "r1c4": "Márc. 8",
-        "r2c1": "API integráció", "r2c2": "B.T.", "r2c3": "Közepes", "r2c4": "Márc. 12",
-        "r3c1": "Chatbot teszt", "r3c2": "N.P.", "r3c3": "Magas", "r3c4": "Márc. 6",
-        "r4c1": "Árajánlat", "r4c2": "B.T.", "r4c3": "Alacsony", "r4c4": "Márc. 15"
+        "kpi1Label": "Mai rendelés", "kpi1Value": "8",
+        "kpi2Label": "Teljesített", "kpi2Value": "6", "kpi2Change": "+12%",
+        "kpi3Label": "Függőben", "kpi3Value": "2",
+        "col1": "Megrendelő", "col2": "Tétel", "col3": "Státusz", "col4": "Összeg",
+        "r1c1": "Kis Kávézó", "r1c2": "20x croissant", "r1c3": "Kiszállítva", "r1c4": "14k Ft",
+        "r2c1": "Hotel Napsugár", "r2c2": "50x kenyér", "r2c3": "Folyamatban", "r2c4": "100k Ft",
+        "r3c1": "Tóth Iroda", "r3c2": "15x pogácsa", "r3c3": "Kiszállítva", "r3c4": "6.750 Ft",
+        "r4c1": "Lakatos Éva", "r4c2": "Torta rendelés", "r4c3": "Várakozik", "r4c4": "18k Ft"
       },
       "p3": {
-        "kpi1Label": "Ezen a héten", "kpi1Value": "5",
-        "kpi2Label": "Találkozó", "kpi2Value": "3",
-        "kpi3Label": "Határidő", "kpi3Value": "2",
+        "kpi1Label": "Ezen a héten", "kpi1Value": "4",
+        "kpi2Label": "Kiszállítás", "kpi2Value": "3",
+        "kpi3Label": "Rendezvény", "kpi3Value": "1",
         "col1": "Esemény", "col2": "Dátum", "col3": "Idő", "col4": "Típus",
-        "r1c1": "Kickoff meeting", "r1c2": "Márc. 5", "r1c3": "10:00", "r1c4": "Meeting",
-        "r2c1": "Design review", "r2c2": "Márc. 6", "r2c3": "14:00", "r2c4": "Meeting",
-        "r3c1": "Sprint záró", "r3c2": "Márc. 7", "r3c3": "16:00", "r3c4": "Meeting",
-        "r4c1": "API deadline", "r4c2": "Márc. 12", "r4c3": "—", "r4c4": "Határidő"
+        "r1c1": "Hotel kiszállítás", "r1c2": "Márc. 5", "r1c3": "06:00", "r1c4": "Kiszállítás",
+        "r2c1": "Irodai csomag", "r2c2": "Márc. 6", "r2c3": "07:30", "r2c4": "Kiszállítás",
+        "r3c1": "Esküvői torta", "r3c2": "Márc. 8", "r3c3": "10:00", "r3c4": "Rendezvény",
+        "r4c1": "Heti rendelés", "r4c2": "Márc. 10", "r4c3": "06:00", "r4c4": "Kiszállítás"
       },
       "p4": {
-        "kpi1Label": "Havi bevétel", "kpi1Value": "9,2M Ft", "kpi1Change": "+12.5%",
-        "kpi2Label": "Növekedés", "kpi2Value": "24%", "kpi2Change": "+5.1%",
-        "kpi3Label": "Átl. projekt", "kpi3Value": "2,1M Ft", "kpi3Change": "+3.8%",
+        "kpi1Label": "Havi bevétel", "kpi1Value": "5,8M Ft", "kpi1Change": "+14.2%",
+        "kpi2Label": "Növekedés", "kpi2Value": "14%", "kpi2Change": "+3.1%",
+        "kpi3Label": "Átlag nap", "kpi3Value": "193k Ft", "kpi3Change": "+8.5%",
         "col1": "Riport", "col2": "Időszak", "col3": "Státusz", "col4": "Típus",
         "r1c1": "Havi összesítő", "r1c2": "Február", "r1c3": "Kész", "r1c4": "PDF",
-        "r2c1": "Ügyfél riport", "r2c2": "Q1 2026", "r2c3": "Folyamatban", "r2c4": "Excel",
-        "r3c1": "Pénzügyi kim.", "r3c2": "Február", "r3c3": "Kész", "r3c4": "PDF",
-        "r4c1": "Éves előrejelzés", "r4c2": "2026", "r4c3": "Tervezés", "r4c4": "—"
+        "r2c1": "Termék toplista", "r2c2": "Q1 2026", "r2c3": "Folyamatban", "r2c4": "Excel",
+        "r3c1": "Alapanyag költség", "r3c2": "Február", "r3c3": "Kész", "r3c4": "PDF",
+        "r4c1": "Éves összehasonlítás", "r4c2": "2026", "r4c3": "Tervezés", "r4c4": "—"
       }
     },
     "ai": {
@@ -89,25 +89,25 @@
       "extLabel": "Weboldalon",
       "intLabel": "Cégen belül",
       "ext": {
-        "greeting": "Kérdezz bármit rólunk!",
-        "q1": "Mikor nyittok szombaton?",
-        "a1": "Szombaton 10:00–22:00 között vagyunk nyitva. Foglaljak asztalt?",
-        "actionBook": "Asztalfoglalás",
+        "greeting": "Szia! Miben segíthetek?",
+        "q1": "Szombaton nyitva vagytok?",
+        "a1": "Igen! Szombaton 10-től 22-ig. Szeretnél asztalt foglalni?",
+        "actionBook": "Foglalás",
         "actionCall": "+36 1 234 5678",
         "actionHours": "Nyitvatartás",
-        "q2": "Igen, szombat este 7-re, 4 főre",
-        "a2": "Rendben! Milyen névre foglaljam?",
+        "q2": "Ja, este 7-re lennénk négyen",
+        "a2": "Milyen névre foglaljam?",
         "q3": "Kovács Márton",
-        "a3": "Kész! Kovács Márton, szo. 19:00, 4 fő. Várjuk!"
+        "a3": "Megvan! Szombat 19:00, 4 fő, Kovács. Várunk!"
       },
       "int": {
-        "greeting": "Szia! Mit nézzünk?",
-        "q1": "Hány rendelés volt tegnap?",
-        "a1": "Tegnap 47 rendelés érkezett, 12%-kal több mint egy héttel ezelőtt.",
+        "greeting": "Szia! Mi érdekel?",
+        "q1": "Tegnap hány rendelés jött be?",
+        "a1": "47 rendelés, tavaly ilyenkor 38 volt.",
         "q2": "Melyik volt a legnagyobb?",
-        "a2": "Nagy Építő Bt — 3 tétel, összesen 847.000 Ft.",
+        "a2": "Nagy Építő Bt, 3 tétel, 847 ezer.",
         "q3": "Küldj nekik egy köszönő emailt",
-        "a3": "Elküldtem! Tárgy: 'Köszönjük a rendelést' — Kovács Péternek."
+        "a3": "Kész! Elküldtem Kovács Péternek."
       }
     },
     "automation": {

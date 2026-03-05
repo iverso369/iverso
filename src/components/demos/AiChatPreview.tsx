@@ -82,34 +82,34 @@ const INT_SLOTS = buildSlots(INT_MESSAGES)
 /* Step delays per mode */
 // ext: 12 steps → 0(empty), 1(typing), 2(greeting), 3(q1), 4(typing), 5(a1+actions), 6(q2), 7(typing), 8(a2), 9(q3), 10(typing), 11(a3)
 const EXT_DELAYS = [
-  800,   // 0→1  pause before first typing
-  1000,  // 1→2  typing→greeting
-  1800,  // 2→3  greeting visible → q1
-  1500,  // 3→4  q1 visible → typing
-  1000,  // 4→5  typing→a1+actions
-  3500,  // 5→6  hold (actions, user reads)
-  1500,  // 6→7  q2 visible → typing
-  1000,  // 7→8  typing→a2
-  1800,  // 8→9  a2 visible → q3
-  1500,  // 9→10 q3 visible → typing
-  1000,  // 10→11 typing→a3
-  4000,  // 11→hold final
+  1000,  // 0→1  pause before first typing
+  1200,  // 1→2  typing→greeting
+  2200,  // 2→3  greeting visible → q1
+  2000,  // 3→4  q1 visible → typing
+  1200,  // 4→5  typing→a1+actions
+  4000,  // 5→6  hold (actions, user reads)
+  2000,  // 6→7  q2 visible → typing
+  1200,  // 7→8  typing→a2
+  2200,  // 8→9  a2 visible → q3
+  2000,  // 9→10 q3 visible → typing
+  1200,  // 10→11 typing→a3
+  5000,  // 11→hold final
 ]
 
 // int: 12 steps → same structure without action button hold
 const INT_DELAYS = [
-  800,   // 0→1  pause before first typing
-  1000,  // 1→2  typing→greeting
-  1800,  // 2→3  greeting visible → q1
-  1500,  // 3→4  q1 visible → typing
-  1000,  // 4→5  typing→a1
-  1800,  // 5→6  a1 visible → q2
-  1500,  // 6→7  q2 visible → typing
-  1000,  // 7→8  typing→a2
-  1800,  // 8→9  a2 visible → q3
-  1500,  // 9→10 q3 visible → typing
-  1000,  // 10→11 typing→a3
-  4000,  // 11→hold final
+  1000,  // 0→1  pause before first typing
+  1200,  // 1→2  typing→greeting
+  2200,  // 2→3  greeting visible → q1
+  2000,  // 3→4  q1 visible → typing
+  1200,  // 4→5  typing→a1
+  2200,  // 5→6  a1 visible → q2
+  2000,  // 6→7  q2 visible → typing
+  1200,  // 7→8  typing→a2
+  2200,  // 8→9  a2 visible → q3
+  2000,  // 9→10 q3 visible → typing
+  1200,  // 10→11 typing→a3
+  5000,  // 11→hold final
 ]
 
 /* ── SVG icons ── */
@@ -171,15 +171,16 @@ function LinkIcon() {
 
 interface ChatPanelProps {
   mode: 'ext' | 'int'
-  active: boolean
-  onComplete: () => void
+  staggerDelay: number
 }
 
-function ChatPanel({ mode, active, onComplete }: ChatPanelProps) {
+function ChatPanel({ mode, staggerDelay }: ChatPanelProps) {
   const { t } = useTranslation()
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const messagesRef = useRef<HTMLDivElement>(null)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const [inView, setInView] = useState(false)
   const [step, setStep] = useState(0)
   const [fading, setFading] = useState(false)
   const [started, setStarted] = useState(false)
@@ -188,29 +189,39 @@ function ChatPanel({ mode, active, onComplete }: ChatPanelProps) {
   const delays = mode === 'ext' ? EXT_DELAYS : INT_DELAYS
   const lastStep = totalSteps - 1
 
+  // Detect in-view
+  useEffect(() => {
+    const el = wrapperRef.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.15 }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   // Advance steps
   const advance = useCallback((currentStep: number) => {
     if (currentStep >= lastStep) {
-      // Final hold → fade → reset → notify parent
+      // Final hold → fade → reset → loop
       timeoutRef.current = setTimeout(() => {
         setFading(true)
         timeoutRef.current = setTimeout(() => {
           setStep(0)
           setFading(false)
-          setStarted(false)
           if (messagesRef.current) {
             messagesRef.current.scrollTop = 0
           }
-          onComplete()
         }, 400)
-      }, delays[currentStep] || 4000)
+      }, delays[currentStep] || 5000)
       return
     }
 
     timeoutRef.current = setTimeout(() => {
       setStep(currentStep + 1)
     }, delays[currentStep] || 1000)
-  }, [lastStep, delays, onComplete])
+  }, [lastStep, delays])
 
   // Drive sequence
   useEffect(() => {
@@ -230,9 +241,9 @@ function ChatPanel({ mode, active, onComplete }: ChatPanelProps) {
     })
   }, [step])
 
-  // Start when active becomes true
+  // Start when in view
   useEffect(() => {
-    if (!active || started) return
+    if (!inView) return
 
     const prefersReduced = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
@@ -240,17 +251,20 @@ function ChatPanel({ mode, active, onComplete }: ChatPanelProps) {
 
     if (prefersReduced) {
       setStep(lastStep)
+      setStarted(false)
       return
     }
 
-    const timer = setTimeout(() => setStarted(true), 300)
-    return () => clearTimeout(timer)
-  }, [active, started, lastStep])
+    if (!started) {
+      const timer = setTimeout(() => setStarted(true), staggerDelay)
+      return () => clearTimeout(timer)
+    }
+  }, [inView, started, staggerDelay, lastStep])
 
   const prefix = `demos.ai.${mode}`
 
   return (
-    <div className={styles.widget}>
+    <div ref={wrapperRef} className={styles.widget}>
       {/* Widget header */}
       <div className={styles.widgetHeader}>
         <span className={styles.statusDot} />
@@ -322,55 +336,23 @@ function ChatPanel({ mode, active, onComplete }: ChatPanelProps) {
 
 export default function AiChatPreview() {
   const { t } = useTranslation()
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const [inView, setInView] = useState(false)
-  const [activePanel, setActivePanel] = useState<'ext' | 'int'>('ext')
-
-  // Detect in-view (once)
-  useEffect(() => {
-    const el = wrapperRef.current
-    if (!el) return
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true)
-          io.disconnect()
-        }
-      },
-      { threshold: 0.15 }
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-
-  const handleComplete = useCallback(() => {
-    setActivePanel(prev => prev === 'ext' ? 'int' : 'ext')
-  }, [])
 
   return (
-    <div ref={wrapperRef} className={styles.wrapper}>
+    <div className={styles.wrapper}>
       <div className={styles.grid}>
         <div className={styles.column}>
           <div className={styles.badge}>
             <GlobeIcon />
             <span>{t('demos.ai.extLabel')}</span>
           </div>
-          <ChatPanel
-            mode="ext"
-            active={inView && activePanel === 'ext'}
-            onComplete={handleComplete}
-          />
+          <ChatPanel mode="ext" staggerDelay={0} />
         </div>
         <div className={styles.column}>
           <div className={styles.badge}>
             <BuildingIcon />
             <span>{t('demos.ai.intLabel')}</span>
           </div>
-          <ChatPanel
-            mode="int"
-            active={inView && activePanel === 'int'}
-            onComplete={handleComplete}
-          />
+          <ChatPanel mode="int" staggerDelay={5000} />
         </div>
       </div>
     </div>
