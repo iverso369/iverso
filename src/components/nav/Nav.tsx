@@ -1,40 +1,29 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './LanguageSwitcher'
 import styles from './Nav.module.css'
 
 interface NavProps {
-  /** ID of the hero element to observe. When provided, nav hides at hero and shows on scroll past it. */
   heroElementId?: string
 }
+
+const serviceLinks = [
+  { path: '/dashboardok', key: 'nav.dashboards' },
+  { path: '/ai', key: 'nav.ai' },
+  { path: '/automatizacio', key: 'nav.automation' },
+  { path: '/weboldalak', key: 'nav.websites' },
+]
 
 export default function Nav({ heroElementId: _heroElementId }: NavProps) {
   const { t } = useTranslation()
   const location = useLocation()
 
-  const [navVisible] = useState(true)
-  const [servicesOpen, setServicesOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-
-  const servicesRef = useRef<HTMLDivElement>(null)
-  const servicesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  // Close services dropdown on outside click
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (servicesRef.current && !servicesRef.current.contains(e.target as Node)) {
-        setServicesOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [])
 
   // Close mobile overlay on route change
   useEffect(() => {
     setMobileOpen(false)
-    setServicesOpen(false)
   }, [location.pathname])
 
   // Prevent body scroll when mobile overlay open
@@ -47,104 +36,46 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
     return () => { document.body.style.overflow = '' }
   }, [mobileOpen])
 
-  const handleServicesEnter = useCallback(() => {
-    if (servicesTimeoutRef.current) {
-      clearTimeout(servicesTimeoutRef.current)
-      servicesTimeoutRef.current = null
-    }
-    setServicesOpen(true)
-  }, [])
-
-  const handleServicesLeave = useCallback(() => {
-    servicesTimeoutRef.current = setTimeout(() => {
-      setServicesOpen(false)
-    }, 150)
-  }, [])
-
-  const serviceLinks = [
-    { path: '/dashboardok', key: 'nav.dashboards' },
-    { path: '/ai', key: 'nav.ai' },
-    { path: '/automatizacio', key: 'nav.automation' },
-    { path: '/weboldalak', key: 'nav.websites' },
-  ]
-
   return (
     <>
-      {/* Desktop + mobile nav bar */}
-      <nav
-        className={`${styles.nav} ${navVisible ? styles.navVisible : styles.navHidden}`}
-        aria-label="Main navigation"
-      >
+      <nav className={styles.nav} aria-label="Main navigation">
         <div className={styles.inner}>
           {/* Logo */}
           <Link to="/" className={styles.logo}>
             IVERSO
           </Link>
 
-          {/* Desktop links */}
+          {/* Desktop links — flat, no dropdown */}
           <div className={styles.desktopLinks}>
-            {/* Services dropdown */}
-            <div
-              className={styles.servicesWrapper}
-              ref={servicesRef}
-              onMouseEnter={handleServicesEnter}
-              onMouseLeave={handleServicesLeave}
-            >
-              <button
-                className={styles.navLink}
-                onClick={() => setServicesOpen(prev => !prev)}
-                aria-expanded={servicesOpen}
-                aria-haspopup="true"
+            {serviceLinks.map(link => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`${styles.navLink} ${location.pathname === link.path ? styles.navLinkActive : ''}`}
               >
-                {t('nav.services')}
-                <svg
-                  className={`${styles.chevron} ${servicesOpen ? styles.chevronOpen : ''}`}
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 4.5L6 7.5L9 4.5" />
-                </svg>
-              </button>
+                {t(link.key)}
+              </Link>
+            ))}
 
-              {servicesOpen && (
-                <ul className={styles.dropdown}>
-                  {serviceLinks.map(link => (
-                    <li key={link.path}>
-                      <Link
-                        to={link.path}
-                        className={`${styles.dropdownLink} ${location.pathname === link.path ? styles.dropdownLinkActive : ''}`}
-                      >
-                        {t(link.key)}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            {/* Dot separator */}
+            <span className={styles.dotSeparator} />
 
             <Link
-              to="/folyamat"
-              className={`${styles.navLink} ${location.pathname === '/folyamat' ? styles.navLinkActive : ''}`}
+              to="/tudnivalok"
+              className={`${styles.navLink} ${location.pathname === '/tudnivalok' ? styles.navLinkActive : ''}`}
             >
               {t('nav.process')}
             </Link>
-
-            <Link
-              to="/kapcsolat"
-              className={styles.contactBtn}
-            >
-              {t('nav.contact')}
-            </Link>
           </div>
 
-          {/* Desktop language switcher */}
-          <div className={styles.desktopLang}>
+          {/* Right side: Contact + separator + Language */}
+          <div className={styles.rightGroup}>
+            <Link to="/kapcsolat" className={styles.contactBtn}>
+              {t('nav.contact')}
+            </Link>
+
+            <span className={styles.lineSeparator} />
+
             <LanguageSwitcher />
           </div>
 
@@ -185,8 +116,6 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
           </button>
 
           <nav className={styles.overlayNav} aria-label="Mobile navigation">
-            {/* Services — listed flat, not dropdown */}
-            <span className={styles.overlayLabel}>{t('nav.services')}</span>
             {serviceLinks.map(link => (
               <Link
                 key={link.path}
@@ -201,8 +130,8 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
             <div className={styles.overlaySeparator} />
 
             <Link
-              to="/folyamat"
-              className={`${styles.overlayLink} ${location.pathname === '/folyamat' ? styles.overlayLinkActive : ''}`}
+              to="/tudnivalok"
+              className={`${styles.overlayLink} ${location.pathname === '/tudnivalok' ? styles.overlayLinkActive : ''}`}
               onClick={() => setMobileOpen(false)}
             >
               {t('nav.process')}
@@ -210,7 +139,7 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
 
             <Link
               to="/kapcsolat"
-              className={`${styles.overlayLink} ${location.pathname === '/kapcsolat' ? styles.overlayLinkActive : ''}`}
+              className={`${styles.overlayLink} ${styles.overlayContactBtn} ${location.pathname === '/kapcsolat' ? styles.overlayLinkActive : ''}`}
               onClick={() => setMobileOpen(false)}
             >
               {t('nav.contact')}

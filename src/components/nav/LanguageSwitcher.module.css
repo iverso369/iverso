@@ -2,21 +2,31 @@
   position: relative;
 }
 
+/* E style: outline + orange tint + shadow */
 .trigger {
   display: flex;
   align-items: center;
   gap: 4px;
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 500;
-  color: var(--muted);
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: color 0.2s;
+  color: var(--accent);
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: rgba(247, 127, 10, 0.06);
+  border: 1px solid rgba(247, 127, 10, 0.25);
+  box-shadow:
+    0 0 10px rgba(247, 127, 10, 0.12),
+    inset 0 0 10px rgba(247, 127, 10, 0.08);
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .trigger:hover {
-  color: var(--text);
+  background: rgba(247, 127, 10, 0.12);
+  box-shadow:
+    0 0 14px rgba(247, 127, 10, 0.2),
+    inset 0 0 14px rgba(247, 127, 10, 0.12);
+  border-color: rgba(247, 127, 10, 0.35);
 }
 
 .chevron {
