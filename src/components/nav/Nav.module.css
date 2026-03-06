@@ -1,17 +1,4 @@
 /* ========================================
-   STANDALONE LANGUAGE SWITCHER
-   Shown when nav is hidden (hero state)
-   ======================================== */
-
-.standaloneLang {
-  position: fixed;
-  top: 20px;
-  right: 24px;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
-}
-
-/* ========================================
    NAV BAR
    ======================================== */
 
@@ -21,30 +8,18 @@
   left: 0;
   right: 0;
   z-index: 999;
-  background: rgba(10, 10, 12, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(136, 136, 154, 0.08);
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.navVisible {
-  transform: translateY(0);
-}
-
-.navHidden {
-  transform: translateY(-100%);
-  pointer-events: none;
+  padding: 14px 40px;
+  background: rgba(17, 17, 20, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #1e1e24;
 }
 
 .inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 24px;
-  height: 56px;
 }
 
 /* ========================================
@@ -54,33 +29,28 @@
 .logo {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   color: var(--accent);
   letter-spacing: 0.12em;
   flex-shrink: 0;
 }
 
 /* ========================================
-   DESKTOP LINKS
+   DESKTOP LINKS (flat, no dropdown)
    ======================================== */
 
 .desktopLinks {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 24px;
   margin-left: 48px;
 }
 
 .navLink {
-  display: flex;
-  align-items: center;
-  gap: 4px;
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 400;
   color: var(--muted);
-  padding: 8px 12px;
-  border-radius: 6px;
   transition: color 0.2s;
   white-space: nowrap;
 }
@@ -93,88 +63,52 @@
   color: var(--text);
 }
 
+/* Dot separator between services and Tudnivalók */
+.dotSeparator {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #2a2a30;
+  flex-shrink: 0;
+}
+
+/* ========================================
+   RIGHT GROUP (Contact + separator + Lang)
+   ======================================== */
+
+.rightGroup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+/* Contact button — solid accent */
 .contactBtn {
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   padding: 7px 18px;
-  border-radius: 8px;
-  background: rgba(247, 127, 10, 0.06);
-  color: var(--accent);
-  border: 1px solid rgba(247, 127, 10, 0.25);
-  box-shadow:
-    0 0 10px rgba(247, 127, 10, 0.12),
-    inset 0 0 10px rgba(247, 127, 10, 0.08);
-  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  transition: opacity 0.2s;
   white-space: nowrap;
 }
 
 .contactBtn:hover {
-  background: rgba(247, 127, 10, 0.12);
-  box-shadow:
-    0 0 14px rgba(247, 127, 10, 0.2),
-    inset 0 0 14px rgba(247, 127, 10, 0.12);
-  border-color: rgba(247, 127, 10, 0.35);
+  opacity: 0.88;
 }
 
-/* ========================================
-   SERVICES DROPDOWN
-   ======================================== */
-
-.servicesWrapper {
-  position: relative;
-}
-
-.chevron {
-  transition: transform 0.2s;
-}
-
-.chevronOpen {
-  transform: rotate(180deg);
-}
-
-.dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  list-style: none;
-  background: rgba(10, 10, 12, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(136, 136, 154, 0.12);
-  border-radius: 10px;
-  padding: 6px;
-  min-width: 180px;
-  z-index: 100;
-  animation: fadeIn 0.15s ease-out;
-}
-
-.dropdownLink {
+/* Vertical line separator */
+.lineSeparator {
   display: block;
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: 400;
-  color: var(--muted);
-  padding: 8px 14px;
-  border-radius: 6px;
-  transition: color 0.15s, background-color 0.15s;
-}
-
-.dropdownLink:hover {
-  color: var(--text);
-  background: rgba(136, 136, 154, 0.08);
-}
-
-.dropdownLinkActive {
-  color: var(--accent);
-}
-
-/* ========================================
-   DESKTOP LANG
-   ======================================== */
-
-.desktopLang {
-  margin-left: auto;
+  width: 1px;
+  height: 20px;
+  background: #2a2a30;
+  flex-shrink: 0;
 }
 
 /* ========================================
@@ -240,16 +174,6 @@
   gap: 4px;
 }
 
-.overlayLabel {
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 4px;
-}
-
 .overlayLink {
   font-family: var(--font-display);
   font-size: 1.5rem;
@@ -278,6 +202,22 @@
   color: var(--accent);
 }
 
+/* Mobile contact — solid accent */
+.overlayContactBtn {
+  margin-top: 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 12px 32px;
+  border-radius: 8px;
+}
+
+.overlayContactBtn:hover {
+  color: var(--bg);
+  opacity: 0.88;
+}
+
 .overlaySeparator {
   width: 40px;
   height: 1px;
@@ -293,17 +233,6 @@
    ANIMATIONS
    ======================================== */
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes overlayIn {
   from {
     opacity: 0;
@@ -318,17 +247,7 @@
    ======================================== */
 
 @media (prefers-reduced-motion: reduce) {
-  .nav {
-    transition: none;
-  }
-
-  .dropdown,
-  .standaloneLang,
   .overlay {
     animation: none;
-  }
-
-  .chevron {
-    transition: none;
   }
 }

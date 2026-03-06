@@ -23,7 +23,7 @@ function App() {
           <Route path="/ai" element={<AI />} />
           <Route path="/automatizacio" element={<Automation />} />
           <Route path="/weboldalak" element={<Websites />} />
-          <Route path="/folyamat" element={<Process />} />
+          <Route path="/tudnivalok" element={<Process />} />
           <Route path="/kapcsolat" element={<Contact />} />
           <Route path="/impressum" element={<Impressum />} />
           <Route path="/adatvedelem" element={<Privacy />} />
