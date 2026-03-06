@@ -137,7 +137,7 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
 
             <Link
               to="/kapcsolat"
-              className={`${styles.navLink} ${location.pathname === '/kapcsolat' ? styles.navLinkActive : ''}`}
+              className={styles.contactBtn}
             >
               {t('nav.contact')}
             </Link>

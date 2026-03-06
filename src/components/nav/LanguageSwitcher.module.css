@@ -7,7 +7,7 @@
   align-items: center;
   gap: 4px;
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: var(--muted);
   padding: 6px 10px;
@@ -48,7 +48,7 @@
   width: 100%;
   text-align: center;
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 400;
   color: var(--muted);
   padding: 6px 12px;
@@ -62,11 +62,12 @@
 }
 
 .active {
-  color: var(--accent);
+  color: var(--text);
+  font-weight: 700;
 }
 
 .active:hover {
-  color: var(--accent);
+  color: var(--text);
 }
 
 @keyframes fadeIn {

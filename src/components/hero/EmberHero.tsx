@@ -128,7 +128,7 @@ function sampleTextPositions(
   const fontSize = Math.round(width * scale * 0.11)
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
-  ctx.font = `900 ${fontSize}px "Playfair Display"`
+  ctx.font = `700 ${fontSize}px "Roboto"`
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.fillStyle = '#ffffff'
