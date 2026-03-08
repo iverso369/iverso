@@ -8,7 +8,7 @@
   left: 0;
   right: 0;
   z-index: 999;
-  padding: 14px 40px;
+  padding: 14px 80px;
   background: rgba(17, 17, 20, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -91,6 +91,7 @@
   text-decoration: none;
   white-space: nowrap;
   transition: opacity 0.2s;
+  margin-left: 40px;
 }
 
 .tudnivalokLink:hover {
