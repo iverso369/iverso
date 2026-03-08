@@ -38,7 +38,7 @@ A főoldali dashboard demó egy **pékség** belső rendszerét mutatja — éle
 | HU | DE | EN |
 |---|---|---|
 | Szolgáltatások | Leistungen | Services |
-| Folyamat | Prozess | Process |
+| Tudnivalók | Wissenswertes | Good to know |
 | Kapcsolat | Kontakt | Contact |
 | Dashboardok | Dashboards | Dashboards |
 | AI | AI | AI |

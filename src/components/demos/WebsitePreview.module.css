@@ -11,7 +11,7 @@
 /* ── page inside MiniWebsite ── */
 
 .page {
-  background: #FAF5EE;
+  background: #E8DFD2;
   padding: 0;
   transition: opacity 0.35s ease;
   font-family: 'Lora', 'Georgia', serif;
@@ -41,7 +41,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 14px;
-  border-bottom: 1px solid #E8DFD2;
+  border-bottom: 1px solid #D4CAB8;
 }
 
 .bakeryName {
@@ -77,16 +77,16 @@
   padding: 0 14px 14px;
   text-align: center;
   background:
-    radial-gradient(ellipse at 30% 50%, rgba(180, 130, 60, 0.25), transparent 70%),
-    radial-gradient(ellipse at 70% 40%, rgba(160, 100, 40, 0.15), transparent 60%),
-    linear-gradient(180deg, #EDE3D4, #D4C4A8);
+    radial-gradient(ellipse at 30% 50%, rgba(155, 110, 50, 0.25), transparent 70%),
+    radial-gradient(ellipse at 70% 40%, rgba(140, 85, 35, 0.15), transparent 60%),
+    linear-gradient(180deg, #D9CFBF, #C4B498);
   overflow: hidden;
 }
 
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(transparent 30%, rgba(250, 245, 238, 0.97) 100%);
+  background: linear-gradient(transparent 30%, rgba(232, 223, 210, 0.97) 100%);
   pointer-events: none;
 }
 
@@ -139,7 +139,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
-  background: #F3ECE0;
+  background: #DDD4C6;
   border-radius: 8px;
   padding: 8px 10px;
 }
@@ -204,7 +204,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 14px;
-  border-top: 1px solid #E8DFD2;
+  border-top: 1px solid #D4CAB8;
 }
 
 .hoursWrapper {
@@ -237,7 +237,7 @@
   display: inline-block;
   padding: 4px 10px;
   background: #8B5E3C;
-  color: #FAF5EE;
+  color: #E8DFD2;
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 600;
   font-size: 7.5px;

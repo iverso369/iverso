@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import EmberHero from '../components/hero/EmberHero'
 import Nav from '../components/nav/Nav'
 import DemoCard from '../components/demos/DemoCard'
@@ -13,6 +14,7 @@ import useIntersection from '../hooks/useIntersection'
 import styles from './Home.module.css'
 
 export default function Home() {
+  const { t } = useTranslation()
   const process = useIntersection({ threshold: 0.15 })
   const cta = useIntersection({ threshold: 0.15 })
   const footer = useIntersection({ threshold: 0.15 })
@@ -38,6 +40,10 @@ export default function Home() {
           <DashboardPreview />
         </DemoCard>
 
+        <p className={styles.serviceDescription}>
+          {t('demos.dashboard.description')}
+        </p>
+
         <DemoCard
           titleKey="ai.title"
           subtitleKey="ai.subtitle"
@@ -45,6 +51,10 @@ export default function Home() {
         >
           <AiChatPreview />
         </DemoCard>
+
+        <p className={styles.serviceDescription}>
+          {t('demos.ai.description')}
+        </p>
 
         <DemoCard
           titleKey="automation.title"
@@ -54,6 +64,10 @@ export default function Home() {
           <AutomationPreview />
         </DemoCard>
 
+        <p className={styles.serviceDescription}>
+          {t('demos.automation.description')}
+        </p>
+
         <DemoCard
           titleKey="websites.title"
           subtitleKey="websites.subtitle"
@@ -61,6 +75,10 @@ export default function Home() {
         >
           <WebsitePreview />
         </DemoCard>
+
+        <p className={styles.serviceDescription}>
+          {t('demos.websites.description')}
+        </p>
       </section>
 
       {/* 4. jelenet: Folyamat — node sequence */}

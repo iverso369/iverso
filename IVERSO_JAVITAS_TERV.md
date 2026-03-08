@@ -1,7 +1,7 @@
 # IVERSO — Javítási terv
 
 > 2026.03.03 — Első vizuális review után
-> Frissítve: 2026.03.05
+> Frissítve: 2026.03.06
 
 ---
 
@@ -13,24 +13,25 @@
 | 2 | Egységes preview méret (DemoCard wrapper) | ✅ kész |
 | 3 | DashboardPreview újra — sidebar + KPI + táblázat | ✅ kész |
 | 4 | AiChatPreview — két panel, input, gyorsválasz | ✅ kész |
-| 5 | WebsitePreview — v2 A világos krém pékség | ✅ kész — szín finomhangolás később |
+| 5 | WebsitePreview — v2 A világos krém pékség | ✅ kész + szín tompítva |
 | 6 | AutomationPreview — node-ok mindig láthatók | ✅ kész |
-| 7 | Építős szekció javítás | ⬜ |
+| 7 | Építős szekció javítás | ⬜ újratervezés lesz |
 | 8 | Folyamat finomhangolás | ⬜ |
 | 9 | "Tovább" gombok beépítése | ✅ kész |
 | 10 | Navbar mindig látható (gépen) | ✅ kész |
 | 11 | Hero magasság ~50vh | ✅ kész |
-| 12 | IVERSO ↔ "Let's build something" pozíció csere + méretezés | ⬜ döntés kell |
-| 13 | Navbar teljes újratervezés (megjelenés + font) | ⬜ döntés kell |
+| 12 | IVERSO ↔ "Let's build something" pozíció csere | ✅ kész |
+| 13 | Navbar teljes újratervezés | ✅ kész (Roboto 700, B+V1 layout, Tudnivalók, E stílusú gombok) |
 | 14 | Preview kártyák szélesség 85vw | ✅ kész |
-| 15 | Font váltás (navbar IVERSO + preview címek) | ⬜ döntés kell |
-| 16 | IVERSO felirat a CTA szekció fölé | ⬜ |
+| 15 | Font váltás (Roboto 700) | ✅ kész |
+| 16 | IVERSO felirat a CTA szekció fölé | ⬜ végére parkolva (parázs effekt) |
 | 17 | Kurzor + jobb klikk menü tiltás | ✅ kész |
-| 18 | Amelia szekció: méret, igazítás, mondatok | ⬜ döntés kell |
-| 19 | Építős: IVERSO parázs átlóg | ⬜ |
-| 20 | Szolgáltatások dropdown: "Weboldalak" hiányzik | ✅ kész |
+| 18 | Amelia szekció: méret, igazítás, mondatok | ✅ kész |
+| 19 | Építős: IVERSO parázs átlóg | ✅ megoldódott (építős újratervezés) |
+| 20 | Szolgáltatások dropdown: "Weboldalak" hiányzik | ✅ kész (dropdown megszűnt, kibontva) |
 | 21 | Építős morph szöveg encoding bug | ✅ kész |
-| 22 | WebsitePreview szín finomhangolás | ⬜ döntés kell |
+| 22 | WebsitePreview szín finomhangolás | ✅ kész (#FAF5EE → #E8DFD2) |
+| 23 | Főoldal tartalmi flow — szövegek a preview kártyák alatt | ✅ kész |
 
 ---
 
@@ -42,60 +43,73 @@
 - ~~P20: "Weboldalak" hiányzik a nav dropdown-ból~~ ✅
 - ~~P21: Encoding bug az építős szekcióban~~ ✅
 
-### 2. kör — Design döntések (opciók mutatása, webes Claude)
-- **P13+P15:** Navbar újratervezés + font választás → HTML prototípok
-- **P12:** IVERSO ↔ "Let's build something" pozíció csere + "Let's build something" szélesítés
-- **P16:** IVERSO felirat a CTA fölé
-- **P18:** Amelia szekció újratervezés + mondatok felülvizsgálat
-- **P22:** WebsitePreview szín tónus
+### 2. kör — Design döntések ✅ KÉSZ
+- ~~P13+P15: Navbar újratervezés + font választás~~ ✅
+- ~~P12: IVERSO ↔ "Let's build something" csere~~ ✅
+- ~~P18: Amelia szekció újratervezés + mondatok~~ ✅
+- ~~P22: WebsitePreview szín tónus~~ ✅
+- ~~P23: Főoldal tartalmi flow~~ ✅
 
-### 3. kör — Nehezebb fixek (VS Code)
-- **P19:** Parázs átlógás az építős szekcióba
-- **P7:** Építős szekció interaktivitás
+### 3. kör — Hátra maradt
+- **P16:** IVERSO parázs a CTA fölé — végére parkolva
+- **P7:** Építős szekció újratervezés
 - **P8:** Folyamat finomhangolás
 
 ---
 
 ## Részletek
 
-### P12 — IVERSO ↔ "Let's build something" csere
-- Jelenleg: felül "Let's build something", alatta IVERSO parázs
-- Elvárt: felül IVERSO parázs, alatta "Let's build something"
-- A "Let's build something" méretben a parázs V elejétől az S végéig érjen
-- Érinti: Home.module.css, EmberHero.tsx
+### P12 — IVERSO ↔ "Let's build something" csere ✅ KÉSZ
+- IVERSO parázs felülre, "Let's build something" alá, nagyobb méretben
 
-### P13 — Navbar teljes újratervezés
-- Megjelenés, font, stílus — komplett áttervezés
-- HTML prototípokat kell mutatni
+### P13 — Navbar teljes újratervezés ✅ KÉSZ
+- Roboto 700 logo (1.35rem), DM Sans linkek
+- B + V1 layout: szolgáltatások kibontva középen, Tudnivalók ponttal elválasztva
+- Szolgáltatások dropdown megszűnt
+- "Folyamat" → "Tudnivalók", route `/folyamat` → `/tudnivalok`
+- Kapcsolat gomb: E stílus (outline + tint + shadow)
+- Nyelvváltó: E stílus
+- Szeparátor vonal Kapcsolat és nyelvváltó között
 
 ### P14 — Preview kártyák 85vw ✅ KÉSZ
 - Home.module.css .demosSection → width: 85vw
 - Tanulság: `max-width` csak limitál, `width` kényszerít
 
-### P15 — Font váltás
-- Navbar "IVERSO" felirat fontja nem jó
-- Preview kártyák címe fontja sem jó
-- Opciók kellenek
+### P15 — Font váltás ✅ KÉSZ
+- Playfair Display → Roboto 700 mindenhol
+- Self-hosted woff2, latin + latin-ext
+- var(--font-display) globális csere
 
-### P16 — IVERSO felirat a CTA fölé
-- "Van egy ötleted?" fölé egy IVERSO felirat
-- Kérdés: sima szöveg vagy parázs? Mekkora?
+### P16 — IVERSO felirat a CTA fölé ⬜ PARKOLVA
+- Ugyanaz a parázs effekt mint a hero-ban
+- Scroll-ra szétoszlik, oldal alján összeáll
+- A végére marad mert az oldal pozíciói még változhatnak
 
 ### P17 — Kurzor + jobb klikk ✅ KÉSZ
-- Jobb klikk context menu tiltás (nem jogi probléma)
-- Custom kurzor stabilizálás
 
-### P18 — Amelia szekció
+### P18 — Amelia szekció ✅ KÉSZ
 - Méret növelés + középre igazítás
-- Amelia mondatok felülvizsgálata
+- Mondatok: 5 → 10 db, új stílus (önirónia, színfalak mögötti bepillantás)
+- **Amelia stílus döntés (végleges):**
+  - Önirónia, saját helyzetéről mesél (NEM a látogató felé személyeskedik)
+  - Színfalak mögötti bepillantás, pozitív hangulat
+  - Norbi-t szidja szeretettel
+  - Emojik: CSAK arckifejezések (😂😅😌😤🙄🥲), CSAK mondatok végén
+  - Tegez
+  - Nem sales, nem manipulál
 
-### P19 — Parázs átlógás
-- Az IVERSO parázs a canvas position: fixed miatt átlóg az építős szekcióba
-- Z-index / overflow rendezés kell
+### P19 — Parázs átlógás ✅ MEGOLDÓDOTT
 
-### P20 — "Weboldalak" hiányzik a dropdown-ból ✅ KÉSZ
-- Nav.tsx serviceLinks tömb — ellenőrzés
+### P20 — Szolgáltatások dropdown ✅ KÉSZ (dropdown megszűnt, linkek kibontva)
 
 ### P21 — Encoding bug ✅ KÉSZ
-- BuilderSection morph szövegek: "\u00E1s" karakter megjelenik
-- i18n kulcs vagy hardcoded szöveg probléma
+
+### P22 — WebsitePreview szín ✅ KÉSZ
+- Háttér: #FAF5EE → #E8DFD2 (tompább krém)
+- Terméklista, borderek igazítva
+
+### P23 — Főoldal tartalmi flow ✅ KÉSZ
+- Semleges, tárgyilagos, hétköznapi nyelvű bemutató szövegek
+- Preview kártyák ALÁ kerültek leírásként
+- HU/DE/EN mind a 4 szolgáltatásnál
+- Szövegírási stílus: nem sales, nem személyeskedés, nem kérdések, nem feltételes mód
