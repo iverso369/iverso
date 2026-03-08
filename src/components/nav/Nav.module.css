@@ -83,6 +83,25 @@
   margin-left: auto;
 }
 
+/* Tudnivalók — orange text link */
+.tudnivalokLink {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.tudnivalokLink:hover {
+  opacity: 0.8;
+}
+
+.tudnivalokActive {
+  opacity: 1;
+}
+
 /* Contact button — E style (outline + orange tint + shadow) */
 .contactBtn {
   font-family: var(--font-body);
@@ -113,7 +132,7 @@
 .lineSeparator {
   display: block;
   width: 1px;
-  height: 20px;
+  height: 22px;
   background: #2a2a30;
   flex-shrink: 0;
 }
