@@ -8,7 +8,7 @@
   left: 0;
   right: 0;
   z-index: 999;
-  padding: 14px 80px;
+  padding: 14px 40px;
   background: rgba(17, 17, 20, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -19,8 +19,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 /* ========================================
@@ -78,8 +78,8 @@
 .rightGroup {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-left: auto;
+  gap: 16px;
+  flex: 1;
 }
 
 /* Tudnivalók — orange text link */
@@ -91,7 +91,7 @@
   text-decoration: none;
   white-space: nowrap;
   transition: opacity 0.2s;
-  margin-left: 40px;
+  margin-left: auto;
 }
 
 .tudnivalokLink:hover {
