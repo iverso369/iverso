@@ -8,7 +8,7 @@
   left: 0;
   right: 0;
   z-index: 999;
-  padding: 24px 56px;
+  padding: 14px 48px;
   background: rgba(17, 17, 20, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -55,26 +55,19 @@
   font-size: 1rem;
   font-weight: 400;
   color: var(--muted);
-  transition: color 0.2s;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
   white-space: nowrap;
 }
 
 .navLink:hover {
   color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .navLinkActive {
   color: var(--text);
-}
-
-/* Dot separator between services and Tudnivalók */
-.dotSeparator {
-  display: block;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #2a2a30;
-  flex-shrink: 0;
 }
 
 /* ========================================
