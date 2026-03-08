@@ -58,8 +58,6 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
             ))}
           </div>
 
-          <div className={styles.spacer} />
-
           <Link
             to="/tudnivalok"
             className={`${styles.tudnivalokLink} ${location.pathname === '/tudnivalok' ? styles.tudnivalokActive : ''}`}
