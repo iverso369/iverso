@@ -46,9 +46,7 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
             IVERSO
           </Link>
 
-          <div className={styles.spacer} />
-
-          {/* Service links */}
+          {/* Service links — absolute centered */}
           <div className={styles.menuLinks}>
             {serviceLinks.map(link => (
               <Link
@@ -60,8 +58,6 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
               </Link>
             ))}
           </div>
-
-          <div className={styles.spacer} />
 
           <Link
             to="/tudnivalok"
