@@ -59,7 +59,7 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
 
           </div>
 
-          {/* Right side: Tudnivalók | Kapcsolat | HU EN DE */}
+          {/* Right side: Tudnivalók  [Kapcsolat]  | HU EN DE */}
           <div className={styles.rightGroup}>
             <Link
               to="/tudnivalok"
@@ -67,8 +67,6 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
             >
               {t('nav.process')}
             </Link>
-
-            <span className={styles.lineSeparator} />
 
             <Link to="/kapcsolat" className={styles.contactBtn}>
               {t('nav.contact')}

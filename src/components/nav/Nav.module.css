@@ -31,8 +31,8 @@
 .logo {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.8rem;
-  color: var(--accent);
+  font-size: 2.3rem;
+  color: #D96A08;
   letter-spacing: 0.12em;
   flex-shrink: 0;
 }
@@ -57,7 +57,7 @@
   color: var(--muted);
   padding: 8px 14px;
   border-radius: 6px;
-  border-bottom: 2px solid rgba(247, 127, 10, 0.15);
+  border: 1px solid rgba(247, 127, 10, 0.15);
   transition: color 0.2s, background 0.2s, border-color 0.2s;
   white-space: nowrap;
 }
@@ -65,7 +65,7 @@
 .navLink:hover {
   color: var(--text);
   background: rgba(255, 255, 255, 0.06);
-  border-bottom-color: var(--accent);
+  border-color: var(--accent);
 }
 
 .navLinkActive {
