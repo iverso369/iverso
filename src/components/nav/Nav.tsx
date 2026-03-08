@@ -45,18 +45,18 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
             IVERSO
           </Link>
 
-          <div className={styles.spacer} />
-
-          {/* Service links */}
-          {serviceLinks.map(link => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`${styles.navLink} ${location.pathname === link.path ? styles.navLinkActive : ''}`}
-            >
-              {t(link.key)}
-            </Link>
-          ))}
+          {/* Service links — absolute centered on screen */}
+          <div className={styles.centerLinks}>
+            {serviceLinks.map(link => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`${styles.navLink} ${location.pathname === link.path ? styles.navLinkActive : ''}`}
+              >
+                {t(link.key)}
+              </Link>
+            ))}
+          </div>
 
           <div className={styles.spacer} />
 
@@ -70,8 +70,6 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
           <Link to="/kapcsolat" className={styles.contactBtn}>
             {t('nav.contact')}
           </Link>
-
-          <div className={styles.spacer} />
 
           <LanguageSwitcher />
 

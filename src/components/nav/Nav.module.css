@@ -16,6 +16,7 @@
 }
 
 .inner {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 24px;
@@ -42,6 +43,19 @@
 
 .spacer {
   flex: 1;
+}
+
+/* ========================================
+   CENTER LINKS (absolute, screen center)
+   ======================================== */
+
+.centerLinks {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 .navLink {
@@ -257,7 +271,7 @@
    ======================================== */
 
 @media (max-width: 1200px) {
-  .navLink,
+  .centerLinks,
   .spacer,
   .tudnivalokLink,
   .contactBtn {
