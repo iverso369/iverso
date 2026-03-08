@@ -45,8 +45,10 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
             IVERSO
           </Link>
 
-          {/* Service links — absolute centered on screen */}
-          <div className={styles.centerLinks}>
+          <div className={styles.spacer} />
+
+          {/* Service links */}
+          <div className={styles.menuLinks}>
             {serviceLinks.map(link => (
               <Link
                 key={link.path}
@@ -57,6 +59,8 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
               </Link>
             ))}
           </div>
+
+          <div className={styles.spacer} />
 
           <Link
             to="/tudnivalok"
