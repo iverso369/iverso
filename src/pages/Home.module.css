@@ -22,10 +22,10 @@
 }
 
 .slogan {
-  margin-top: 32px;
+  margin-top: 48px;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(24px, 4vw, 52px);
+  font-size: clamp(28px, 5vw, 64px);
   color: var(--muted);
   opacity: 0;
   animation: sloganFadeIn 1s ease forwards;

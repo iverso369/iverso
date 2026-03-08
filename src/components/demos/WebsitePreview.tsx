@@ -16,8 +16,8 @@ function ensureLora() {
 
 /* ── Animation steps: nav, hero, heroSub, sectionLabel, product0, product1, product2, bottomBar ── */
 const STEP_COUNT = 8
-const STEP_DELAY = 400
-const HOLD_MS = 6000
+const STEP_DELAY = 500
+const HOLD_MS = 7000
 const FADE_MS = 800
 
 export default function WebsitePreview() {
