@@ -10,7 +10,7 @@
 
 .grid {
   display: flex;
-  gap: 48px;
+  gap: 32px;
   justify-content: center;
 }
 
@@ -98,8 +98,8 @@
   flex-direction: column;
   justify-content: flex-end;
   padding: 14px 12px;
-  min-height: 350px;
-  overflow-y: scroll;
+  height: 420px;
+  overflow: hidden;
   scrollbar-width: none;
   transition: opacity 0.35s ease;
 }
