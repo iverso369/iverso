@@ -79,7 +79,7 @@
 .rightGroup {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   margin-left: auto;
 }
 
@@ -135,7 +135,7 @@
   height: 22px;
   background: #2a2a30;
   flex-shrink: 0;
-  margin-left: auto;
+  margin-left: 60px;
 }
 
 /* ========================================
