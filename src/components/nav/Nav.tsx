@@ -59,7 +59,7 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
 
           </div>
 
-          {/* Right side: Tudnivalók  [Kapcsolat]  | HU EN DE */}
+          {/* Right side: Tudnivalók + Kapcsolat */}
           <div className={styles.rightGroup}>
             <Link
               to="/tudnivalok"
@@ -71,11 +71,11 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
             <Link to="/kapcsolat" className={styles.contactBtn}>
               {t('nav.contact')}
             </Link>
-
-            <span className={styles.lineSeparator} />
-
-            <LanguageSwitcher />
           </div>
+
+          {/* Language switcher — separate, far right */}
+          <span className={styles.lineSeparator} />
+          <LanguageSwitcher />
 
           {/* Mobile hamburger */}
           <button
