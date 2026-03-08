@@ -16,9 +16,9 @@
 }
 
 .inner {
-  position: relative;
   display: flex;
   align-items: center;
+  gap: 24px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -37,16 +37,11 @@
 }
 
 /* ========================================
-   DESKTOP LINKS (flat, no dropdown)
+   SPACER (flex: 1 for equal distribution)
    ======================================== */
 
-.desktopLinks {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 32px;
+.spacer {
+  flex: 1;
 }
 
 .navLink {
@@ -71,17 +66,6 @@
   color: var(--text);
 }
 
-/* ========================================
-   RIGHT GROUP (Contact + separator + Lang)
-   ======================================== */
-
-.rightGroup {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex: 1;
-}
-
 /* Tudnivalók — orange text link */
 .tudnivalokLink {
   font-family: var(--font-body);
@@ -91,7 +75,6 @@
   text-decoration: none;
   white-space: nowrap;
   transition: opacity 0.2s;
-  margin-left: auto;
 }
 
 .tudnivalokLink:hover {
@@ -126,16 +109,6 @@
     0 0 14px rgba(247, 127, 10, 0.2),
     inset 0 0 14px rgba(247, 127, 10, 0.12);
   border-color: rgba(247, 127, 10, 0.35);
-}
-
-/* Vertical line separator */
-.lineSeparator {
-  display: block;
-  width: 1px;
-  height: 22px;
-  background: #2a2a30;
-  flex-shrink: 0;
-  margin-left: auto;
 }
 
 /* ========================================
@@ -276,5 +249,22 @@
 @media (prefers-reduced-motion: reduce) {
   .overlay {
     animation: none;
+  }
+}
+
+/* ========================================
+   RESPONSIVE — hide desktop, show hamburger
+   ======================================== */
+
+@media (max-width: 1200px) {
+  .navLink,
+  .spacer,
+  .tudnivalokLink,
+  .contactBtn {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
   }
 }

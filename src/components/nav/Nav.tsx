@@ -45,37 +45,35 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
             IVERSO
           </Link>
 
-          {/* Desktop links — flat, no dropdown */}
-          <div className={styles.desktopLinks}>
-            {serviceLinks.map(link => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`${styles.navLink} ${location.pathname === link.path ? styles.navLinkActive : ''}`}
-              >
-                {t(link.key)}
-              </Link>
-            ))}
+          <div className={styles.spacer} />
 
-          </div>
-
-          {/* Right side: Tudnivalók + Kapcsolat + separator + Lang */}
-          <div className={styles.rightGroup}>
+          {/* Service links */}
+          {serviceLinks.map(link => (
             <Link
-              to="/tudnivalok"
-              className={`${styles.tudnivalokLink} ${location.pathname === '/tudnivalok' ? styles.tudnivalokActive : ''}`}
+              key={link.path}
+              to={link.path}
+              className={`${styles.navLink} ${location.pathname === link.path ? styles.navLinkActive : ''}`}
             >
-              {t('nav.process')}
+              {t(link.key)}
             </Link>
+          ))}
 
-            <Link to="/kapcsolat" className={styles.contactBtn}>
-              {t('nav.contact')}
-            </Link>
+          <div className={styles.spacer} />
 
-            <span className={styles.lineSeparator} />
+          <Link
+            to="/tudnivalok"
+            className={`${styles.tudnivalokLink} ${location.pathname === '/tudnivalok' ? styles.tudnivalokActive : ''}`}
+          >
+            {t('nav.process')}
+          </Link>
 
-            <LanguageSwitcher />
-          </div>
+          <Link to="/kapcsolat" className={styles.contactBtn}>
+            {t('nav.contact')}
+          </Link>
+
+          <div className={styles.spacer} />
+
+          <LanguageSwitcher />
 
           {/* Mobile hamburger */}
           <button
