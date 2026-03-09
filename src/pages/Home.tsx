@@ -11,7 +11,6 @@ import ProcessSection from '../components/process/ProcessSection'
 import BuilderSection from '../components/builder/BuilderSection'
 import CtaSection from '../components/cta/CtaSection'
 import Footer from '../components/footer/Footer'
-import TextSection from '../components/ui/TextSection'
 import useIntersection from '../hooks/useIntersection'
 import styles from './Home.module.css'
 
