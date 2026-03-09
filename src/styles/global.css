@@ -64,21 +64,12 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ========================================
    "ULTRA MÉLY" HÁTTÉR GRADIENT
-   A storyboard alapján:
-   - Drámai narancs radial gradient felülről
-   - Több mélységi réteg
-   - Vignette
-   - Film grain
-   - Lélegző fény (pulzáló animáció)
-   - NEM reagál egérre
-   - Közepes intenzitás
-   - Végig ugyanaz minden oldalon
-
-   Finomhangolás később gépen (értékek tweakelése).
+   Vulkánikus mélységű, többrétegű gradient.
+   Központ: preview kártyák mögött (~65%).
+   NEM reagál egérre. Végig ugyanaz minden oldalon.
    ======================================== */
 
-body::before,
-body::after {
+body::before {
   content: '';
   position: fixed;
   top: 0;
@@ -89,51 +80,17 @@ body::after {
   z-index: 0;
 }
 
-/* Fő narancs radial gradient felülről + mélységi rétegek */
+/* Vulkánikus mélységű háttér — preview kártyák mögött izzik */
 body::before {
   background:
-    /* 1. réteg — fő narancs glow felülről */
-    radial-gradient(
-      ellipse 80% 50% at 50% 0%,
-      rgba(247, 127, 10, 0.15) 0%,
-      rgba(247, 127, 10, 0.05) 40%,
-      transparent 70%
-    ),
-    /* 2. réteg — mélyebb, szétterjedtebb narancs */
-    radial-gradient(
-      ellipse 120% 80% at 50% -20%,
-      rgba(247, 127, 10, 0.08) 0%,
-      transparent 60%
-    ),
-    /* 3. réteg — enyhe középső fény */
-    radial-gradient(
-      circle at 50% 30%,
-      rgba(247, 127, 10, 0.03) 0%,
-      transparent 50%
-    );
-  animation: breathe 8s ease-in-out infinite;
-}
-
-/* Vignette (szélek sötétítése) */
-body::after {
-  background:
-    radial-gradient(
-      ellipse at center,
-      transparent 40%,
-      rgba(10, 10, 12, 0.4) 70%,
-      rgba(10, 10, 12, 0.8) 100%
-    );
-  z-index: 1;
-}
-
-/* Lélegző fény animáció */
-@keyframes breathe {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+    /* Fő narancs izzás — 65%-nál, a preview kártyák mögött */
+    radial-gradient(ellipse 90% 35% at 50% 65%, rgba(247,127,10,0.20) 0%, transparent 60%),
+    /* Barna/vöröses mélység mögötte */
+    radial-gradient(ellipse 100% 50% at 50% 68%, rgba(140,40,5,0.16) 0%, rgba(80,20,0,0.08) 40%, transparent 70%),
+    /* Széles mély barna alap */
+    radial-gradient(ellipse 150% 80% at 50% 65%, rgba(50,15,0,0.12) 0%, transparent 70%),
+    /* Sötét vignette széleken */
+    radial-gradient(ellipse 70% 70% at 50% 50%, transparent 40%, rgba(0,0,0,0.4) 100%);
 }
 
 
