@@ -7,11 +7,11 @@ const LANGUAGES = [
   { code: 'de', label: 'DE' },
 ] as const
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ className }: { className?: string }) {
   const { i18n } = useTranslation()
 
   return (
-    <div className={styles.langSwitcher}>
+    <div className={`${styles.langSwitcher} ${className || ''}`}>
       {LANGUAGES.map(lang => (
         <button
           key={lang.code}

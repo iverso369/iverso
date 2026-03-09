@@ -255,6 +255,13 @@
 
 .overlayLangWrapper {
   margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.overlayLangSwitcher {
+  position: static;
+  transform: none;
 }
 
 /* ========================================

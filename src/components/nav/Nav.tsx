@@ -137,7 +137,7 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
             </Link>
 
             <div className={styles.overlayLangWrapper}>
-              <LanguageSwitcher />
+              <LanguageSwitcher className={styles.overlayLangSwitcher} />
             </div>
           </nav>
         </div>
