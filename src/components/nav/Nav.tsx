@@ -136,8 +136,6 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
               {t('nav.contact')}
             </Link>
 
-            <div className={styles.overlaySeparator} />
-
             <div className={styles.overlayLangWrapper}>
               <LanguageSwitcher />
             </div>
