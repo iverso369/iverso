@@ -6,6 +6,7 @@ import DashboardPreview from '../components/demos/DashboardPreview'
 import AiChatPreview from '../components/demos/AiChatPreview'
 import AutomationPreview from '../components/demos/AutomationPreview'
 import WebsitePreview from '../components/demos/WebsitePreview'
+import TextSection from '../components/ui/TextSection'
 import ProcessSection from '../components/process/ProcessSection'
 import BuilderSection from '../components/builder/BuilderSection'
 import CtaSection from '../components/cta/CtaSection'
@@ -28,11 +29,13 @@ export default function Home() {
         <p className={styles.slogan}>Let&apos;s build something</p>
       </div>
 
-      {/* Nav — scroll-aware, hero-nál rejtett, scrollra megjelenik */}
+      {/* Nav */}
       <Nav heroElementId="hero-area" />
 
-      {/* 3. jelenet: 4 demó előzetes */}
+      {/* 3. jelenet: 4 demó előzetes — új sorrend + layoutok */}
       <section className={styles.demosSection}>
+
+        {/* 1. Dashboard — STANDARD (DemoCard, mint eddig) */}
         <DemoCard
           titleKey="dashboards.title"
           subtitleKey="dashboards.subtitle"
