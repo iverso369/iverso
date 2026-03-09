@@ -32,7 +32,16 @@ body {
   font-family: var(--font-body);
   font-weight: 400;
   color: var(--text);
-  background-color: var(--bg);
+  background:
+    /* Függőleges oszlop — a kártyák szélessége */
+    radial-gradient(ellipse 55% 100% at 50% 55%, rgba(100,35,0,0.18) 0%, transparent 70%),
+    /* Vízszintes meleg sáv — horizont vonal */
+    radial-gradient(ellipse 60% 25% at 50% 55%, rgba(247,127,10,0.30) 0%, transparent 70%),
+    /* Mögötte barna mélység */
+    radial-gradient(ellipse 65% 35% at 50% 58%, rgba(140,40,5,0.22) 0%, transparent 65%),
+    /* Alap fekete */
+    #0A0A0C;
+  background-attachment: fixed;
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
@@ -61,40 +70,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
 }
-
-/* ========================================
-   "ULTRA MÉLY" HÁTTÉR GRADIENT
-   Vulkánikus mélységű, többrétegű gradient.
-   Központ: preview kártyák mögött (~65%).
-   NEM reagál egérre. Végig ugyanaz minden oldalon.
-   ======================================== */
-
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Vulkánikus mélységű háttér — preview kártyák mögött izzik */
-body::before {
-  background:
-    /* Fő narancs izzás — ERŐS */
-    radial-gradient(ellipse 90% 35% at 50% 65%, rgba(247,127,10,0.55) 0%, transparent 60%),
-    /* Barna/vöröses mélység — ERŐS */
-    radial-gradient(ellipse 100% 50% at 50% 68%, rgba(140,40,5,0.40) 0%, rgba(80,20,0,0.20) 40%, transparent 70%),
-    /* Széles mély barna alap — ERŐS */
-    radial-gradient(ellipse 150% 80% at 50% 65%, rgba(50,15,0,0.30) 0%, transparent 70%),
-    /* Vignette széleken */
-    radial-gradient(ellipse 70% 70% at 50% 50%, transparent 40%, rgba(0,0,0,0.4) 100%),
-    #0A0A0C;
-  background-attachment: fixed;
-}
-
 
 /* Tartalom a rétegek fölé */
 #root {
