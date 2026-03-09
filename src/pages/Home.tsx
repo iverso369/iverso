@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import EmberHero from '../components/hero/EmberHero'
 import Nav from '../components/nav/Nav'
 import DemoCard from '../components/demos/DemoCard'
@@ -5,6 +7,7 @@ import DashboardPreview from '../components/demos/DashboardPreview'
 import AiChatPreview from '../components/demos/AiChatPreview'
 import AutomationPreview from '../components/demos/AutomationPreview'
 import WebsitePreview from '../components/demos/WebsitePreview'
+import TextSection from '../components/ui/TextSection'
 import ProcessSection from '../components/process/ProcessSection'
 import BuilderSection from '../components/builder/BuilderSection'
 import CtaSection from '../components/cta/CtaSection'
@@ -13,6 +16,7 @@ import useIntersection from '../hooks/useIntersection'
 import styles from './Home.module.css'
 
 export default function Home() {
+  const { t } = useTranslation()
   const process = useIntersection({ threshold: 0.15 })
   const cta = useIntersection({ threshold: 0.15 })
   const footer = useIntersection({ threshold: 0.15 })
@@ -25,11 +29,13 @@ export default function Home() {
         <p className={styles.slogan}>Let&apos;s build something</p>
       </div>
 
-      {/* Nav — scroll-aware, hero-nál rejtett, scrollra megjelenik */}
+      {/* Nav */}
       <Nav heroElementId="hero-area" />
 
-      {/* 3. jelenet: 4 demó előzetes */}
+      {/* 3. jelenet: 4 demó előzetes — új sorrend + layoutok */}
       <section className={styles.demosSection}>
+
+        {/* 1. Dashboard — STANDARD (DemoCard, mint eddig) */}
         <DemoCard
           titleKey="dashboards.title"
           subtitleKey="dashboards.subtitle"
@@ -38,29 +44,66 @@ export default function Home() {
           <DashboardPreview />
         </DemoCard>
 
-        <DemoCard
-          titleKey="ai.title"
-          subtitleKey="ai.subtitle"
-          linkTo="/ai"
-        >
-          <AiChatPreview />
-        </DemoCard>
+        <TextSection>
+          <p>{t('dashboards.subtitle')}</p>
+        </TextSection>
 
-        <DemoCard
-          titleKey="automation.title"
-          subtitleKey="automation.subtitle"
-          linkTo="/automatizacio"
-        >
-          <AutomationPreview />
-        </DemoCard>
+        {/* 2. AI Chat — SPLIT (szöveg bal, demo jobb) */}
+        <div className={styles.splitCard}>
+          <div className={styles.splitInfo}>
+            <h2 className={styles.splitTitle}>{t('ai.title')}</h2>
+            <p className={styles.splitSubtitle}>{t('ai.subtitle')}</p>
+            <Link to="/ai" className={styles.splitLink}>
+              {t('common.more')}
+            </Link>
+          </div>
+          <div className={styles.splitDemo}>
+            <AiChatPreview />
+          </div>
+        </div>
 
-        <DemoCard
-          titleKey="websites.title"
-          subtitleKey="websites.subtitle"
-          linkTo="/weboldalak"
-        >
-          <WebsitePreview />
-        </DemoCard>
+        <TextSection>
+          <p>{t('ai.subtitle')}</p>
+        </TextSection>
+
+        {/* 3. Weboldal — FORDÍTOTT SPLIT (demo bal, szöveg jobb) */}
+        <div className={styles.reverseSplitCard}>
+          <div className={styles.reverseSplitDemo}>
+            <WebsitePreview />
+          </div>
+          <div className={styles.splitInfo}>
+            <h2 className={styles.splitTitle}>{t('websites.title')}</h2>
+            <p className={styles.splitSubtitle}>{t('websites.subtitle')}</p>
+            <Link to="/weboldalak" className={styles.splitLink}>
+              {t('common.more')}
+            </Link>
+          </div>
+        </div>
+
+        <TextSection>
+          <p>{t('websites.subtitle')}</p>
+        </TextSection>
+
+        {/* 4. Automatizáció — CINEMA OVERLAY (demo kitölti, cím overlay) */}
+        <div className={styles.cinemaCard}>
+          <div className={styles.cinemaOverlay}>
+            <div>
+              <h2 className={styles.cinemaTitle}>{t('automation.title')}</h2>
+              <p className={styles.cinemaSubtitle}>{t('automation.subtitle')}</p>
+            </div>
+            <Link to="/automatizacio" className={styles.splitLink}>
+              {t('common.more')}
+            </Link>
+          </div>
+          <div className={styles.cinemaDemo}>
+            <AutomationPreview />
+          </div>
+        </div>
+
+        <TextSection>
+          <p>{t('automation.subtitle')}</p>
+        </TextSection>
+
       </section>
 
       {/* 4. jelenet: Folyamat — node sequence */}
