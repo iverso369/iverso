@@ -4,36 +4,50 @@ import styles from './BackgroundParticles.module.css'
 interface Particle {
   x: number
   y: number
-  size: number
-  baseSize: number
-  glowSize: number
+  radius: number
+  baseRadius: number
   opacity: number
   baseOpacity: number
-  color: string
-  glowColor: string
+  spriteIndex: number
   vx: number
   vy: number
   phase: number
   phaseSpeed: number
 }
 
-// 30% sötét vörös, 40% narancs, 20% sárgás, 10% fehéres
-const COLORS: Array<{ core: string; glow: string; weight: number }> = [
-  { core: 'rgba(139,37,0,',  glow: 'rgba(139,37,0,',  weight: 0.30 },  // sötét vörös
-  { core: 'rgba(217,106,8,', glow: 'rgba(217,106,8,', weight: 0.20 },  // sötét narancs
-  { core: 'rgba(247,127,10,', glow: 'rgba(247,127,10,', weight: 0.20 }, // narancs
-  { core: 'rgba(255,179,71,', glow: 'rgba(255,179,71,', weight: 0.20 }, // sárgás
-  { core: 'rgba(255,228,181,', glow: 'rgba(255,228,181,', weight: 0.10 }, // fehéres
+const SPRITE_SIZE = 64
+const SPRITE_COLORS = [
+  { r: 139, g: 37, b: 0, weight: 0.30 },   // sötét vörös
+  { r: 247, g: 127, b: 10, weight: 0.40 },  // narancs
+  { r: 255, g: 179, b: 71, weight: 0.20 },  // világos narancs
+  { r: 255, g: 228, b: 181, weight: 0.10 }, // sárgás-fehér
 ]
 
-function pickColor() {
+function buildSprites(): HTMLCanvasElement[] {
+  return SPRITE_COLORS.map(({ r, g, b }) => {
+    const offscreen = document.createElement('canvas')
+    offscreen.width = SPRITE_SIZE
+    offscreen.height = SPRITE_SIZE
+    const octx = offscreen.getContext('2d')!
+    const half = SPRITE_SIZE / 2
+    const grad = octx.createRadialGradient(half, half, 0, half, half, half)
+    grad.addColorStop(0, `rgba(${r},${g},${b},1)`)
+    grad.addColorStop(0.4, `rgba(${r},${g},${b},0.3)`)
+    grad.addColorStop(1, `rgba(${r},${g},${b},0)`)
+    octx.fillStyle = grad
+    octx.fillRect(0, 0, SPRITE_SIZE, SPRITE_SIZE)
+    return offscreen
+  })
+}
+
+function pickSpriteIndex(): number {
   const r = Math.random()
   let cumulative = 0
-  for (const c of COLORS) {
-    cumulative += c.weight
-    if (r < cumulative) return c
+  for (let i = 0; i < SPRITE_COLORS.length; i++) {
+    cumulative += SPRITE_COLORS[i].weight
+    if (r < cumulative) return i
   }
-  return COLORS[1]
+  return 1
 }
 
 function createParticle(w: number, h: number): Particle {
@@ -43,25 +57,21 @@ function createParticle(w: number, h: number): Particle {
     : Math.random() * w
   const y = Math.random() * h
 
-  const baseSize = 0.5 + Math.random() * 1.0
-  const glowSize = 4 + Math.random() * 4
-  const baseOpacity = 0.1 + Math.random() * 0.4
-  const color = pickColor()
+  const baseRadius = 2 + Math.random() * 8
+  const baseOpacity = 0.03 + Math.random() * 0.12
 
   return {
     x,
     y,
-    size: baseSize,
-    baseSize,
-    glowSize,
+    radius: baseRadius,
+    baseRadius,
     opacity: baseOpacity,
     baseOpacity,
-    color: color.core,
-    glowColor: color.glow,
-    vx: (Math.random() - 0.5) * 0.375,
-    vy: (Math.random() - 0.5) * 0.375,
+    spriteIndex: pickSpriteIndex(),
+    vx: (Math.random() - 0.5) * 0.47,
+    vy: (Math.random() - 0.5) * 0.47,
     phase: Math.random() * Math.PI * 2,
-    phaseSpeed: 0.00625 + Math.random() * 0.0125,
+    phaseSpeed: 0.008 + Math.random() * 0.016,
   }
 }
 
@@ -76,6 +86,7 @@ export default function BackgroundParticles() {
     if (!ctx) return
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const sprites = buildSprites()
 
     let w = window.innerWidth
     let h = window.innerHeight
@@ -94,7 +105,7 @@ export default function BackgroundParticles() {
     resize()
     window.addEventListener('resize', resize)
 
-    const count = Math.min(500, Math.max(400, Math.floor(w * h / 4000)))
+    const count = Math.min(800, Math.max(600, Math.floor(w * h / 2800)))
     const particles: Particle[] = []
     for (let i = 0; i < count; i++) {
       particles.push(createParticle(w, h))
@@ -104,6 +115,7 @@ export default function BackgroundParticles() {
 
     function draw() {
       ctx!.clearRect(0, 0, w, h)
+      ctx!.globalCompositeOperation = 'lighter'
 
       for (const p of particles) {
         if (!reducedMotion) {
@@ -111,27 +123,28 @@ export default function BackgroundParticles() {
           p.y += p.vy
           p.phase += p.phaseSpeed
 
-          p.size = p.baseSize + Math.sin(p.phase) * 0.3
-          p.opacity = p.baseOpacity + Math.sin(p.phase * 0.7) * 0.08
+          p.radius = p.baseRadius + Math.sin(p.phase) * 1.5
+          p.opacity = p.baseOpacity + Math.sin(p.phase * 0.7) * 0.02
 
-          if (p.x < -10) p.x = w + 10
-          if (p.x > w + 10) p.x = -10
-          if (p.y < -10) p.y = h + 10
-          if (p.y > h + 10) p.y = -10
+          if (p.x < -20) p.x = w + 20
+          if (p.x > w + 20) p.x = -20
+          if (p.y < -20) p.y = h + 20
+          if (p.y > h + 20) p.y = -20
         }
 
-        // Glow — halvány, nagy kör
-        ctx!.beginPath()
-        ctx!.arc(p.x, p.y, p.glowSize, 0, Math.PI * 2)
-        ctx!.fillStyle = `${p.glowColor}${Math.min(p.opacity * 0.15, 0.1)})`
-        ctx!.fill()
-
-        // Core — kisebb, erősebb mag
-        ctx!.beginPath()
-        ctx!.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx!.fillStyle = `${p.color}${p.opacity})`
-        ctx!.fill()
+        const drawSize = p.radius * 2
+        ctx!.globalAlpha = p.opacity
+        ctx!.drawImage(
+          sprites[p.spriteIndex],
+          p.x - drawSize / 2,
+          p.y - drawSize / 2,
+          drawSize,
+          drawSize
+        )
       }
+
+      ctx!.globalAlpha = 1
+      ctx!.globalCompositeOperation = 'source-over'
 
       rafId = requestAnimationFrame(draw)
     }
