@@ -30,3 +30,9 @@
   color: var(--accent);
   background: rgba(247, 127, 10, 0.08);
 }
+
+@media (max-width: 1200px) {
+  .langSwitcher {
+    display: none;
+  }
+}

@@ -123,6 +123,14 @@ Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 ## Mi van még hátra
 
 - ✅ **P18: Amelia mondatok** — 10 db, önirónia stílus, kész
+- ✅ **P24: "Let's build something"** — nagyobb, lejjebb
+- ✅ **P27: WebsitePreview** — fontok nagyobb, animáció lassabb
+- 🔄 **P25: Navbar** — méret, középre, menüpont kinézet — iteráció folyamatban
+- 🔄 **P27b: AiChatPreview** — fix magasság + gap
+- ⬜ **P26: Preview szövegek** — vizuális beágyazás az oldalba
+- ⬜ **P28: Amelia szekció** — vizuális újratervezés
+- ⬜ **P29: Oldalszélek** — üres, hiányzik az élet
+- ⬜ **P30: Háttér** — átdolgozás
 - ⬜ **P16: IVERSO parázs a CTA fölé** — végére parkolva
 - ⬜ **Építős szekció újratervezés** — P7
 - ⬜ **Folyamat finomhangolás** — P8

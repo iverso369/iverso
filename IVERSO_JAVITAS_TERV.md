@@ -50,10 +50,17 @@
 - ~~P22: WebsitePreview szín tónus~~ ✅
 - ~~P23: Főoldal tartalmi flow~~ ✅
 
-### 3. kör — Hátra maradt
-- **P16:** IVERSO parázs a CTA fölé — végére parkolva
-- **P7:** Építős szekció újratervezés
-- **P8:** Folyamat finomhangolás
+### 3. kör — Vizuális review után (03.06)
+- **P24:** "Let's build something" pozíció + méret — ✅ kész (nagyobb, lejjebb)
+- **P25:** Navbar méret + menüpontok középre — 🔄 folyamatban (3. iteráció)
+- **P26:** Preview szövegek vizuális megjelenítés — ⬜ döntés kell
+- **P27:** WebsitePreview méret + animáció — ✅ kész (fontok nagyobb, animáció lassabb)
+- **P27b:** AiChatPreview arányok — 🔄 folyamatban (fix magasság + gap)
+- **P28:** Amelia szekció vizuális újratervezés — ⬜ döntés kell
+- **P29:** Kétoldalt üres — ⬜ döntés kell
+- **P30:** Háttér átdolgozás — ⬜ döntés kell
+- **P7:** Építős szekció újratervezés (továbbra is hátra van)
+- **P8:** Folyamat finomhangolás (továbbra is hátra van)
 
 ---
 

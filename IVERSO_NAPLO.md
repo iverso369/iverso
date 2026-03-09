@@ -1,6 +1,6 @@
 # IVERSO — Projekt Napló
 
-> Utolsó frissítés: 2026.03.06
+> Utolsó frissítés: 2026.03.08
 
 ---
 
@@ -61,21 +61,18 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 ### Réteg 2 — Háttér + Hero ✅ KÉSZ
 ### Réteg 3 — Építőkockák ✅ KÉSZ
 
-### Réteg 4 — Jelenetek 🔄 JAVÍTÁS FOLYAMATBAN
-- ✅ Nav, DashboardPreview, AiChatPreview, AutomationPreview, WebsitePreview, CTA, Footer
-- ✅ Navbar mindig látható + Hero magasság ~50vh
-- ✅ Audit fixek (EN $→€, Syne CSS, package.json name)
-- ✅ Preview kártyák szélesség (85vw), jobb klikk tiltás, Weboldalak dropdown fix, encoding fix
-- ✅ Navbar font váltás (Roboto 700, E stílusú gomb) — de layout/méret/gombok még újra kell
-- ✅ Navbar layout újratervezés (B+V1, Tudnivalók, E stílusú gombok, Kapcsolat gomb E stílus)
-- ✅ P23: Tartalmi szövegek a preview kártyák alá (HU/DE/EN)
-- ✅ P12: IVERSO ↔ "Let's build something" pozíció csere
-- ✅ P22: WebsitePreview szín tompítás (#FAF5EE → #E8DFD2)
-- ✅ P18: Amelia szekció méret + igazítás + mondatok (10 db, önirónia stílus)
+### Réteg 4 — Jelenetek 🔄 FOLYAMATBAN
+- ✅ Minden preview komponens kész (Dashboard, AI, Automation, Website)
+- ✅ Navbar végleges (flex + absolute menü + absolute nyelv)
+- ✅ P23 tartalmi szövegek, P12 pozíció csere, P22 szín tompítás, P18 Amelia mondatok
+- ✅ P24 "Let's build something" méretezés, P25 navbar, P27 preview fontok
+- ⬜ P26: Preview szövegek vizuális beágyazás
+- ⬜ P28: Amelia szekció vizuális újratervezés
+- ⬜ P29: Kétoldalt üres — hiányzik az élet
+- ⬜ P30: Háttér átdolgozás
+- ⬜ P7: Építős szekció újratervezés
+- ⬜ P8: Folyamat finomhangolás
 - ⬜ P16: IVERSO parázs a CTA fölé — végére parkolva
-- ⬜ Építős szekció újratervezés
-- ⬜ Folyamat finomhangolás
-- Részletek: IVERSO_JAVITAS_TERV.md
 
 ### Réteg 5 — Aloldalak ⬜ vár
 ### Réteg 6 — Amelia ⬜ vár
@@ -88,30 +85,26 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 **Repo:** github.com/iverso369/iverso — aktív
 **Deploy:** iverso-orpin.vercel.app
 
-**Amit most csinálunk:** Réteg 4 — összes javítás kész, push + teljes review következik. Hátra: Építős újratervezés (P7), Folyamat finomhangolás (P8), IVERSO parázs CTA fölé (P16 — végére parkolva).
+**Amit most csinálunk:** Réteg 4 — navbar kész. Következő: P26-P30 design döntések.
 
 ---
 
-## Audit (2026.03.05)
-
-- Build ✅, TypeScript ✅, 238 i18n kulcs szinkronban (HU/DE/EN)
-- ✅ EN pénznem $→€ javítva
-- ✅ DashboardPreview CSS Syne maradék + hardcoded fontok javítva
-- ✅ package.json name javítva
-- **Döntés:** Dashboard demó cégnevek maradnak pékségként (Molnár Pékség / Bäckerei Müller / Baker & Sons)
-
 ## Döntések (03.06)
 
-- **Font:** Playfair Display → Roboto 700 (display font mindenhol)
-- **Navbar gomb:** E stílus — outline + halvány narancs háttér tint + shadow (kifelé + befelé)
-- **Tartalmi gap:** Azonosítva hogy a főoldal vizuálisan lenyűgöző de a látogató nem kap elég kontextust a demók között — megbeszélés kell (P23)
-- **P23 szövegek:** Véglegesítve — semleges, tárgyilagos, hétköznapi nyelv. Nem sales, nem személyeskedés, nem kérdések. Tényszerű bemutató ami leírja mi az adott dolog és mit csinál. HU/DE/EN fordítások kész.
-- **P23 elhelyezés:** Preview kártyák ALÁ kerülnek leírásként
-- **Navbar layout:** B+V1 — logo nagyobb (1.35rem), szolgáltatások kibontva középen, Tudnivalók ponttal elválasztva, Kapcsolat E stílus, nyelvváltó E stílus, szeparátor vonal
-- **"Folyamat" → "Tudnivalók"** — az aloldal ki lesz bővítve (nem csak 4 lépés, hanem teljes bemutató: működés, lehetőségek, közös munka stb.)
-- **Route:** /folyamat → /tudnivalok
-- **Kapcsolat gomb:** solid narancs → E stílus (outline + tint + shadow, mint a nyelvváltó)
-- **Amelia stílus:** Önirónia, saját helyzetéről mesél, színfalak mögötti bepillantás, Norbi-t szidja szeretettel. Emojik csak arckifejezések, csak mondatok végén. Tegez. 10 mondat HU/DE/EN.
+- **Font:** Playfair Display → Roboto 700
+- **Navbar gomb:** E stílus (outline + tint + shadow)
+- **P23 szövegek:** Semleges, tárgyilagos, hétköznapi nyelv. Preview kártyák alá.
+- **"Folyamat" → "Tudnivalók"** — Route: /folyamat → /tudnivalok
+- **Kapcsolat gomb:** solid narancs → E stílus
+- **Amelia stílus:** Önirónia, saját helyzetéről mesél. 10 mondat HU/DE/EN.
+
+## Döntések (03.08)
+
+- **Navbar végleges:** flex sor + menüpontok absolute középen + nyelvváltó absolute jobb szélre
+- **IVERSO navbar logó:** 2.3rem, #D96A08 (sötétebb narancs)
+- **Menüpont keretek:** border körbe, hover narancs
+- **Nyelvváltó:** 3 gomb (HU EN DE), dropdown megszűnt
+- **Navbar responsive:** 1200px alatt hamburger
 
 ---
 
