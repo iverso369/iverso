@@ -16,11 +16,14 @@ interface Particle {
 }
 
 const SPRITE_SIZE = 64
+// Synced with EmberHero.tsx volcanic lava palette
 const SPRITE_COLORS = [
-  { r: 139, g: 37, b: 0, weight: 0.30 },   // sötét vörös
-  { r: 247, g: 127, b: 10, weight: 0.40 },  // narancs
-  { r: 255, g: 179, b: 71, weight: 0.20 },  // világos narancs
-  { r: 255, g: 228, b: 181, weight: 0.10 }, // sárgás-fehér
+  { r: 139, g: 26, b: 0, weight: 0.25 },   // #8b1a00 deep core
+  { r: 170, g: 34, b: 0, weight: 0.20 },   // #aa2200 dark red
+  { r: 204, g: 68, b: 0, weight: 0.20 },   // #cc4400 mid orange
+  { r: 255, g: 102, b: 0, weight: 0.20 },  // #ff6600 bright orange
+  { r: 255, g: 136, b: 0, weight: 0.10 },  // #ff8800 hot
+  { r: 255, g: 170, b: 0, weight: 0.05 },  // #ffaa00 hot yellow
 ]
 
 function buildSprites(): HTMLCanvasElement[] {
