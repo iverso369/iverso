@@ -83,14 +83,16 @@ body::before {
 /* Vulkánikus mélységű háttér — preview kártyák mögött izzik */
 body::before {
   background:
-    /* Fő narancs izzás — 65%-nál, a preview kártyák mögött */
-    radial-gradient(ellipse 90% 35% at 50% 65%, rgba(247,127,10,0.20) 0%, transparent 60%),
-    /* Barna/vöröses mélység mögötte */
-    radial-gradient(ellipse 100% 50% at 50% 68%, rgba(140,40,5,0.16) 0%, rgba(80,20,0,0.08) 40%, transparent 70%),
-    /* Széles mély barna alap */
-    radial-gradient(ellipse 150% 80% at 50% 65%, rgba(50,15,0,0.12) 0%, transparent 70%),
-    /* Sötét vignette széleken */
-    radial-gradient(ellipse 70% 70% at 50% 50%, transparent 40%, rgba(0,0,0,0.4) 100%);
+    /* Fő narancs izzás — ERŐS */
+    radial-gradient(ellipse 90% 35% at 50% 65%, rgba(247,127,10,0.55) 0%, transparent 60%),
+    /* Barna/vöröses mélység — ERŐS */
+    radial-gradient(ellipse 100% 50% at 50% 68%, rgba(140,40,5,0.40) 0%, rgba(80,20,0,0.20) 40%, transparent 70%),
+    /* Széles mély barna alap — ERŐS */
+    radial-gradient(ellipse 150% 80% at 50% 65%, rgba(50,15,0,0.30) 0%, transparent 70%),
+    /* Vignette széleken */
+    radial-gradient(ellipse 70% 70% at 50% 50%, transparent 40%, rgba(0,0,0,0.4) 100%),
+    #0A0A0C;
+  background-attachment: fixed;
 }
 
 
