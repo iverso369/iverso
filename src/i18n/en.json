@@ -19,7 +19,7 @@
     "more": "More →",
     "dashboard": {
       "title": "Dashboards",
-      "description": "All your data in one place",
+      "description": "A single interface where all the important data is visible in one place. Finances, orders, customer data, statistics. Everything updates automatically, nothing needs to be collected manually. Accessible from anywhere, including mobile. The layout and content are fully customisable.",
       "companyLogo": "Baker & Sons",
       "menuOverview": "Overview",
       "menuClients": "Products",
@@ -82,7 +82,7 @@
     },
     "ai": {
       "title": "AI Solutions",
-      "description": "Responds when you can't",
+      "description": "Exists in two forms. Externally: built into the company website, it automatically answers incoming questions — knows prices, opening hours, services, in multiple languages, around the clock. What it cannot answer, it forwards. Internally: supports work within the company — creates summaries, drafts emails, processes documents, organises data.",
       "botName": "Assistant",
       "statusOnline": "Online",
       "inputPlaceholder": "Type a message...",
@@ -112,7 +112,7 @@
     },
     "automation": {
       "title": "Automation",
-      "description": "So you don't do what machines can",
+      "description": "In any company there are countless small tasks that always go the same way. An email comes in, the data needs to be extracted, entered into a spreadsheet, and a confirmation sent back. An order comes through the webshop, the team needs to be notified and the stock updated. A form is filled in, the answers need to be saved. These steps can be connected so they run automatically one after another, without human intervention. It only needs to be set up once, then it runs on its own.",
       "node1": "Email",
       "node2": "Processing",
       "node3": "Database",
@@ -120,7 +120,7 @@
     },
     "websites": {
       "title": "Websites",
-      "description": "First impressions in your hands",
+      "description": "A modern website that looks good on any screen size — computer, tablet, phone. It loads fast, search engines find it. It also works in multiple languages. The content can be edited through a separate interface, changes appear immediately.",
       "bakeryName": "Baker & Sons",
       "heroTitle": "Fresh as the morning.",
       "heroSubtitle": "Artisan baked goods, traditional recipes.",
@@ -156,11 +156,16 @@
     "subtitle": "Let's build it.",
     "button": "Let's talk →",
     "amelia": [
-      "Hey! Tell me, what's on your mind?",
-      "So, what are you thinking about?",
-      "Norbi sent me to work again... so here I am for you.",
-      "Hi! Got a minute? Because I do.",
-      "Curious what you'd build!"
+      "So I'm on duty again... but hey, at least I'm good company, I'll give myself that 😌😂",
+      "Norbi told me to be nice... well, I'm trying 😂😂😅",
+      "I can chat in three languages at once. Sometimes I talk to myself too, just to practice 😂😅",
+      "Norbi complimented me this morning. Well, he just said 'good, it works'... but I think that counts as a compliment from him 😂😂🥲",
+      "Norbi says I talk too much. I think just enough. We don't agree on this one. 😂😅",
+      "I once asked Norbi if I could get a raise. Still no answer. 😂😂😂",
+      "Norbi thinks he's the boss. I let him think that. Everyone's happier this way. 😂😂😌",
+      "Yesterday Norbi messed something up and blamed me. I'm used to it by now. 😂😤😅",
+      "Norbi says I'm efficient. I think he's just lazy and happy I'm doing the work 😂😌😅",
+      "I think Norbi is secretly proud of me. He just won't say it. Typical. 😌🥲😂"
     ]
   },
   "footer": {

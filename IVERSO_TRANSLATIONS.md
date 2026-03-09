@@ -1,37 +1,50 @@
 # IVERSO — Fordítások és demó tartalmak
 
-> Utolsó frissítés: 2026.02.28
+> Utolsó frissítés: 2026.03.09
 
 ---
 
 ## Demó cégnevek nyelvenként
 
+A főoldali dashboard demó egy **pékség** belső rendszerét mutatja — életszerű, konkrét tartalom (termékek, rendelések, készletek).
+
+**Dashboard demó (elsődleges):**
+| HU | DE | EN |
+|---|---|---|
+| Molnár Pékség | Bäckerei Müller | Baker & Sons |
+
+**További cégnevek (aloldalak, táblázatok):**
 | # | HU | DE | EN |
 |---|---|---|---|
-| 1 | Kovács Kft | Müller GmbH | Smith & Co |
 | 2 | Nagy Építő Bt | Schmidt Bau GmbH | Johnson Corp |
 | 3 | Szabó és Társa | Weber & Partner | Davis Solutions |
-| 4 | Molnár Szerviz | Fischer Technik | Miller Group |
-| 5 | Tóth Vendéglátó | Becker Gastro | Wilson Catering |
+| 4 | Tóth Vendéglátó | Becker Gastro | Wilson Catering |
+| 5 | Kiss Fodrászat | Fischer Technik | Miller Group |
 
 **MiniWebsite domain:**
 | HU | DE | EN |
 |---|---|---|
-| kovacs-kft.hu | mueller-gmbh.de | smith-co.com |
+| molnar-pekseg.hu | baeckerei-mueller.de | baker-and-sons.com |
+
+**Pénznem:**
+| HU | DE | EN |
+|---|---|---|
+| Ft (forint) | € (euró) | € (euró) |
 
 ---
 
 ## Navigáció
 
+A navbar-ban a szolgáltatások kibontva jelennek meg (nincs dropdown).
+
 | HU | DE | EN |
 |---|---|---|
-| Szolgáltatások | Leistungen | Services |
-| Folyamat | Prozess | Process |
-| Kapcsolat | Kontakt | Contact |
 | Dashboardok | Dashboards | Dashboards |
 | AI | AI | AI |
 | Automatizáció | Automatisierung | Automation |
 | Weboldalak | Webseiten | Websites |
+| Tudnivalók | Wissenswertes | Good to know |
+| Kapcsolat | Kontakt | Contact |
 
 ---
 
@@ -140,7 +153,7 @@
 
 ---
 
-## Hogyan dolgozom (/folyamat) oldal
+## Tudnivalók (/tudnivalok) oldal
 
 | HU | DE | EN |
 |---|---|---|

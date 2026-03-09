@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import EmberHero from '../components/hero/EmberHero'
 import Nav from '../components/nav/Nav'
@@ -12,6 +11,7 @@ import ProcessSection from '../components/process/ProcessSection'
 import BuilderSection from '../components/builder/BuilderSection'
 import CtaSection from '../components/cta/CtaSection'
 import Footer from '../components/footer/Footer'
+import TextSection from '../components/ui/TextSection'
 import useIntersection from '../hooks/useIntersection'
 import styles from './Home.module.css'
 
@@ -45,65 +45,44 @@ export default function Home() {
         </DemoCard>
 
         <TextSection>
-          <p>{t('dashboards.subtitle')}</p>
+          <p>{t('demos.dashboard.description')}</p>
         </TextSection>
 
-        {/* 2. AI Chat — SPLIT (szöveg bal, demo jobb) */}
-        <div className={styles.splitCard}>
-          <div className={styles.splitInfo}>
-            <h2 className={styles.splitTitle}>{t('ai.title')}</h2>
-            <p className={styles.splitSubtitle}>{t('ai.subtitle')}</p>
-            <Link to="/ai" className={styles.splitLink}>
-              {t('common.more')}
-            </Link>
-          </div>
-          <div className={styles.splitDemo}>
-            <AiChatPreview />
-          </div>
-        </div>
+        <DemoCard
+          titleKey="ai.title"
+          subtitleKey="ai.subtitle"
+          linkTo="/ai"
+        >
+          <AiChatPreview />
+        </DemoCard>
 
         <TextSection>
-          <p>{t('ai.subtitle')}</p>
+          <p>{t('demos.ai.description')}</p>
         </TextSection>
 
-        {/* 3. Weboldal — FORDÍTOTT SPLIT (demo bal, szöveg jobb) */}
-        <div className={styles.reverseSplitCard}>
-          <div className={styles.reverseSplitDemo}>
-            <WebsitePreview />
-          </div>
-          <div className={styles.splitInfo}>
-            <h2 className={styles.splitTitle}>{t('websites.title')}</h2>
-            <p className={styles.splitSubtitle}>{t('websites.subtitle')}</p>
-            <Link to="/weboldalak" className={styles.splitLink}>
-              {t('common.more')}
-            </Link>
-          </div>
-        </div>
+        <DemoCard
+          titleKey="automation.title"
+          subtitleKey="automation.subtitle"
+          linkTo="/automatizacio"
+        >
+          <AutomationPreview />
+        </DemoCard>
 
         <TextSection>
-          <p>{t('websites.subtitle')}</p>
+          <p>{t('demos.automation.description')}</p>
         </TextSection>
 
-        {/* 4. Automatizáció — CINEMA OVERLAY (demo kitölti, cím overlay) */}
-        <div className={styles.cinemaCard}>
-          <div className={styles.cinemaOverlay}>
-            <div>
-              <h2 className={styles.cinemaTitle}>{t('automation.title')}</h2>
-              <p className={styles.cinemaSubtitle}>{t('automation.subtitle')}</p>
-            </div>
-            <Link to="/automatizacio" className={styles.splitLink}>
-              {t('common.more')}
-            </Link>
-          </div>
-          <div className={styles.cinemaDemo}>
-            <AutomationPreview />
-          </div>
-        </div>
+        <DemoCard
+          titleKey="websites.title"
+          subtitleKey="websites.subtitle"
+          linkTo="/weboldalak"
+        >
+          <WebsitePreview />
+        </DemoCard>
 
         <TextSection>
-          <p>{t('automation.subtitle')}</p>
+          <p>{t('demos.websites.description')}</p>
         </TextSection>
-
       </section>
 
       {/* 4. jelenet: Folyamat — node sequence */}

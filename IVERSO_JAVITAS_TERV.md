@@ -1,76 +1,7 @@
 # IVERSO — Javítási terv
 
 > 2026.03.03 — Első vizuális review után
-
----
-
-## Mi a helyzet
-
-Réteg 1 és 3 rendben van. Réteg 4 (jelenetek) mind implementálva, de az első vizuális review komoly problémákat tárt fel. A Réteg 2 (parázs hero) a másik chatben készült és bugos — innentől minden javítás ebben a projekt chatben történik.
-
----
-
-## Azonosított problémák
-
-### P1 — Parázs IVERSO felirat átlóg mindenen (KRITIKUS)
-- A Three.js canvas nincs a hero szekcióba bezárva
-- A parázs felirat a builder szekció, CTA és mindenhol mögött/felett megjelenik
-- Valószínűleg position: fixed vagy rossz z-index
-- **Javítás:** hero konténerbe zárás, overflow: hidden, z-index rendezés
-
-### P2 — DashboardPreview üres (KOMOLY)
-- Csak 3 KPI kártya donut chart-tal — nincs dashboard hangulat
-- Az eredeti vízió: sidebar navigáció, KPI kártyák, táblázat sorokkal, tab váltás
-- Kevés tartalom, nagy üres helyek
-- "Tovább →" gomb a kártyán kívül van
-- **Javítás:** gazdagabb dashboard tartalom, sidebar + táblázat, "Tovább" a kártyába
-
-### P3 — AiChatPreview auto-scroll + kevés tartalom (KOMOLY)
-- Az üzenetek megjelenésekor az oldal automatikusan görget — idegesítő
-- Nincs fix mérete a preview-nak
-- Csak 2-3 buborék jelenik meg, nincs chat felület érzés
-- Az eredeti vízió: teljes chat felület input mezővel, élő érzés
-- **Javítás:** fix méret, nincs auto-scroll, gazdagabb chat tartalom
-
-### P4 — Preview-k mérete nem egységes (KOMOLY)
-- Az AutomationPreview kisebb mint a többi
-- Vizuálisan össze-vissza — az összes preview-nak azonos kártyaméretűnek kellene lennie
-- **Javítás:** egységes kártyaméret mind a 4 preview-nak
-
-### P5 — WebsitePreview üres (KOMOLY)
-- A mini éttermi landing page tartalom nem jön át
-- Vizuálisan nem mutat semmit
-- **Javítás:** átgondolás, gazdagabb tartalom
-
-### P6 — Folyamat szekció — közel jó, de hiányzik valami
-- A 4 node megjelenik, konzisztens az AutomationPreview-val
-- De hiányzik valami — háttér, mélység, valami amitől nem lapos
-- **Javítás:** finom háttér/effekt hozzáadás
-
-### P7 — Építős szekció nem interaktív (KOMOLY)
-- Színes narancs kockák össze-vissza, nincs valódi interakció érzés
-- A morph bugol a Réteg 2 parázs felirat miatt
-- Nehéz érteni mit kell csinálni
-- **Javítás:** a Réteg 2 fix után újratesztelni, interakció javítás
-
-### P8 — "Tovább →" gombok kívül vannak
-- Minden preview-nál a "Tovább →" a kártya alatt van külön sorban
-- Be kellene építeni a kártya aljába
-- **Javítás:** kártyán belülre
-
----
-
-## Javítási sorrend
-
-1. **Réteg 2 fix** — a parázs hero bezárása a hero szekcióba (ez blokkolja a többit)
-2. **Egységes preview kártyaméret** — mind a 4 azonos méretű wrapper
-3. **DashboardPreview újratervezés** — gazdagabb tartalom
-4. **AiChatPreview fix** — fix méret, nincs auto-scroll, gazdagabb
-5. **WebsitePreview újratervezés** — tartalmasabb mini weboldal
-6. **AutomationPreview méretezés** — egységes a többivel
-7. **Építős szekció javítás** — interaktivitás, morph újrateszt
-8. **Folyamat szekció finomhangolás** — háttér/mélység
-9. **"Tovább" gombok beépítése** — kártyán belülre
+> Frissítve: 2026.03.09
 
 ---
 
@@ -78,12 +9,68 @@ Réteg 1 és 3 rendben van. Réteg 4 (jelenetek) mind implementálva, de az els�
 
 | # | Javítás | Állapot |
 |---|---------|---------|
-| 1 | Réteg 2 hero fix | ⬜ átbeszélés |
-| 2 | Egységes preview méret | ⬜ |
-| 3 | DashboardPreview újra | ⬜ |
-| 4 | AiChatPreview fix | ⬜ |
-| 5 | WebsitePreview újra | ⬜ |
-| 6 | AutomationPreview méret | ⬜ |
-| 7 | Építős javítás | ⬜ |
+| 1 | Réteg 2 hero fix (#1-4) | ✅ kész |
+| 2 | Egységes preview méret (DemoCard wrapper) | ✅ kész |
+| 3 | DashboardPreview újra — sidebar + KPI + táblázat | ✅ kész |
+| 4 | AiChatPreview — két panel, input, gyorsválasz | ✅ kész |
+| 5 | WebsitePreview — v2 A világos krém pékség | ✅ kész + szín tompítva |
+| 6 | AutomationPreview — node-ok mindig láthatók | ✅ kész |
+| 7 | Építős szekció javítás | ⬜ újratervezés lesz |
 | 8 | Folyamat finomhangolás | ⬜ |
-| 9 | "Tovább" gombok | ⬜ |
+| 9 | "Tovább" gombok beépítése | ✅ kész |
+| 10 | Navbar mindig látható (gépen) | ✅ kész |
+| 11 | Hero magasság ~50vh | ✅ kész |
+| 12 | IVERSO ↔ "Let's build something" pozíció csere | ✅ kész |
+| 13 | Navbar teljes újratervezés | ✅ kész |
+| 14 | Preview kártyák szélesség 85vw | ✅ kész |
+| 15 | Font váltás (Roboto 700) | ✅ kész |
+| 16 | IVERSO felirat a CTA szekció fölé | ⬜ végére parkolva |
+| 17 | Kurzor + jobb klikk menü tiltás | ✅ kész |
+| 18 | Amelia szekció: méret, igazítás, mondatok | ✅ kész |
+| 19 | Építős: IVERSO parázs átlóg | ✅ megoldódott |
+| 20 | Szolgáltatások dropdown | ✅ kész (megszűnt, kibontva) |
+| 21 | Építős morph szöveg encoding bug | ✅ kész |
+| 22 | WebsitePreview szín finomhangolás | ✅ kész |
+| 23 | Főoldal tartalmi flow | ✅ kész |
+| 24 | "Let's build something" méret + responsive | ✅ kész |
+| 25 | Navbar végleges layout | ✅ kész |
+| 27 | WebsitePreview + AiChatPreview fontok | ✅ kész |
+| 30 | Háttér gradient (naplemente) | ✅ kész |
+| 31 | Canvas 2D particle háttér | ✅ kész (radial gradient sprite + additív blending + hero szín szinkron) |
+
+---
+
+## Hátra maradt — megbeszélt sorrend
+
+P26 → P28 → P8 → P7 → P16
+
+| Sorrend | # | Feladat | Állapot |
+|---------|---|---------|---------|
+| 1. | P26/A | Háttér gradient frissítés (3 rétegű radial) | 📋 prompt kész |
+| 1. | P26/B | TextSection komponens (sötétítő zóna + accent vonal) | 📋 prompt kész |
+| 1. | P26/C | Preview layout átstrukturálás + sorrend csere | 📋 prompt kész |
+| 2. | P28 | Amelia szekció vizuális újratervezés | ⬜ koncepció kell |
+| 3. | P8 | Folyamat finomhangolás | ⬜ |
+| 4. | P7 | Építős szekció újratervezés | ⬜ (legnagyobb falat) |
+| 5. | P16 | IVERSO parázs a CTA fölé | ⬜ végére parkolva |
+
+## Új ötletek (03.09 — átbeszélve, döntés este gépen)
+
+| Ötlet | Leírás | Állapot |
+|-------|--------|---------|
+| Preview sorrend | Dashboard → AI → Weboldal → Automatizáció (Norbi preferencia) | ⬜ döntés kell |
+| Építős pozíció | AI preview után berakni — megtöri a monoton ritmust | ⬜ döntés kell ("Let's build something" kontextus?) |
+| AutomationPreview | Jelenlegi túl gyenge, újratervezés kell (nem csak finomhangolás) | ⬜ koncepció kell |
+
+## Layout döntések (03.09 — VÉGLEGES)
+
+Minden preview kártya MÁS layout — megtöri a monotonságot:
+
+| Preview | Layout | Leírás |
+|---------|--------|--------|
+| Dashboard | Standard teljes szélesség | Marad mint most — 5 oldalas animáció teret igényel |
+| AI Chat | Split: szöveg bal, demo jobb | Szöveg+alcím+gomb bal oldalon, demo jobb oldalon |
+| Weboldal | Fordított split: demo bal, szöveg jobb | Demo bal, szöveg+alcím+gomb jobb oldalon |
+| Automatizáció | Cinema overlay | Demo kitölti az EGÉSZ kártyát, cím+alcím overlay fent sötétedő gradienttel |
+
+Közöttük mindenhol V1 szöveg szekció (sötétítő zóna + bal accent vonal).

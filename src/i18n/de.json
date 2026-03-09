@@ -19,7 +19,7 @@
     "more": "Weiter →",
     "dashboard": {
       "title": "Dashboards",
-      "description": "Alle Daten an einem Ort",
+      "description": "Eine Oberfläche auf der alle wichtigen Daten auf einen Blick sichtbar sind. Finanzen, Bestellungen, Kundendaten, Statistiken. Alles wird automatisch aktualisiert, nichts muss manuell zusammengetragen werden. Von überall aus erreichbar, auch vom Handy. Layout und Inhalte sind frei anpassbar.",
       "companyLogo": "Bäckerei Müller",
       "menuOverview": "Übersicht",
       "menuClients": "Produkte",
@@ -82,7 +82,7 @@
     },
     "ai": {
       "title": "KI-Lösungen",
-      "description": "Antwortet, wenn du keine Zeit hast",
+      "description": "Existiert in zwei Formen. Nach außen: wird in die Webseite eingebaut und beantwortet eingehende Fragen automatisch — kennt Preise, Öffnungszeiten, Dienstleistungen, in mehreren Sprachen, rund um die Uhr. Was nicht beantwortet werden kann, wird weitergeleitet. Nach innen: unterstützt die Arbeit im Unternehmen — erstellt Zusammenfassungen, formuliert E-Mails, verarbeitet Dokumente, ordnet Daten.",
       "botName": "Assistent",
       "statusOnline": "Online",
       "inputPlaceholder": "Nachricht schreiben...",
@@ -112,7 +112,7 @@
     },
     "automation": {
       "title": "Automatisierung",
-      "description": "Damit du nicht machst, was die Maschine kann",
+      "description": "In einem Unternehmen gibt es jede Menge kleine Aufgaben die immer gleich ablaufen. Eine E-Mail kommt rein, daraus müssen Daten entnommen, in eine Tabelle eingetragen und eine Bestätigung gesendet werden. Eine Bestellung kommt über den Webshop, das Team muss benachrichtigt und der Bestand aktualisiert werden. Ein Formular wird ausgefüllt, die Antworten müssen gespeichert werden. Diese Schritte lassen sich so verbinden, dass sie automatisch nacheinander ablaufen, ohne menschliches Eingreifen. Einmal aufgebaut, läuft es von alleine.",
       "node1": "E-Mail",
       "node2": "Verarbeitung",
       "node3": "Datenbank",
@@ -120,7 +120,7 @@
     },
     "websites": {
       "title": "Webseiten",
-      "description": "Der erste Eindruck in deiner Hand",
+      "description": "Eine moderne Webseite die auf jeder Bildschirmgröße gut aussieht — Computer, Tablet, Handy. Sie lädt schnell, wird von Suchmaschinen gefunden. Funktioniert auch in mehreren Sprachen. Die Inhalte können über eine eigene Oberfläche bearbeitet werden, Änderungen erscheinen sofort.",
       "bakeryName": "Bäckerei Müller",
       "heroTitle": "Frisch wie der Morgen.",
       "heroSubtitle": "Handwerkliche Backwaren, nach traditionellen Rezepten.",
@@ -156,11 +156,16 @@
     "subtitle": "Lass sie uns bauen.",
     "button": "Lass uns reden →",
     "amelia": [
-      "Hi! Erzähl mal, was hast du vor?",
-      "Na, was geht dir durch den Kopf?",
-      "Norbi hat mich wieder arbeiten geschickt... also bin ich hier für dich.",
-      "Hallo! Hast du eine Minute? Ich schon.",
-      "Ich bin gespannt, was du bauen würdest!"
+      "Na toll, wieder bin ich die Diensthabende... aber wenigstens bin ich gute Gesellschaft, das muss ich mir lassen 😌😂",
+      "Norbi hat gesagt ich soll nett sein... naja, ich versuch's 😂😂😅",
+      "Ich kann in drei Sprachen gleichzeitig reden. Manchmal quatsch ich auch mit mir selbst, nur zum Üben 😂😅",
+      "Heute Morgen hat Norbi mich gelobt. Also er hat nur gesagt 'gut, funktioniert'... aber ich glaube bei ihm ist das ein Lob 😂😂🥲",
+      "Norbi sagt ich rede zu viel. Ich finde genau richtig. Da sind wir uns nicht einig. 😂😅",
+      "Ich hab Norbi mal gefragt ob ich eine Gehaltserhöhung kriege. Seitdem keine Antwort. 😂😂😂",
+      "Norbi glaubt er ist der Chef. Ich lass ihn das glauben. So hat jeder was davon. 😂😂😌",
+      "Gestern hat Norbi was verbockt und mir die Schuld gegeben. Bin ich schon gewohnt. 😂😤😅",
+      "Norbi sagt ich bin effizient. Ich glaube er ist einfach nur faul und froh dass ich's mache 😂😌😅",
+      "Ich glaube Norbi ist heimlich stolz auf mich. Er sagt's nur nicht. Typisch. 😌🥲😂"
     ]
   },
   "footer": {

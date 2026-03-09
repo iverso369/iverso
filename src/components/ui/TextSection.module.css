@@ -36,7 +36,7 @@
   background: linear-gradient(90deg, rgba(247,127,10,0.13), transparent 40%);
 }
 
-.inner {
+.textInner {
   position: relative;
   width: 85vw;
   max-width: 1100px;
@@ -51,12 +51,12 @@
   border-radius: 1px;
 }
 
-.content {
+.textContent {
   padding-left: 28px;
   max-width: 640px;
 }
 
-.content p {
+.textContent p {
   color: #88889A;
   font-size: 0.95rem;
   line-height: 1.8;

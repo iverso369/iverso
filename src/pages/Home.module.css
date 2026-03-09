@@ -17,15 +17,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: calc(56px + 14vh);   /* nav height (56px) + visual offset */
+  padding-top: calc(56px + 28vh);   /* below IVERSO parázs */
   pointer-events: none;
 }
 
 .slogan {
-  margin-top: 16px;
+  margin-top: 48px;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(14px, 2vw, 22px);
+  font-size: clamp(1.2rem, 3.5vw, 3rem);
   color: var(--muted);
   opacity: 0;
   animation: sloganFadeIn 1s ease forwards;
@@ -45,7 +45,7 @@
   flex-direction: column;
   gap: 0;
   padding: 100px 24px;
-  max-width: min(75%, 1200px);
+  width: 65vw;
   margin: 0 auto;
   position: relative;
   z-index: 1;

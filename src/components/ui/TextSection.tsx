@@ -10,9 +10,11 @@ export default function TextSection({ children }: TextSectionProps) {
     <div className={styles.textSection}>
       <div className={styles.lineTop} />
       <div className={styles.lineBottom} />
-      <div className={styles.inner}>
+      <div className={styles.textInner}>
         <div className={styles.accentLine} />
-        <div className={styles.content}>{children}</div>
+        <div className={styles.textContent}>
+          {children}
+        </div>
       </div>
     </div>
   )

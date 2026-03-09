@@ -1,6 +1,6 @@
 # IVERSO — Projekt Napló
 
-> Utolsó frissítés: 2026.03.03
+> Utolsó frissítés: 2026.03.09
 
 ---
 
@@ -27,10 +27,18 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
   - Fehér: #EDEDF0 (szöveg)
   - Narancs: #F77F0A (akcentus)
 - **Szürke:** #88889A (másodlagos szöveg)
-- **Fontok:** Syne (display/címek), DM Sans (body/szövegtörzs)
+- **Fontok:** Roboto 700 (display/címek), DM Sans 400/500 (body) — self-hosted woff2
 - **Ikonok:** SVG thin line (1.5px stroke, currentColor)
 - **Emojik:** nincsenek sehol (kivéve Amelia)
-- **Háttér:** "Ultra mély" gradient
+- **Háttér:** Naplemente stílusú gradient (narancs fényoszlop közepén, barna mélység, vignette széleken) + Canvas 2D particle háttér (radial gradient sprite-ok, additív blending, hero szín szinkron)
+- **Custom kurzor:** narancssárgás pont + trail (egész oldalon, mobilon nincs)
+
+---
+
+## Szövegírási stílus
+
+- **Általános:** Semleges, tárgyilagos, hétköznapi nyelv. NEM sales, NEM személyeskedés, NEM kérdések, NEM feltételes mód, NEM manipuláció. Folyó szöveg, nem felsorolás.
+- **Amelia:** Önirónia, saját helyzetéről mesél. Színfalak mögötti bepillantás, pozitív hangulat, Norbi-t szidja szeretettel. Emojik csak arckifejezések, csak mondatok végén. Tegez. Nem sales, nem manipulál.
 
 ---
 
@@ -41,29 +49,34 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 - **Routing:** react-router-dom
 - **i18n:** react-i18next (HU/DE/EN)
 - **Hero:** Three.js (desktop) + Canvas 2D (mobil)
+- **Háttér particlek:** Canvas 2D (radial gradient sprite + additív blending)
 - **Scroll:** Intersection Observer API
 - **Deploy:** GitHub → Vercel (auto-deploy)
-- **Fontok:** Syne + DM Sans, self-hosted woff2 (GDPR)
+- **Fontok:** Roboto 700 + DM Sans 400/500, self-hosted woff2 (GDPR)
 
 ---
 
 ## Build plan — 7 réteg
 
 ### Réteg 1 — Alap ✅ KÉSZ
-Projekt, routing, színek, fontok, háttér, i18n váz.
-
-### Réteg 2 — Háttér + Hero ⚠️ JAVÍTANDÓ
-Three.js parázs particle rendszer — a másik beszélgetésben implementálva, de problémás. A javítás itt folytatódik (ebben a projekt chatben).
-
+### Réteg 2 — Háttér + Hero ✅ KÉSZ
 ### Réteg 3 — Építőkockák ✅ KÉSZ
-5 ui/ komponens (KpiCard, ChatBubble, WorkflowNode, MiniWebsite, CompanySizeSlider).
 
-### Réteg 4 — Jelenetek ⚠️ IMPLEMENTÁLVA, JAVÍTANDÓ
-Minden jelenet implementálva és összeszerelve, DE az első review után komoly problémák:
-- Preview-k vizuálisan gyengék, nem adják az "élő demó" érzést
-- Méretek nem egységesek
-- Építős szekció nem interaktív eléggé
-- Részletek: RETEG_4_NAPLO.md
+### Réteg 4 — Jelenetek 🔄 FOLYAMATBAN
+- ✅ Minden preview komponens kész (Dashboard, AI, Automation, Website)
+- ✅ Navbar végleges
+- ✅ P23 tartalmi szövegek, P12 pozíció csere, P22 szín tompítás, P18 Amelia mondatok
+- ✅ P24 "Let's build something" méretezés + responsive
+- ✅ P25 navbar végleges
+- ✅ P27 preview fontok
+- ✅ P30 háttér gradient (naplemente stílus)
+- ✅ Canvas 2D particle háttér (radial gradient sprite + additív blending + hero szín szinkron)
+- ⬜ P26: Preview szövegek vizuális beágyazás
+- ⬜ P28: Amelia szekció vizuális újratervezés
+- ⬜ P29: Kétoldalt üres — nézd meg most a particle háttérrel
+- ⬜ P7: Építős szekció újratervezés
+- ⬜ P8: Folyamat finomhangolás
+- ⬜ P16: IVERSO parázs a CTA fölé — végére parkolva
 
 ### Réteg 5 — Aloldalak ⬜ vár
 ### Réteg 6 — Amelia ⬜ vár
@@ -74,17 +87,25 @@ Minden jelenet implementálva és összeszerelve, DE az első review után komol
 ## Hol tartunk most
 
 **Repo:** github.com/iverso369/iverso — aktív
+**Deploy:** iverso-orpin.vercel.app
 
-**Amit most csinálunk:** Réteg 2 + Réteg 4 javítása — visszatérés az eredeti vízióhoz. A preview-k, az építős szekció és a parázs hero újratervezése.
+**Amit most csinálunk:** Réteg 4 — P26 szétbontva 3 promptra (A: háttér gradient, B: TextSection komponens, C: layout átstrukturálás). Claude Code végrehajtja, este gépen ellenőrzés. Layout döntés végleges: minden preview más forma (standard, split, fordított split, cinema overlay).
 
-**Implementáció állapota:**
-- ✅ Réteg 1 (Alap) — KÉSZ
-- ⚠️ Réteg 2 (Háttér + Hero) — JAVÍTANDÓ (itt folytatjuk, nem a másik chatben)
-- ✅ Réteg 3 (Építőkockák) — KÉSZ
-- ⚠️ Réteg 4 (Jelenetek) — IMPLEMENTÁLVA, JAVÍTANDÓ
-- ⬜ Réteg 5 (Aloldalak)
-- ⬜ Réteg 6 (Amelia)
-- ⬜ Réteg 7 (Polish)
+---
+
+## Döntések (03.09)
+
+- **Canvas 2D particle háttér:** Radial gradient sprite-ok + additív blending (`globalCompositeOperation: 'lighter'`). 600-800 részecske, nagyon alacsony opacity (0.03-0.15), átfedésnél fény összeadódik. Szín palette szinkronban a Three.js hero-val.
+- **Particle megközelítés tanulság:** ctx.arc() + glow kör = konfetti. Radial gradient sprite + additív blending = parázs. A rajzolási technika számít, nem a paraméterek finomhangolása.
+- **P26 szöveg szekciók:** V1 stílus — sötétítő zóna + bal accent vonal + irányított félvonalak. A szöveg nem dőlt, nem középre zárt, hanem bal oldalra igazított, max 640px.
+- **Háttér gradient frissítés:** 3 rétegű radial gradient (narancs fényoszlop + vöröses mélység + barna szétterülés) — a HTML prototípusból átvéve.
+
+## Nyitott ötletek (03.09 — még nem döntés!)
+
+- **Preview sorrend:** Dashboard → AI → Weboldal → Automatizáció (Norbi preferencia)
+- **Építős pozíció:** a 2. preview kártya (AI) után berakni — megtöri a monoton ritmust. Kérdés: "Let's build something" kontextus.
+- **AutomationPreview:** újratervezés kell, a jelenlegi túl gyenge (4 node nyíllal, ennyi)
+- **P28 Amelia szekció:** teljesen újratervezés, konkrét irány még nincs
 
 ---
 
@@ -92,3 +113,4 @@ Minden jelenet implementálva és összeszerelve, DE az első review után komol
 
 - **Domain:** iverso.info
 - **GitHub:** github.com/iverso369/iverso
+- **Vercel:** iverso-orpin.vercel.app

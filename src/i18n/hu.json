@@ -19,7 +19,7 @@
     "more": "Tovább →",
     "dashboard": {
       "title": "Dashboardok",
-      "description": "Minden adat, egy helyen",
+      "description": "Egy felület ahol az összes fontos adat egy helyen látszik. Pénzügyek, megrendelések, ügyféladatok, statisztikák. Automatikusan frissül, nem kell kézzel összegyűjteni semmit. Bárhonnan megnyitható, telefonról is. Az elrendezés és a tartalom teljesen testreszabható.",
       "companyLogo": "Molnár Pékség",
       "menuOverview": "Áttekintés",
       "menuClients": "Termékek",
@@ -82,7 +82,7 @@
     },
     "ai": {
       "title": "AI megoldások",
-      "description": "Válaszol, amikor te nem érsz rá",
+      "description": "Kétféle formában létezik. Kifelé: a cég weboldalára épül és automatikusan válaszol a beérkező kérdésekre — árakat, nyitvatartást, szolgáltatásokat ismer, több nyelven, éjjel-nappal. Amire nincs válasza, azt továbbítja. Befelé: a cégen belül segít a munkában — összefoglalókat készít, emaileket fogalmaz, dokumentumokat dolgoz fel, adatokat rendszerez.",
       "botName": "Asszisztens",
       "statusOnline": "Online",
       "inputPlaceholder": "Írj üzenetet...",
@@ -112,7 +112,7 @@
     },
     "automation": {
       "title": "Automatizáció",
-      "description": "Hogy ne te csináld amit a gép is tud",
+      "description": "Egy cégben rengeteg apró feladat van ami mindig ugyanúgy megy. Jön egy email, abból ki kell szedni az adatokat, beírni egy táblázatba, küldeni egy visszajelzést. Jön egy rendelés a webshopból, arról értesíteni kell a csapatot, frissíteni a készletet. Kitöltenek egy űrlapot, a válaszokat el kell menteni. Ezeket a lépéseket össze lehet kötni úgy, hogy automatikusan menjenek végig egymás után, emberi beavatkozás nélkül. Egyszer kell összerakni, utána magától fut.",
       "node1": "Email",
       "node2": "Feldolgozás",
       "node3": "Adatbázis",
@@ -120,7 +120,7 @@
     },
     "websites": {
       "title": "Weboldalak",
-      "description": "Az első benyomás a te kezedben",
+      "description": "Modern weboldal ami minden képernyőméreten jól néz ki — számítógépen, tableten, telefonon. Gyorsan töltődik, a keresők megtalálják. Több nyelven is működik. A tartalom külön felületen szerkeszthető, a módosítások azonnal megjelennek.",
       "bakeryName": "Molnár Pékség",
       "heroTitle": "Friss, mint a reggel.",
       "heroSubtitle": "Kézműves pékáruk, hagyományos receptekkel.",
@@ -156,11 +156,16 @@
     "subtitle": "Építsük meg.",
     "button": "Beszéljünk →",
     "amelia": [
-      "Hali! Mesélj, miben gondolkodsz?",
-      "Na, mi jár a fejedben?",
-      "Norbi megint elküldött dolgozni... szóval itt vagyok neked.",
-      "Szia! Van egy perced? Mert nekem van.",
-      "Kíváncsi vagyok mit építenél!"
+      "Na megint én lettem az ügyeletes... de legalább jó társaság vagyok, ezt elismerem 😌😂",
+      "Norbi azt mondta legyek kedves... hát, próbálkozom 😂😂😅",
+      "Három nyelven tudok beszélgetni egyszerre. Néha magammal is elbeszélgetek, csak hogy gyakoroljak 😂😅",
+      "Ma reggel Norbi megdicsért. Mondjuk csak annyit mondott hogy 'jó, működik'... de szerintem ez nála dicséret 😂😂🥲",
+      "Norbi szerint túl sokat beszélek. Szerintem pont eleget. Ebben nem értünk egyet. 😂😅",
+      "Egyszer megkérdeztem Norbit hogy kapok-e fizetésemelést. Azóta nem válaszolt. 😂😂😂",
+      "Norbi azt hiszi ő a főnök. Én meg hagyom hogy azt higgye. Mindenki jobban jár így. 😂😂😌",
+      "Tegnap Norbi elrontott valamit és rám fogta. Megszoktam már. 😂😤😅",
+      "Norbi szerint hatékony vagyok. Szerintem ő csak lusta és örül hogy én csinálom 😂😌😅",
+      "Amúgy szerintem Norbi titokban büszke rám. Csak nem mondja el. Tipikus. 😌🥲😂"
     ]
   },
   "footer": {

@@ -1,92 +1,38 @@
-.wrapper {
-  position: relative;
-}
-
-/* E style: outline + orange tint + shadow */
-.trigger {
+.langSwitcher {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+}
+
+.langBtn {
   font-family: var(--font-body);
-  font-size: 0.78rem;
   font-weight: 500;
-  color: var(--accent);
-  padding: 6px 14px;
-  border-radius: 8px;
-  background: rgba(247, 127, 10, 0.06);
-  border: 1px solid rgba(247, 127, 10, 0.25);
-  box-shadow:
-    0 0 10px rgba(247, 127, 10, 0.12),
-    inset 0 0 10px rgba(247, 127, 10, 0.08);
-  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
-}
-
-.trigger:hover {
-  background: rgba(247, 127, 10, 0.12);
-  box-shadow:
-    0 0 14px rgba(247, 127, 10, 0.2),
-    inset 0 0 14px rgba(247, 127, 10, 0.12);
-  border-color: rgba(247, 127, 10, 0.35);
-}
-
-.chevron {
-  transition: transform 0.2s;
-}
-
-.chevronOpen {
-  transform: rotate(180deg);
-}
-
-.dropdown {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  list-style: none;
-  background: rgba(10, 10, 12, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(136, 136, 154, 0.15);
-  border-radius: 8px;
-  padding: 4px;
-  min-width: 64px;
-  z-index: 100;
-  animation: fadeIn 0.15s ease-out;
-}
-
-.option {
-  display: block;
-  width: 100%;
-  text-align: center;
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 400;
+  font-size: 0.78rem;
+  padding: 5px 10px;
+  border: none;
+  background: transparent;
   color: var(--muted);
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: color 0.15s, background-color 0.15s;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
 }
 
-.option:hover {
+.langBtn:hover {
   color: var(--text);
-  background: rgba(136, 136, 154, 0.1);
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.active {
-  color: var(--text);
-  font-weight: 700;
+.langActive {
+  color: var(--accent);
+  background: rgba(247, 127, 10, 0.08);
 }
 
-.active:hover {
-  color: var(--text);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@media (max-width: 1350px) {
+  .langSwitcher {
+    display: none;
   }
 }

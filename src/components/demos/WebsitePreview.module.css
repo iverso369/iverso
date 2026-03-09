@@ -2,6 +2,8 @@
 
 .wrapper {
   width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .browser {
@@ -11,9 +13,9 @@
 /* ── page inside MiniWebsite ── */
 
 .page {
-  background: #FAF5EE;
+  background: #E8DFD2;
   padding: 0;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.8s ease;
   font-family: 'Lora', 'Georgia', serif;
 }
 
@@ -40,14 +42,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 14px;
-  border-bottom: 1px solid #E8DFD2;
+  padding: 10px 16px;
+  border-bottom: 1px solid #D4CAB8;
 }
 
 .bakeryName {
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 700;
-  font-size: 10px;
+  font-size: 16px;
   color: #5C3D1E;
   white-space: nowrap;
 }
@@ -60,7 +62,7 @@
 .navLink {
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 400;
-  font-size: 8px;
+  font-size: 12px;
   color: #8C7A66;
   white-space: nowrap;
 }
@@ -73,20 +75,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  min-height: 130px;
-  padding: 0 14px 14px;
+  min-height: 200px;
+  padding: 0 16px 16px;
   text-align: center;
   background:
-    radial-gradient(ellipse at 30% 50%, rgba(180, 130, 60, 0.25), transparent 70%),
-    radial-gradient(ellipse at 70% 40%, rgba(160, 100, 40, 0.15), transparent 60%),
-    linear-gradient(180deg, #EDE3D4, #D4C4A8);
+    radial-gradient(ellipse at 30% 50%, rgba(155, 110, 50, 0.25), transparent 70%),
+    radial-gradient(ellipse at 70% 40%, rgba(140, 85, 35, 0.15), transparent 60%),
+    linear-gradient(180deg, #D9CFBF, #C4B498);
   overflow: hidden;
 }
 
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(transparent 30%, rgba(250, 245, 238, 0.97) 100%);
+  background: linear-gradient(transparent 30%, rgba(232, 223, 210, 0.97) 100%);
   pointer-events: none;
 }
 
@@ -95,10 +97,10 @@
   z-index: 1;
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 26px;
   color: #3A2410;
   line-height: 1.2;
-  margin: 0 0 4px;
+  margin: 0 0 5px;
 }
 
 .heroSubtitle {
@@ -106,7 +108,7 @@
   z-index: 1;
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 400;
-  font-size: 9px;
+  font-size: 14px;
   color: #8C7A66;
   line-height: 1.4;
   margin: 0;
@@ -115,13 +117,13 @@
 /* ── product section ── */
 
 .productSection {
-  padding: 12px 14px 8px;
+  padding: 14px 16px 10px;
 }
 
 .sectionLabel {
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 600;
-  font-size: 7px;
+  font-size: 11px;
   color: #A6896C;
   letter-spacing: 1.2px;
   text-transform: uppercase;
@@ -138,10 +140,10 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
-  background: #F3ECE0;
+  gap: 10px;
+  background: #DDD4C6;
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 10px 12px;
 }
 
 .productLeft {
@@ -153,8 +155,8 @@
 
 .productDot {
   flex-shrink: 0;
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #C4956C;
   margin-top: 4px;
@@ -167,7 +169,7 @@
 .productName {
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 600;
-  font-size: 9px;
+  font-size: 15px;
   color: #2C2016;
   line-height: 1.3;
   white-space: nowrap;
@@ -178,7 +180,7 @@
 .productDesc {
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 400;
-  font-size: 7.5px;
+  font-size: 12px;
   color: #8C7A66;
   line-height: 1.3;
   margin-top: 1px;
@@ -191,7 +193,7 @@
   flex-shrink: 0;
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 700;
-  font-size: 9px;
+  font-size: 15px;
   color: #8B5E3C;
   white-space: nowrap;
   margin-top: 2px;
@@ -203,8 +205,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 14px;
-  border-top: 1px solid #E8DFD2;
+  padding: 10px 16px;
+  border-top: 1px solid #D4CAB8;
 }
 
 .hoursWrapper {
@@ -221,26 +223,26 @@
 }
 
 .clockIcon svg {
-  width: 11px;
-  height: 11px;
+  width: 13px;
+  height: 13px;
 }
 
 .hoursText {
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 400;
-  font-size: 7px;
+  font-size: 12px;
   color: #8C7A66;
   white-space: nowrap;
 }
 
 .orderBtn {
   display: inline-block;
-  padding: 4px 10px;
+  padding: 5px 12px;
   background: #8B5E3C;
-  color: #FAF5EE;
+  color: #E8DFD2;
   font-family: 'Lora', 'Georgia', serif;
   font-weight: 600;
-  font-size: 7.5px;
+  font-size: 12px;
   border-radius: 4px;
   white-space: nowrap;
 }

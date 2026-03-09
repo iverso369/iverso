@@ -39,14 +39,15 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
   return (
     <>
       <nav className={styles.nav} aria-label="Main navigation">
+        <LanguageSwitcher />
         <div className={styles.inner}>
           {/* Logo */}
           <Link to="/" className={styles.logo}>
             IVERSO
           </Link>
 
-          {/* Desktop links — flat, no dropdown */}
-          <div className={styles.desktopLinks}>
+          {/* Service links — absolute centered */}
+          <div className={styles.menuLinks}>
             {serviceLinks.map(link => (
               <Link
                 key={link.path}
@@ -56,28 +57,18 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
                 {t(link.key)}
               </Link>
             ))}
-
-            {/* Dot separator */}
-            <span className={styles.dotSeparator} />
-
-            <Link
-              to="/tudnivalok"
-              className={`${styles.navLink} ${location.pathname === '/tudnivalok' ? styles.navLinkActive : ''}`}
-            >
-              {t('nav.process')}
-            </Link>
           </div>
 
-          {/* Right side: Contact + separator + Language */}
-          <div className={styles.rightGroup}>
-            <Link to="/kapcsolat" className={styles.contactBtn}>
-              {t('nav.contact')}
-            </Link>
+          <Link
+            to="/tudnivalok"
+            className={`${styles.tudnivalokLink} ${location.pathname === '/tudnivalok' ? styles.tudnivalokActive : ''}`}
+          >
+            {t('nav.process')}
+          </Link>
 
-            <span className={styles.lineSeparator} />
-
-            <LanguageSwitcher />
-          </div>
+          <Link to="/kapcsolat" className={styles.contactBtn}>
+            {t('nav.contact')}
+          </Link>
 
           {/* Mobile hamburger */}
           <button
@@ -145,10 +136,8 @@ export default function Nav({ heroElementId: _heroElementId }: NavProps) {
               {t('nav.contact')}
             </Link>
 
-            <div className={styles.overlaySeparator} />
-
             <div className={styles.overlayLangWrapper}>
-              <LanguageSwitcher />
+              <LanguageSwitcher className={styles.overlayLangSwitcher} />
             </div>
           </nav>
         </div>

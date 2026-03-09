@@ -5,12 +5,12 @@ import styles from './EmberHero.module.css'
 /* ========================================
    CONSTANTS
    ======================================== */
-const PARTICLE_COUNT = 50000
+const PARTICLE_COUNT = 72000
 const CAMERA_Z = 35
 const CAMERA_FOV = 75
 
 // Destroy radius
-const DESTROY_RADIUS_FACTOR = 0.045
+const DESTROY_RADIUS_FACTOR = 0.135
 
 // Destroy timeline (ms) — 10s total
 const DESTROY_FLY_PHASE = 1500
@@ -18,8 +18,6 @@ const DESTROY_HOLD_PHASE = 2000
 const DESTROY_RETURN_PHASE = 5000
 const DESTROY_SNAP_PHASE = 1500
 const DESTROY_TOTAL = DESTROY_FLY_PHASE + DESTROY_HOLD_PHASE + DESTROY_RETURN_PHASE + DESTROY_SNAP_PHASE
-
-const MOSQUITO_DURATION = 3000
 
 // Scroll thresholds
 const SCROLL_DISPERSE_START = 0.15
@@ -67,10 +65,8 @@ const vertexShader = /* glsl */ `
       baseSize = 7.0 + aRandom * 6.0;
     }
 
-    float pulse = sin(uTime * 1.5 + aRandom * 6.2832) * 0.15
-                + sin(uTime * 0.7 + aRandom * 3.14) * 0.08 + 1.0;
-    pulse *= uBreathing;
-    float edgeSizeBoost = 1.0 + (1.0 - aEdgeDist) * 0.35;
+    float pulse = 1.0;
+    float edgeSizeBoost = 1.0 + (1.0 - aEdgeDist) * 0.15;
     float hoverBoost = 1.0 + vMouseGlow * 0.15;
 
     gl_PointSize = baseSize * pulse * hoverBoost * edgeSizeBoost * (150.0 / -mvPosition.z);
@@ -94,10 +90,10 @@ const fragmentShader = /* glsl */ `
     float dist = length(center);
     if (dist > 0.5) discard;
 
-    float sharpness = mix(16.0, 8.0, vSizeClass);
+    float sharpness = mix(19.2, 9.6, vSizeClass);
     float glow = exp(-dist * sharpness);
-    float core = exp(-dist * 20.0);
-    float edgeBrightness = 1.0 + (1.0 - vEdgeDist) * 0.8;
+    float core = exp(-dist * 24.0);
+    float edgeBrightness = 1.0 + (1.0 - vEdgeDist) * 0.3;
 
     vec3 color = vColor * glow * edgeBrightness
                + vec3(1.0, 0.85, 0.65) * core * 0.25 * edgeBrightness;
@@ -106,8 +102,8 @@ const fragmentShader = /* glsl */ `
     color = mix(color, hoverColor * (glow + core * 0.5) * 1.5, vMouseGlow * 0.15);
 
     float baseAlpha = mix(0.85, 0.35, vSizeClass);
-    float softEdge = smoothstep(0.5, 0.05, dist);
-    float edgeAlpha = 1.0 + (1.0 - vEdgeDist) * 0.4;
+    float softEdge = smoothstep(0.5, 0.02, dist);
+    float edgeAlpha = 1.0 + (1.0 - vEdgeDist) * 0.15;
     float alpha = softEdge * glow * baseAlpha * vAlpha * edgeAlpha;
     alpha *= 1.0 + vMouseGlow * 0.5;
 
@@ -136,7 +132,7 @@ function sampleTextPositions(
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.fillStyle = '#ffffff'
-  ctx.fillText(text, canvas.width / 2, canvas.height * 0.37)
+  ctx.fillText(text, canvas.width / 2, canvas.height * 0.27)
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const px = imageData.data
@@ -249,9 +245,6 @@ export default function EmberHero() {
     const raycaster = new THREE.Raycaster()
     let mouseActive = false
     const recentDestroys: number[] = []
-    let mosquitoActive = false
-    let mosquitoStartTime = 0
-    let mosquitoOffsets: Float32Array
     const clickRC = new THREE.Raycaster()
 
     async function init() {
@@ -298,7 +291,6 @@ export default function EmberHero() {
       destroyVelocities = new Float32Array(count * 3)
       destroyOffsets = new Float32Array(count * 3)
       returnDelays = new Float32Array(count)
-      mosquitoOffsets = new Float32Array(count * 3)
       scrollVelocities = new Float32Array(count * 3)
       scrollOffsets = new Float32Array(count * 3)
       scrollDirections = new Float32Array(count * 3)
@@ -428,7 +420,7 @@ export default function EmberHero() {
 
       material.uniforms.uTime.value = elapsed
       material.uniforms.uOpacity.value = fadeIn * scrollOpacity
-      material.uniforms.uBreathing.value = Math.sin(elapsed * 0.35) * 0.15 + 1.0
+      material.uniforms.uBreathing.value = 1.0
 
       const tgtActive = mouseActive ? 1.0 : 0.0
       material.uniforms.uMouseActive.value += (tgtActive - material.uniforms.uMouseActive.value) * 0.08
@@ -436,15 +428,6 @@ export default function EmberHero() {
       raycaster.setFromCamera(mouseNDC, camera)
       if (raycaster.ray.intersectPlane(mousePlane, _hit)) mouse3D.copy(_hit)
       ;(material.uniforms.uMouse3D.value as THREE.Vector3).lerp(mouse3D, 0.12)
-
-      let mJitter = 0
-      if (mosquitoActive) {
-        const mAge = (now - mosquitoStartTime) / 1000
-        const mDur = MOSQUITO_DURATION / 1000
-        if (mAge > mDur + 1) { mosquitoActive = false; mosquitoOffsets.fill(0) }
-        else if (mAge > mDur) { for (let i = 0; i < PARTICLE_COUNT * 3; i++) mosquitoOffsets[i] *= 0.85 }
-        else mJitter = Math.max(0, 1 - mAge / mDur)
-      }
 
       while (recentDestroys.length > 0 && now - recentDestroys[0] > DESTROY_TOTAL) recentDestroys.shift()
 
@@ -567,22 +550,30 @@ export default function EmberHero() {
             destroyOffsets[i3 + 1] *= 1 - s
             destroyOffsets[i3 + 2] *= 1 - s
           }
+          // Clamp destroy offsets so particles stay within viewport
+          const halfW = storedVisW * 0.52
+          const halfH = storedVisH * 0.52
+          const homeX = homePositions[i3]
+          const homeY = homePositions[i3 + 1]
+          if (homeX + destroyOffsets[i3] > halfW) {
+            destroyOffsets[i3] = halfW - homeX
+            destroyVelocities[i3] *= -0.3
+          } else if (homeX + destroyOffsets[i3] < -halfW) {
+            destroyOffsets[i3] = -halfW - homeX
+            destroyVelocities[i3] *= -0.3
+          }
+          if (homeY + destroyOffsets[i3 + 1] > halfH) {
+            destroyOffsets[i3 + 1] = halfH - homeY
+            destroyVelocities[i3 + 1] *= -0.3
+          } else if (homeY + destroyOffsets[i3 + 1] < -halfH) {
+            destroyOffsets[i3 + 1] = -halfH - homeY
+            destroyVelocities[i3 + 1] *= -0.3
+          }
+
           tx += destroyOffsets[i3]
           ty += destroyOffsets[i3 + 1]
           tz += destroyOffsets[i3 + 2]
         }
-
-        // Mosquito
-        if (mJitter > 0) {
-          const freq = 5 + r * 15
-          const a1 = elapsed * freq + r * 100, a2 = elapsed * (freq * 1.3) + r * 200
-          mosquitoOffsets[i3] += Math.sin(a1) * mJitter * 0.15 - mosquitoOffsets[i3] * 0.02
-          mosquitoOffsets[i3 + 1] += Math.cos(a2) * mJitter * 0.15 - mosquitoOffsets[i3 + 1] * 0.02
-          mosquitoOffsets[i3 + 2] += Math.sin(a1 * 0.7) * mJitter * 0.05 - mosquitoOffsets[i3 + 2] * 0.02
-        }
-        tx += mosquitoOffsets[i3]
-        ty += mosquitoOffsets[i3 + 1]
-        tz += mosquitoOffsets[i3 + 2]
 
         positionArray[i3] = tx
         positionArray[i3 + 1] = ty
@@ -602,7 +593,7 @@ export default function EmberHero() {
     }
     function handleMouseLeave() { mouseActive = false }
 
-    function doDestroy(cx: number, cy: number) {
+    function doDestroy(cx: number, cy: number, destroyAll = false) {
       if (!camera || !geometry || !material) return
       const now = performance.now()
       while (recentDestroys.length > 0 && now - recentDestroys[0] > DESTROY_TOTAL) recentDestroys.shift()
@@ -613,42 +604,66 @@ export default function EmberHero() {
       const clickPos = new THREE.Vector3()
       if (!clickRC.ray.intersectPlane(mousePlane, clickPos)) return
 
-      const dR = DESTROY_RADIUS_FACTOR * textWorldWidth
+      const dR = destroyAll ? 9999 : DESTROY_RADIUS_FACTOR * textWorldWidth
       let hitCount = 0
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         const i3 = i * 3
-        const dx = positionArray[i3] - clickPos.x
-        const dy = positionArray[i3 + 1] - clickPos.y
+
+        // Use current position (home + any existing offset) so scattered particles also get hit
+        const curX = positionArray[i3]
+        const curY = positionArray[i3 + 1]
+        const dx = curX - clickPos.x
+        const dy = curY - clickPos.y
         const dist = Math.sqrt(dx * dx + dy * dy)
 
-        // Per-particle radius variation for organic edge (±40%)
-        const effectiveR = dR * (0.6 + Math.random() * 0.8)
-        if (dist >= effectiveR) continue
+        if (!destroyAll) {
+          // Per-particle radius variation for organic edge (±40%)
+          const effectiveR = dR * (0.6 + Math.random() * 0.8)
+          if (dist >= effectiveR) continue
 
-        // Squared probability falloff — no sharp boundary
-        const normDist = dist / effectiveR
-        const hitChance = (1 - normDist * normDist)
-        if (Math.random() > hitChance) continue
+          // Squared probability falloff — no sharp boundary
+          const normDist = dist / effectiveR
+          const hitChance = (1 - normDist * normDist)
+          if (Math.random() > hitChance) continue
+        }
 
         hitCount++
-        destroyedAt[i] = now
-        returnDelays[i] = Math.random()
 
-        // Radial outward from click + 30% random jitter
-        const rdist = dist || 0.001
-        const nx = dx / rdist
-        const ny = dy / rdist
-        const jitterAngle = Math.random() * Math.PI * 2
-        const vx = nx * 0.7 + Math.cos(jitterAngle) * 0.3
-        const vy = ny * 0.7 + Math.sin(jitterAngle) * 0.3
+        // Shockwave physics: closer particles get MORE speed (inverse distance)
+        // Like a water ripple or supernova — epicenter = fastest
+        const maxDist = destroyAll ? textWorldWidth * 0.8 : dR
+        const normDist = Math.min(dist / maxDist, 1)
+        // Inverse: close = fast, far = slow (with minimum so edge particles still move)
+        const distanceFactor = 1.0 - normDist * 0.7
+
+        // 90% random direction, 10% radial outward from click
+        const randomAngle = Math.random() * Math.PI * 2
+        const radialDist = dist || 0.001
+        const radX = dx / radialDist
+        const radY = dy / radialDist
+        const vx = Math.cos(randomAngle) * 0.9 + radX * 0.1
+        const vy = Math.sin(randomAngle) * 0.9 + radY * 0.1
         const vlen = Math.sqrt(vx * vx + vy * vy) || 1
 
-        const speed = 0.2 + Math.random() * 0.6
-        const falloff = (1 - normDist) * (1 - normDist)
-        destroyVelocities[i3] = (vx / vlen) * speed * (0.3 + falloff * 0.7)
-        destroyVelocities[i3 + 1] = (vy / vlen) * speed * (0.3 + falloff * 0.7)
-        destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5
-        destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
+        const baseSpeed = destroyAll ? 0.12 + Math.random() * 0.25 : 0.15 + Math.random() * 0.4
+        const speed = baseSpeed * distanceFactor
+
+        // If already flying, add new velocity on top (don't reset offset)
+        if (destroyedAt[i] > 0) {
+          destroyVelocities[i3] += (vx / vlen) * speed
+          destroyVelocities[i3 + 1] += (vy / vlen) * speed
+          destroyVelocities[i3 + 2] += (Math.random() - 0.5) * speed * 0.3
+          // Reset timer so fly phase restarts with new velocity
+          destroyedAt[i] = now
+          returnDelays[i] = Math.random()
+        } else {
+          destroyedAt[i] = now
+          returnDelays[i] = Math.random()
+          destroyVelocities[i3] = (vx / vlen) * speed
+          destroyVelocities[i3 + 1] = (vy / vlen) * speed
+          destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.3
+          destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
+        }
       }
       if (hitCount > 0) recentDestroys.push(now)
     }
@@ -663,8 +678,8 @@ export default function EmberHero() {
 
     function handleContextMenu(e: MouseEvent) {
       e.preventDefault()
-      mosquitoActive = true
-      mosquitoStartTime = performance.now()
+      // Right-click = destroy ALL particles from click position
+      doDestroy(e.clientX, e.clientY, true)
     }
 
     function handleResize() {

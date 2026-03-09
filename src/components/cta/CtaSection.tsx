@@ -22,7 +22,7 @@ function AmeliaAvatar() {
   )
 }
 
-const AMELIA_COUNT = 5
+const AMELIA_COUNT = 10
 
 export default function CtaSection() {
   const { t } = useTranslation()
