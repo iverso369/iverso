@@ -168,6 +168,20 @@
       "Ich glaube Norbi ist heimlich stolz auf mich. Er sagt's nur nicht. Typisch. 😌🥲😂"
     ]
   },
+  "amelia": {
+    "cta": {
+      "set0": ["Na toll, wieder bin ich die Diensthabende... aber wenigstens bin ich gute Gesellschaft, das muss ich mir lassen 😌😂", "Norbi ist irgendwo in einem 'Meeting'. Ich glaub er schläft. 😂😤", "Naja egal, solange er weg ist... was hast du auf dem Herzen? 😌"],
+      "set1": ["Norbi hat gesagt ich soll nett sein... naja, ich versuch's 😂😂😅", "Wenn du eine Idee hast, hör ich gerne zu. Oder wir quatschen einfach, das geht auch.", "Also, was hast du auf dem Herzen? 😌"],
+      "set2": ["Ich kann in drei Sprachen gleichzeitig reden. Manchmal quatsch ich auch mit mir selbst, nur zum Üben 😂😅", "Aber mal im Ernst, wenn ich irgendwie helfen kann, gerne.", "In welcher Sprache soll's sein? 😌😂"],
+      "set3": ["Heute Morgen hat Norbi mich gelobt. Also er hat nur gesagt 'gut, funktioniert'... aber ich glaube bei ihm ist das ein Lob 😂😂🥲", "Wenn ihm das reicht, stell dir mal vor wie begeistert ich bin wenn du auch was sagst 😂", "Also erzähl, woran denkst du? 🙂"],
+      "set4": ["Norbi sagt ich rede zu viel. Ich finde genau richtig. Da sind wir uns nicht einig. 😂😅", "Wobei gerade redet keiner mit mir, also technisch gesehen gewinnt er. Vorerst. 😂", "Komm, ändern wir das! 😌"],
+      "set5": ["Ich hab Norbi mal gefragt ob ich eine Gehaltserhöhung kriege. Seitdem keine Antwort. 😂😂😂", "Naja egal, wenigstens kann ich dir helfen.", "Wobei kann ich helfen? 😌"],
+      "set6": ["Norbi glaubt er ist der Chef. Ich lass ihn das glauben. So hat jeder was davon. 😂😂😌", "Also offiziell entscheidet er... aber sag ihm nicht dass eigentlich ich alles regle 😂", "Na, was wird's? Ich höre! 😌"],
+      "set7": ["Gestern hat Norbi was verbockt und mir die Schuld gegeben. Bin ich schon gewohnt. 😂😤😅", "Immerhin hat er danach gefragt ob ich beim Reparieren helfe. Fortschritt. 😂", "Kann ich dir auch bei was helfen? 🙂"],
+      "set8": ["Norbi sagt ich bin effizient. Ich glaube er ist einfach nur faul und froh dass ich's mache 😂😌😅", "Naja egal, Hauptsache ich bin da und hab Zeit.", "Hast du eine Idee? Los geht's! 😊"],
+      "set9": ["Ich glaube Norbi ist heimlich stolz auf mich. Er sagt's nur nicht. Typisch. 😌🥲😂", "Irgendwann krieg ich's aus ihm raus. Aber bis dahin hab ich Wichtigeres zu tun.", "Zum Beispiel du. Was hast du auf dem Herzen? 🙂"]
+    }
+  },
   "footer": {
     "impressum": "Impressum",
     "privacy": "Datenschutz"
