@@ -292,7 +292,7 @@
    RESPONSIVE — hide desktop, show hamburger
    ======================================== */
 
-@media (max-width: 1200px) {
+@media (max-width: 1350px) {
   .menuLinks,
   .spacer,
   .tudnivalokLink,

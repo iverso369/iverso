@@ -31,7 +31,7 @@
   background: rgba(247, 127, 10, 0.08);
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1350px) {
   .langSwitcher {
     display: none;
   }
