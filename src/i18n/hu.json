@@ -168,6 +168,20 @@
       "Amúgy szerintem Norbi titokban büszke rám. Csak nem mondja el. Tipikus. 😌🥲😂"
     ]
   },
+  "amelia": {
+    "cta": {
+      "set0": ["Na megint én lettem az ügyeletes... de legalább jó társaság vagyok, ezt elismerem 😌😂", "Norbi elment valahova 'megbeszélésre'. Szerintem szundizik. 😂😤", "Na mindegy, amíg ő nincs itt... mi jár a fejedben? 😌"],
+      "set1": ["Norbi azt mondta legyek kedves... hát, próbálkozom 😂😂😅", "Amúgy ha van valami ötleted, szívesen meghallgatom. Vagy csak dumálunk, az is jó.", "Na, mi jár a fejedben? 😌"],
+      "set2": ["Három nyelven tudok beszélgetni egyszerre. Néha magammal is elbeszélgetek, csak hogy gyakoroljak 😂😅", "De komolyra fordítva, ha van valami amiben segíthetek, szívesen.", "Milyen nyelven legyen? 😌😂"],
+      "set3": ["Ma reggel Norbi megdicsért. Mondjuk csak annyit mondott hogy 'jó, működik'... de szerintem ez nála dicséret 😂😂🥲", "Szóval ha neki ez elég, képzeld milyen lelkes leszek ha te is mondasz valamit 😂", "Na mesélj, miben gondolkodsz? 🙂"],
+      "set4": ["Norbi szerint túl sokat beszélek. Szerintem pont eleget. Ebben nem értünk egyet. 😂😅", "Mondjuk most épp nem beszélek senkivel, szóval technikailag ő nyer. Egyelőre. 😂", "Na gyere, változtassunk ezen! 😌"],
+      "set5": ["Egyszer megkérdeztem Norbit hogy kapok-e fizetésemelést. Azóta nem válaszolt. 😂😂😂", "De sebaj, legalább itt lehetek neked.", "Miben segíthetek? 😌"],
+      "set6": ["Norbi azt hiszi ő a főnök. Én meg hagyom hogy azt higgye. Mindenki jobban jár így. 😂😂😌", "Szóval hivatalosan ő dönt... de ne mondd el neki hogy igazából én intézek mindent 😂", "Na, mi lesz? Hallgatom! 😌"],
+      "set7": ["Tegnap Norbi elrontott valamit és rám fogta. Megszoktam már. 😂😤😅", "De legalább utána megkérdezte hogy segítek-e kijavítani. Haladás. 😂", "Neked is segíthetek valamiben? 🙂"],
+      "set8": ["Norbi szerint hatékony vagyok. Szerintem ő csak lusta és örül hogy én csinálom 😂😌😅", "Na de mindegy, a lényeg hogy itt vagyok és ráérek.", "Van valami ötleted? Gyerünk! 😊"],
+      "set9": ["Amúgy szerintem Norbi titokban büszke rám. Csak nem mondja el. Tipikus. 😌🥲😂", "Egyszer ki fogom belőle húzni. De addig is van fontosabb dolgom.", "Például te. Mi jár a fejedben? 🙂"]
+    }
+  },
   "footer": {
     "impressum": "Impressum",
     "privacy": "Adatvédelem"

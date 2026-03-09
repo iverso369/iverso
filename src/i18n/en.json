@@ -168,6 +168,20 @@
       "I think Norbi is secretly proud of me. He just won't say it. Typical. 😌🥲😂"
     ]
   },
+  "amelia": {
+    "cta": {
+      "set0": ["So I'm on duty again... but hey, at least I'm good company, I'll give myself that 😌😂", "Norbi went to some 'meeting'. I think he's napping. 😂😤", "Anyway, while he's gone... what's on your mind? 😌"],
+      "set1": ["Norbi told me to be nice... well, I'm trying 😂😂😅", "If you have an idea, I'm all ears. Or we can just chat, that works too.", "So, what's on your mind? 😌"],
+      "set2": ["I can chat in three languages at once. Sometimes I talk to myself too, just to practice 😂😅", "But seriously, if I can help with anything, happy to.", "Which language shall we go with? 😌😂"],
+      "set3": ["Norbi complimented me this morning. Well, he just said 'good, it works'... but I think that counts as a compliment from him 😂😂🥲", "So if that's enough for him, imagine how excited I'll be when you say something too 😂", "So tell me, what are you thinking about? 🙂"],
+      "set4": ["Norbi says I talk too much. I think just enough. We don't agree on this one. 😂😅", "Though right now nobody's talking to me, so technically he wins. For now. 😂", "Come on, let's change that! 😌"],
+      "set5": ["I once asked Norbi if I could get a raise. Still no answer. 😂😂😂", "But hey, at least I get to help you.", "What can I help with? 😌"],
+      "set6": ["Norbi thinks he's the boss. I let him think that. Everyone's happier this way. 😂😂😌", "So officially he decides... but don't tell him I'm actually the one running things 😂", "Alright, what's it gonna be? I'm listening! 😌"],
+      "set7": ["Yesterday Norbi messed something up and blamed me. I'm used to it by now. 😂😤😅", "At least he asked me to help fix it afterwards. Progress. 😂", "Can I help you with something too? 🙂"],
+      "set8": ["Norbi says I'm efficient. I think he's just lazy and happy I'm doing the work 😂😌😅", "Anyway, point is I'm here and I've got time.", "Got an idea? Let's go! 😊"],
+      "set9": ["I think Norbi is secretly proud of me. He just won't say it. Typical. 😌🥲😂", "One day I'll get it out of him. But until then I've got more important things to do.", "Like you, for example. What's on your mind? 🙂"]
+    }
+  },
   "footer": {
     "impressum": "Legal Notice",
     "privacy": "Privacy Policy"
