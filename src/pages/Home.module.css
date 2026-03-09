@@ -175,6 +175,33 @@
   justify-content: center;
 }
 
+/* ── Mobile: split layouts stack ── */
+
+@media (max-width: 768px) {
+  .splitCard {
+    grid-template-columns: 1fr;
+  }
+
+  .splitDemo {
+    border-left: none;
+    border-top: 1px solid #1a1a1f;
+  }
+
+  .reverseSplitCard {
+    grid-template-columns: 1fr;
+  }
+
+  .reverseSplitDemo {
+    border-right: none;
+    border-top: 1px solid #1a1a1f;
+    order: 2;
+  }
+
+  .splitInfo {
+    order: 1;
+  }
+}
+
 /* ── 4. jelenet: Folyamat — node sequence ── */
 
 .processScene {
