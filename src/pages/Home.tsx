@@ -10,6 +10,7 @@ import ProcessSection from '../components/process/ProcessSection'
 import BuilderSection from '../components/builder/BuilderSection'
 import CtaSection from '../components/cta/CtaSection'
 import Footer from '../components/footer/Footer'
+import TextSection from '../components/ui/TextSection'
 import useIntersection from '../hooks/useIntersection'
 import styles from './Home.module.css'
 
@@ -40,9 +41,9 @@ export default function Home() {
           <DashboardPreview />
         </DemoCard>
 
-        <p className={styles.serviceDescription}>
-          {t('demos.dashboard.description')}
-        </p>
+        <TextSection>
+          <p>{t('demos.dashboard.description')}</p>
+        </TextSection>
 
         <DemoCard
           titleKey="ai.title"
@@ -52,9 +53,9 @@ export default function Home() {
           <AiChatPreview />
         </DemoCard>
 
-        <p className={styles.serviceDescription}>
-          {t('demos.ai.description')}
-        </p>
+        <TextSection>
+          <p>{t('demos.ai.description')}</p>
+        </TextSection>
 
         <DemoCard
           titleKey="automation.title"
@@ -64,9 +65,9 @@ export default function Home() {
           <AutomationPreview />
         </DemoCard>
 
-        <p className={styles.serviceDescription}>
-          {t('demos.automation.description')}
-        </p>
+        <TextSection>
+          <p>{t('demos.automation.description')}</p>
+        </TextSection>
 
         <DemoCard
           titleKey="websites.title"
@@ -76,9 +77,9 @@ export default function Home() {
           <WebsitePreview />
         </DemoCard>
 
-        <p className={styles.serviceDescription}>
-          {t('demos.websites.description')}
-        </p>
+        <TextSection>
+          <p>{t('demos.websites.description')}</p>
+        </TextSection>
       </section>
 
       {/* 4. jelenet: Folyamat — node sequence */}

@@ -51,17 +51,6 @@
   z-index: 1;
 }
 
-.serviceDescription {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--muted);
-  max-width: 680px;
-  margin: 0 auto;
-  text-align: center;
-}
-
 /* ── 4. jelenet: Folyamat — node sequence ── */
 
 .processScene {
