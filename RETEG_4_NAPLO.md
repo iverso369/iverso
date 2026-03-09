@@ -1,6 +1,6 @@
 # Réteg 4 — Jelenetek (Napló)
 
-> Utolsó frissítés: 2026.03.06
+> Utolsó frissítés: 2026.03.09
 
 ---
 
@@ -21,6 +21,7 @@ Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 | 9 | Home.tsx összeszerelés | ✅ implementálva |
 | 10 | Navbar mindig látható (gépen) | ✅ kész |
 | 11 | Hero magasság ~50vh | ✅ kész |
+| 12 | Canvas 2D particle háttér | ✅ kész (radial gradient sprite + additív blending + hero szín szinkron) |
 
 ---
 
@@ -86,6 +87,17 @@ Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
   - Tegez
   - Nem sales, nem manipulál
 
+### P30 — Háttér gradient ✅ kész
+- Naplemente stílus — narancs fényoszlop középen, barna mélység, vignette szélek
+
+### P31 — Canvas 2D particle háttér ✅ kész
+- BackgroundParticles.tsx — position: fixed, z-index: 1, pointer-events: none
+- V1: ctx.arc() + glow kör → konfetti kinézet, ROSSZ
+- V2: Radial gradient sprite-ok + additív blending (`globalCompositeOperation: 'lighter'`) → parázs kinézet, JÓ
+- Szín szinkron: Three.js hero palettájából átvéve
+- 600-800 részecske, nagyon alacsony opacity (0.03-0.15), átfedésnél fény összeadódik
+- P29 (oldalszélek üresek) is megoldódott ezzel
+
 ---
 
 ## Döntések
@@ -117,6 +129,9 @@ Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 | 03.06 | Amelia stílus: önirónia, saját helyzetéről mesél, színfalak mögötti bepillantás, Norbi szidás szeretettel, emojik csak arckifejezések mondatok végén, tegez |
 | 03.06 | Amelia mondatok: 10 db (5 helyett), HU/DE/EN |
 | 03.06 | WebsitePreview szín: #FAF5EE → #E8DFD2 (tompább, kevésbé kontrasztos) |
+| 03.09 | Canvas 2D particle háttér: radial gradient sprite + additív blending (ctx.arc glow nem működött — konfetti maradt) |
+| 03.09 | Particle szín: Three.js hero palettájából szinkronizálva |
+| 03.09 | P29 megoldódott: a particle háttér kitölti az oldalsó üres területeket |
 
 ---
 
@@ -124,13 +139,14 @@ Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 
 - ✅ **P18: Amelia mondatok** — 10 db, önirónia stílus, kész
 - ✅ **P24: "Let's build something"** — nagyobb, lejjebb
+- ✅ **P25: Navbar** — végleges
 - ✅ **P27: WebsitePreview** — fontok nagyobb, animáció lassabb
-- 🔄 **P25: Navbar** — méret, középre, menüpont kinézet — iteráció folyamatban
-- 🔄 **P27b: AiChatPreview** — fix magasság + gap
+- ✅ **P27b: AiChatPreview** — fix magasság + gap
+- ✅ **P29: Oldalszélek** — particle háttér megoldotta
+- ✅ **P30: Háttér** — naplemente gradient kész
+- ✅ **P31: Canvas 2D particle háttér** — kész
 - ⬜ **P26: Preview szövegek** — vizuális beágyazás az oldalba
 - ⬜ **P28: Amelia szekció** — vizuális újratervezés
-- ⬜ **P29: Oldalszélek** — üres, hiányzik az élet
-- ⬜ **P30: Háttér** — átdolgozás
 - ⬜ **P16: IVERSO parázs a CTA fölé** — végére parkolva
 - ⬜ **Építős szekció újratervezés** — P7
 - ⬜ **Folyamat finomhangolás** — P8

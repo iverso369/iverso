@@ -1,5 +1,5 @@
 # IVERSO — Scroll Storyboard
-## Utolsó frissítés: 2026.03.05
+## Utolsó frissítés: 2026.03.09
 
 ## Az élmény egy mondatban
 A látogató úgy érezze: *"Hú, ilyet én is akarok a cégemnek."*
@@ -19,11 +19,17 @@ Nem kell külön bizalom-szekció (nincs referencia, garancia, számok). **Az ol
 - **3 szín**: fekete (#0A0A0C), fehér (#EDEDF0), narancs (#F77F0A)
 - **Ikonok**: SVG thin line (1.5px stroke, currentColor)
 - **Emojik**: nincsenek sehol az oldalon (kivéve Amelia chat üzenetei — ő használhat)
-- **Fontok**: Syne (display), DM Sans (body)
-- **Háttér**: #0A0A0C + **"Ultra mély" gradient** — drámai narancs radial gradient felülről, több mélységi réteg, vignette, film grain, lélegző fény. Nem reagál egérre. Közepes intenzitás. Végig ugyanaz. Finomhangolás VS Code-ban.
+- **Fontok**: Roboto 700 (display), DM Sans 400/500 (body)
+- **Háttér**: #0A0A0C + **naplemente stílusú gradient** — narancs fényoszlop középen, barna mélység mögötte, vignette a széleken. Nem reagál egérre. background-attachment: fixed. + **Canvas 2D particle háttér** (radial gradient sprite-ok, additív blending, Three.js hero palettájával szinkronban, mindig fut).
 - **Szürke:** #88889A (másodlagos szöveg, pl. "Let's build something")
 
 **FONTOS:** Korábban volt 4 külön szolgáltatás szín (cyan, kék, lila, narancs) — ezek **TÖRÖLVE**. Az egész oldal egységesen a 3 alapszínt használja. A szolgáltatásokat nem szín különbözteti meg, hanem az interaktív tartalom maga.
+
+---
+
+## Referencia képek
+
+A repo gyökerében lévő `Képernyőkép_*.png` fájlok a **régi projektből** származnak. Ezek vizuális referenciaként szolgálnak a parázs hatás, izzó felirat, hover interakció kinézetéhez. **NEM a jelenlegi oldal képernyőképei.**
 
 ---
 
@@ -43,7 +49,7 @@ Nem kell külön bizalom-szekció (nincs referencia, garancia, számok). **Az ol
 - **/ai** — részletes AI demó + CompanySizeSlider
 - **/automatizacio** — részletes workflow demó + CompanySizeSlider (node szám változik szintenként)
 - **/weboldalak** — CompanySizeSlider (komplexitás) + weboldal konfigurátor
-- **/folyamat** — részletes folyamat oldal (hogyan dolgozom)
+- **/tudnivalok** — részletes bemutató oldal (korábban /folyamat — kibővítve: működés, lehetőségek, közös munka)
 - **/kapcsolat** — Amelia teljes chat
 - **/impressum** — kötelező (Nebengewerbe)
 - **/adatvedelem** — kötelező (Datenschutz)
@@ -62,10 +68,10 @@ Nem kell külön bizalom-szekció (nincs referencia, garancia, számok). **Az ol
 
 **Technológia:**
 - **Gépen:** Three.js — teljes 3D parázs particle rendszer
-- **Mobilon:** CSS + Canvas 2D — ugyanaz a hangulat, könnyebb, touch-kompatibilis
+- **Mobilon:** Canvas 2D — ugyanaz a hangulat, könnyebb, touch-kompatibilis
 - **Automatikus váltás** eszköz alapján
 - Touch támogatás beépítve
-- Ultra mély gradient háttér mögötte
+- Naplemente gradient háttér mögötte
 
 **Érzés:** *"Ez más."*
 
@@ -81,8 +87,8 @@ Nem kell külön bizalom-szekció (nincs referencia, garancia, számok). **Az ol
 ```
 
 **Részletek:**
-- IVERSO: Syne, 800 weight, narancs (#F77F0A), nagy méret
-- "Let's build something": Syne, 600 weight, szürke (#88889A), kisebb — MINDIG angolul, minden nyelven
+- IVERSO: parázs particle felirat (Three.js)
+- "Let's build something": Roboto 700, szürke (#88889A) — MINDIG angolul, minden nyelven
 - A parázs halványan mögötte pislákol
 
 **Érzés:** *"Oké, figyelek."*
@@ -90,37 +96,33 @@ Nem kell külön bizalom-szekció (nincs referencia, garancia, számok). **Az ol
 ---
 
 ## 3. jelenet — 4 MINI DEMÓ ELŐZETES
-**Átmenet:** A parázs teljesen elhalványul, fekete háttér marad (+ térhatás effekt).
+**Átmenet:** A parázs teljesen elhalványul, fekete háttér marad (+ Canvas 2D particle háttér).
 
-**Elrendezés:** 4 nagy mini demó egymás alatt, egyforma vizuális súllyal. Mindegyik tartalmaz: cím + 1 mondatos leírás + mini verziót a demóból + "Tovább →" ami morph animációval megnyitja a részletes aloldalt.
+**Elrendezés:** 4 nagy mini demó egymás alatt, egyforma vizuális súllyal. Mindegyik tartalmaz: cím + leíró szöveg + mini verziót a demóból + "Tovább →" ami megnyitja a részletes aloldalt.
 
 **Sorrend:** Dashboard → AI → Automatizáció → Weboldal (fix)
-
-**Morph animáció:**
-- Gépen: fancy expand effekt
-- Mobilon: smooth slide-up teljes képernyőre
 
 **A 4 demó (sorrend nem fontossági — mind egyforma):**
 
 ### 3A — Dashboard
-- Mini demó: 2-3 KPI kártya előzetes
+- Mini demó: sidebar + KPI kártyák + táblázat, 5 oldalas ciklikus animáció
 - Aloldalon: teljes interaktív dashboard + CompanySizeSlider ("Mekkórák vagytok?")
 - CompanySizeSlider: Egyedül dolgozom → Kis csapat → Több részleg → Komoly szervezet
 - A demó tartalma változik a slider alapján
 
 ### 3B — AI Chatbot
-- Mini demó: egy chat buborék előzetes
+- Mini demó: két panel (külső + belső chatbot), gyorsválasz gombok, input
 - Aloldalon: teljes chat felület, gyorsválasz gombok + szabad input
 
 ### 3C — Automatizáció
-- Mini demó: workflow node-ok előzetes
-- Aloldalon: 6 node-os workflow, kattintható, animálható
+- Mini demó: 4 workflow node + adat flow animáció
+- Aloldalon: slider szintenként más node szám, kattintható, animálható
 
-### 3D — Weboldalak (ÚJ — korábban hiányzott)
-- Mini demó: egy mini weboldal előzetes
-- Aloldalon: részletes weboldal demó (konkrét formátum még nyitott — gépen tervezzük)
+### 3D — Weboldalak
+- Mini demó: világos krém pékség weboldal preview (saját paletta, Lora font)
+- Aloldalon: részletes weboldal konfigurátor
 
-**Megjelenés:** Scroll reveal animáció, szekciók között gap.
+**Megjelenés:** Scroll reveal animáció, szekciók között gap. Kártyák alatt semleges, tárgyilagos leíró szöveg (HU/DE/EN).
 
 **Érzés:** *"Várj, ez tényleg működik? Ilyet akarok."*
 
@@ -135,9 +137,9 @@ Nem kell külön bizalom-szekció (nincs referencia, garancia, számok). **Az ol
 - Építés — "Közben bármikor szólhatsz."
 - Átadás — "Nem hagylak magadra."
 
-NEM linkel a /folyamat aloldalra — ennyi elég a főoldalon.
+NEM linkel a /tudnivalok aloldalra — ennyi elég a főoldalon.
 
-**Aloldalon (/folyamat):** Részletesebb verzió, több infóval minden lépésnél.
+**Aloldalon (/tudnivalok):** Részletesebb verzió, több infóval (nem csak 4 lépés, hanem teljes bemutató: működés, lehetőségek, közös munka).
 
 **Interaktív:** Kattintható node-ok, animált flow — pont mint a workflow demó.
 
@@ -180,8 +182,7 @@ NEM linkel a /folyamat aloldalra — ennyi elég a főoldalon.
     [ Beszéljünk → ]  ← ez visz a /kapcsolat oldalra
 ```
 
-**Amelia buborék:** Véletlenszerű mondatok nyelvfüggően (több variációból választ minden látogatásnál).
-Pl. HU: "Hali! Mesélj, miben gondolkodsz?" / "Na, mi jár a fejedben?" / "Norbi megint elküldött dolgozni... szóval itt vagyok neked 😤"
+**Amelia buborék:** Véletlenszerű mondatok nyelvfüggően (10 variációból választ minden látogatásnál). Lásd AMELIA_MONDATOK.md.
 
 **CTA gomb:** Nyelvfüggő — HU: "Beszéljünk →", DE: "Lass uns reden →", EN: "Let's talk →"
 
@@ -193,13 +194,17 @@ Pl. HU: "Hali! Mesélj, miben gondolkodsz?" / "Na, mi jár a fejedben?" / "Norbi
 - Nő, 20-as évek, fiatalos, láza energia
 - AI-generált realisztikus arc (avatár)
 - **Személyiség:** ironikus, szókimondó, "hatalmas forma", vannak beszólásai, veszi a lapot, benne van a hülyéskedésben
+- **Stílus:** önirónia, saját helyzetéről mesél (nem a látogató felé személyeskedik), színfalak mögötti bepillantás, Norbi-t szidja szeretettel, pozitív hangulat
+- **Emojik:** csak arckifejezések (😂😅😌😤🙄🥲), csak mondatok végén
+- **Tegez**
+- **Nem sales, nem manipulál**
 - **Norbi-val való viszony:** szidja a háta mögött viccelődve (pl. "én is itt gubbasztok mert Norbi ezt a feladatot adta nekem... ő meg biztos lazul valahol 😂")
 - **De komoly is tud lenni** — amikor kell, profi és segítőkész
 - **Megszólítás:** először magáz, aztán átvált tegezésre ha a látogató is tegez
 - **Tudás:** bármiről beszél, de mindig visszatereli a témát az Iverso-ra
 - **Okossága:** valódi AI (API hívás), nem előre megírt válaszok
 - **Terelés:** nincs üzenet limit, de természetesen tereli a beszélgetést Norbi felé amikor konkrét lesz
-- **Átadás:** módja még nyitott (email/webhook/admin felület)
+- **Átadás:** email értesítés Norbinak ha konkrét az érdeklődő
 - Nyelvfüggő stílus
 
 **Norbi eredeti megfogalmazása Ameliáról (szó szerint):**
@@ -228,10 +233,10 @@ SCROLL →
 [  IVERSO        ]  ← parázs halványul, felirat megjelenik
 [  Let's build   ]
 [  ..............  ]  ← átmenet feketébe
-[  ● Dashboard   ]  ← mini demó előzetes → kattintásra morph → aloldal
-[  ● AI Chat     ]  ← mini demó előzetes → kattintásra morph → aloldal
-[  ● Workflow    ]  ← mini demó előzetes → kattintásra morph → aloldal
-[  ● Weboldal    ]  ← mini demó előzetes → kattintásra morph → aloldal
+[  ● Dashboard   ]  ← mini demó előzetes → kattintásra → aloldal
+[  ● AI Chat     ]  ← mini demó előzetes → kattintásra → aloldal
+[  ● Workflow    ]  ← mini demó előzetes → kattintásra → aloldal
+[  ● Weboldal    ]  ← mini demó előzetes → kattintásra → aloldal
 [  ..............  ]
 [  ⚙ FOLYAMAT    ]  ← 3-4 interaktív node (MIT → HOGYAN híd)
 [  ..............  ]
@@ -247,13 +252,7 @@ SCROLL →
 
 ### Közös aloldal design elv: "Élő háttér mindenhol"
 
-Az aloldalak IS kapnak particle effektet — ugyanaz a parázs rendszer mint a hero-ban, csak visszafogottabb.
-A tartalom van előtérben, de a háttér lélegzik, van mélysége, nem "halott".
-
-**Háttér:** Parázs particles + narancs radial gradient felülről.
-- **Gépen:** Three.js particles (visszafogott intenzitás)
-- **Mobilon:** Canvas 2D particles (visszafogott intenzitás)
-- Egy rendszer, "intensity" paraméterrel: hero = erős, aloldalak = gyenge
+Az aloldalak IS kapnak particle effektet — Canvas 2D particle háttér + naplemente gradient (ugyanaz mint a főoldalon).
 
 ### Közös aloldal struktúra
 
@@ -262,8 +261,8 @@ Minden szolgáltatás aloldal (/dashboardok, /ai, /automatizacio, /weboldalak) u
 ```
 ┌──────────────────────────────────────────────┐
 │  1. SUB-HERO                                 │
-│     • Tag badge (szolgáltatás színében)       │
-│     • Cím (nagy, Syne, fehér)                │
+│     • Tag badge (narancs)                    │
+│     • Cím (nagy, Roboto 700, fehér)          │
 │     • Alcím/leírás (szürke, max 480px)       │
 │     • Radial gradient háttér                 │
 │                                              │
@@ -364,11 +363,7 @@ Minden szolgáltatás aloldal (/dashboardok, /ai, /automatizacio, /weboldalak) u
 
 **Interaktív demó:**
 - Workflow vizualizáció böngésző keretben
-- Node szám és komplexitás VÁLTOZIK slider szintenként:
-  - Egyedül: 3-4 egyszerű node (Űrlap → Mentés → Email → Válasz)
-  - Kis csapat: 5-6 node, elágazásokkal
-  - Több részleg: 8+ node, több rendszer, monitoring
-  - Komoly szervezet: komplex hálózat, párhuzamos ágak, audit
+- Node szám és komplexitás VÁLTOZIK slider szintenként
 - SVG vonalak kötik össze a node-okat
 - Hover-re: tooltip (rövid leírás)
 - Kattintásra: node kinyit (részletes leírás)
@@ -418,19 +413,14 @@ A látogató valós időben építi a saját weboldalát. A preview élőben rea
 
 ---
 
-### /folyamat — részletes felépítés
+### /tudnivalok — részletes felépítés
 
 **Sub-hero:**
-- Tag nincs (ez nem szolgáltatás, hanem folyamat)
-- Cím: pl. "Hogyan dolgozom"
+- Tag nincs (ez nem szolgáltatás)
+- Cím: HU "Hogyan dolgozom" / DE "So arbeite ich" / EN "How I work"
 - Alcím: "4 lépés az ötlettől a kész megoldásig."
 
-**Tartalom:** 4 lépés, mindegyik részletesen kifejtve:
-
-1. **Beszélgetés** — Mire van szükség, mi a cél, mi a felesleges. Ebből lesz a terv alapja.
-2. **Tervezés** — Váz, felület, logika — minden látható mielőtt bármi épülne. Itt még könnyű változtatni.
-3. **Építés** — A megoldás készül, közben bármikor belenézhetsz. Semmi meglepetés a végén.
-4. **Átadás** — Kész megoldás, betanítással. Utána sem marad kérdés megválaszolatlanul.
+**Tartalom:** Kibővített verzió — nem csak a 4 lépés, hanem teljes bemutató: működés, lehetőségek, közös munka. A konkrét tartalom Réteg 5-nél készül el.
 
 **Interaktív:** Kattintható node-ok, animált flow vonalak — részletesebb verzió mint a főoldalon.
 
@@ -460,6 +450,7 @@ Az előzetesek (főoldal) és az aloldalak **közös építőkockákat** haszná
 | WorkflowNode | 3 db, adat flow animáció | 3-10+ db, slider változtatja (egyedül: kevés, nagyvállalat: komplex) |
 | MiniWebsite | 1 db, loader animáció | 1 db, konfigurátor változtatja |
 | CompanySizeSlider | NINCS (csak aloldalon) | Van (mind a 4 szolgáltatás aloldalon!) |
+| DemoCard | Egységes keret mind a 4 preview-nak | NINCS (csak főoldalon) |
 
 **KpiCard részletek:**
 - Többféle számformátum: €, %, db, +/-
@@ -503,23 +494,20 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 - **Nyelvváltás:** automatikus böngésző nyelv alapján + váltó gomb
 
 ### Navigáció
-- Hero-nál (parázs): nav NINCS, a nyelvváltó gomb egyedül látszik jobb felső sarokban
-- Scrollra: diszkrét nav sáv besúszik felülről (menü linkek + nyelvváltó)
-- Visszagörgetésre a hero-hoz: nav eltűnik, csak nyelvváltó marad
-- **Nav formátum:**
-  ```
-  IVERSO    Szolgáltatások▾    Folyamat    Kapcsolat    HU▾
-  ```
-  - Szolgáltatások dropdown: Dashboardok, AI, Automatizáció, Weboldalak
-  - Folyamat = "hogyan dolgozom" (nem szolgáltatás, külön menüpont)
-  - Mobilon: hamburger menü (fullscreen overlay)
+- **Gépen: MINDIG látható** (scroll-aware kikapcsolva)
+- Menüpontok: Dashboardok · AI · Automatizáció · Weboldalak · Tudnivalók | Kapcsolat | HU EN DE
+- Szolgáltatások kibontva (nincs dropdown)
+- Kapcsolat gomb: E stílus (outline + halvány narancs tint + shadow)
+- Nyelvváltó: 3 külön gomb (HU EN DE), nem dropdown
+- IVERSO logó: 2.3rem, #D96A08
+- **1350px alatt:** hamburger menü (fullscreen overlay, menüpontok + nyelvváltó)
 
 ### Styling
 - **CSS Modules** — minden komponens saját CSS-e, nevek nem ütköznek
 
 ### Hero technológia
 - **Gépen:** Three.js — teljes 3D parázs particle rendszer
-- **Mobilon:** CSS + Canvas 2D — ugyanaz a hangulat, könnyebb, touch-kompatibilis
+- **Mobilon:** Canvas 2D — ugyanaz a hangulat, könnyebb, touch-kompatibilis
 - **Automatikus váltás** eszköz alapján
 - Parázs részecskék az IVERSO felirat körül
 - Hover: felerősödik, kattintás/tap: szétrobban
@@ -534,7 +522,7 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 - Nő, 20-as évek, AI-generált realisztikus avatár
 - Először magáz, átvált tegezésre ha a látogató is tegez
 - Valódi AI mögötte (API hívás) — bármiről beszél, visszaterel Iverso-ra
-- Átadás módja Norbinak: még nyitott
+- Átadás módja: email értesítés Norbinak
 
 ### Footer
 - Minimális: Impressum + Adatvédelem linkek
@@ -554,14 +542,14 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 - Visszagörgetésre nem resetelődik (csak teszteléskor)
 
 ### Élő érzés a demókban
-- Az előzetesek is mozognak/reagálnak a főoldalon — konkrétumokat gépen tervezzük
+- Az előzetesek is mozognak/reagálnak a főoldalon
 
 ### Domain
 - **iverso.info**
 
-### Folyamat oldal
+### Tudnivalók oldal
 - Főoldalon: rövid, 4 interaktív node (demók és építős szekció között)
-- Aloldalon (/folyamat): részletes verzió
+- Aloldalon (/tudnivalok): részletes bemutató (kibővítve: működés, lehetőségek, közös munka)
 - Stílus: workflow demó-szerű interaktív node-ok
 - **4 lépés:** Beszélgetés → Tervezés → Építés → Átadás
 
@@ -569,18 +557,15 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 
 ## Gépen megbeszélendő — előkészített döntések
 
-### 1. 3D háttér effekt ✅ ELDÖNTVE
-- **"Ultra mély" gradient** kiválasztva (iverso-gradient-v2.html, D verzió)
-- Drámai narancs radial gradient felülről, több mélységi réteg, vignette, film grain, lélegző fény
-- Közepes intenzitás, nem reagál egérre, végig ugyanaz
-- Finomhangolás VS Code-ban
+### 1. Háttér ✅ ELDÖNTVE
+- **Naplemente stílusú gradient** — narancs fényoszlop középen, barna mélység mögötte, vignette széleken
+- background-attachment: fixed
+- Canvas 2D particle háttér felette (radial gradient sprite + additív blending)
 
 ### 2. Parázs hero ✅ ELDÖNTVE
-- Működő prototípus kész (iverso-parazs-hero.html)
 - **Gépen:** Three.js particle rendszer
-- **Mobilon:** CSS + Canvas 2D (a prototípus alapján fut)
+- **Mobilon:** Canvas 2D
 - Parázs részecskék az IVERSO felirat körül, hover erősödik, kattintásra szétrobban
-- Finomhangolás VS Code-ban
 
 ### 3. Scroll animációk ✅ ELDÖNTVE
 - **2. jelenet (IVERSO felirat):** Depth fade — elmosódásból élesedik, mélyből jön
@@ -592,48 +577,26 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 
 ### 4. Mini demó előzetesek mozgása ✅ ELDÖNTVE
 - **Gépen:** élnek amíg a képernyőn vannak:
-  - Dashboard: számok felpörögnek + bar chart animálódik, folyamatosan mozog
-  - AI Chat: beszélgetés lejátszódik (typing indicator → üzenetek), loop
+  - Dashboard: 5 oldalas ciklikus animáció (Áttekintés, Termékek, Rendelések, Naptár, Riportok)
+  - AI Chat: két panel (külső + belső chatbot), gyorsválasz gombok
   - Automatizáció: adat végigfolyik a node-okon (Email → Feldolgozás → Adatbázis → Értesítés)
-  - Weboldal: mini böngésző progresszíven "betöltődik"
-- **Mobilon:** belépő animáció (pl. számok felszámlálnak), utána statikusak
-- Finomhangolás VS Code-ban
+  - Weboldal: világos krém pékség téma, progresszív betöltés
+- **Mobilon:** belépő animáció, utána statikusak
 
 ### 5. Weboldal demó formátum ✅ ELDÖNTVE
-- **Konfigurátor** — valódi builder érzés, a látogató úgy érezze mintha tényleg most építené a weboldalát
-- **CompanySizeSlider:** igen, itt IS van — először slider (komplexitás), aztán konfigurátor
+- **Konfigurátor** — valódi builder érzés
+- **CompanySizeSlider:** igen, itt IS van
 - **Vezérlők:** tab rendszer (Alap | Tartalom | Layout | Effekt)
-  - Mobilon: fent preview (~60%), alul tab-os vezérlők (~40%)
-  - Gépen: fent tab-ok, alatta nagy preview
-- **Konfigurálható elemek:**
-  - Sötét/világos mód
-  - Stílus (modern, minimal, bold, classic)
-  - Színvilág (meleg, hűvös, élénk, pasztell)
-  - Iparág (5-6, ikonos gombok: kés-villa=étterem, olló=fodrász, stb.)
-  - Font választó
-  - Layout (hero pozíció, oszlopok, menü helye)
-  - Szekciók ki-be kapcsolása (toggle-ök)
-  - Animáció stílus (fade, slide, zoom — élőben látja)
-  - CTA gomb szöveg szerkesztés
-  - Eszköz váltó (desktop/tablet/mobil nézet)
-- Preview élőben reagál minden váltásra (nincs Apply gomb)
-- Végén: "Tetszik? Beszéljünk róla!" → Ameliához, beállítások átmennek
-- Finomhangolás VS Code-ban
 
 ### 6. Építős szekció ✅ ELDÖNTVE
-- **8+ blokk** — igazi építés érzés, a látogató húzza/tappolja a rácsba
-- Blokkok **szabadon** rakhatók — bárhova, nincs látható rács, snap-el a helyére
-- Blokkok kinézete: **különböző narancs árnyalatok** (variáció)
-- **Ha nem interaktál:** a pattogó blokk egész addig hívogatja ("Húzz be!")
-- Morph animáció **időzítve** indul — pár mp után magától, nem kell gomb
-- **Morph eredmény:** vegyes mini felület — chat buborék + grafikon + KPI kártya + workflow node (minden szolgáltatás 1-1 elem)
-- Finomhangolás és prototípus VS Code-ban
+- **8+ blokk** — igazi építés érzés
+- Blokkok **szabadon** rakhatók, snap-el a helyére
+- Morph animáció **időzítve** indul
+- **Morph eredmény:** vegyes mini felület
 
 ### 7. Loading / Intro ✅ ELDÖNTVE
-- **Mit lát:** IVERSO logó halványan + narancs szikrák pattognak a képernyő alján (érintsd meg → szikrázik)
-- **Átmenet:** szikrák felgyűlnek középre → IVERSO felirat kialakul belőlük → parázs hero indul
-- **Időtartam:** 2 mp (mindig, gyors neten is — nem fake loading, hanem intro animáció)
-- Finomhangolás VS Code-ban
+- **Időtartam:** 2 mp (mindig)
+- Szikrák felgyűlnek középre → IVERSO felirat kialakul → parázs hero indul
 
 ---
 
@@ -641,8 +604,7 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 - [ ] Impressum + Adatvédelem tartalom megírása (implementációkor)
 - [ ] Amelia mögötti AI provider (OpenAI/Anthropic/más — később döntjük el)
 - [ ] Cookie-Banner + Analitika (készülünk rá, implementációkor kerül be)
-- [ ] OG sharing image finomhangolás gépen (parázs hero screenshot, fekete háttér)
-- [ ] Háttér gradient finomhangolás gépen
+- [ ] OG sharing image finomhangolás (parázs hero screenshot, fekete háttér)
 
 ## Eldöntve (Réteg 6)
 - ✅ Loading/Intro: 2 mp szikrás intro — jó ahogy van
@@ -654,8 +616,18 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 - ✅ OG meta tags: nyelvfüggő cím/leírás, parázs hero screenshot
 - ✅ Fordítások: HU/DE/EN — külön fájlban (IVERSO_TRANSLATIONS.md)
 - ✅ /automatizacio alcím: n8n referencia törölve
-- ✅ /folyamat szövegek: semleges, tárgyilagos hangnem
+- ✅ /tudnivalok szövegek: semleges, tárgyilagos hangnem
 - ✅ /ai demó chatbot: 6 kérdés-válasz pár megírva
+- ✅ Háttér gradient: naplemente stílus
+- ✅ Canvas 2D particle háttér: radial gradient sprite + additív blending
+- ✅ Font: Roboto 700 (display), korábban Syne → Playfair Display → Roboto 700
+- ✅ Navbar: gépen mindig látható, szolgáltatások kibontva, hamburger 1350px
+
+---
+
+## Szövegírási stílus
+- **Általános:** Semleges, tárgyilagos, hétköznapi nyelv. NEM sales, NEM személyeskedés, NEM kérdések, NEM feltételes mód, NEM manipuláció. Folyó szöveg, nem felsorolás. "Lexikonszerű de nem száraz."
+- **Amelia:** Önirónia, saját helyzetéről mesél. Színfalak mögötti bepillantás, pozitív hangulat, Norbi-t szidja szeretettel. Nem sales, nem manipulál.
 
 ---
 

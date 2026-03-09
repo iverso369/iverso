@@ -1,6 +1,6 @@
 # IVERSO — Projekt Napló
 
-> Utolsó frissítés: 2026.03.08
+> Utolsó frissítés: 2026.03.09
 
 ---
 
@@ -30,15 +30,15 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 - **Fontok:** Roboto 700 (display/címek), DM Sans 400/500 (body) — self-hosted woff2
 - **Ikonok:** SVG thin line (1.5px stroke, currentColor)
 - **Emojik:** nincsenek sehol (kivéve Amelia)
-- **Háttér:** "Ultra mély" gradient
+- **Háttér:** Naplemente stílusú gradient (narancs fényoszlop közepén, barna mélység, vignette széleken) + Canvas 2D particle háttér (radial gradient sprite-ok, additív blending, hero szín szinkron)
 - **Custom kurzor:** narancssárgás pont + trail (egész oldalon, mobilon nincs)
 
 ---
 
 ## Szövegírási stílus
 
-- **Általános:** Semleges, tárgyilagos, hétköznapi nyelv. NEM sales, NEM személyeskedés, NEM kérdések, NEM feltételes mód, NEM manipuláció. Egyszerű bemutató ami leírja mi a dolog és mit csinál. Nem a látogató helyébe képzeli magát. Folyó szöveg, nem felsorolás.
-- **Amelia:** Önirónia, saját helyzetéről mesél (nem a látogató felé személyeskedik). Színfalak mögötti bepillantás, pozitív hangulat, Norbi-t szidja szeretettel. Emojik csak arckifejezések (😂😅😌😤🙄🥲), csak mondatok végén. Tegez. Nem sales, nem manipulál.
+- **Általános:** Semleges, tárgyilagos, hétköznapi nyelv. NEM sales, NEM személyeskedés, NEM kérdések, NEM feltételes mód, NEM manipuláció. Folyó szöveg, nem felsorolás.
+- **Amelia:** Önirónia, saját helyzetéről mesél. Színfalak mögötti bepillantás, pozitív hangulat, Norbi-t szidja szeretettel. Emojik csak arckifejezések, csak mondatok végén. Tegez. Nem sales, nem manipulál.
 
 ---
 
@@ -49,6 +49,7 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 - **Routing:** react-router-dom
 - **i18n:** react-i18next (HU/DE/EN)
 - **Hero:** Three.js (desktop) + Canvas 2D (mobil)
+- **Háttér particlek:** Canvas 2D (radial gradient sprite + additív blending)
 - **Scroll:** Intersection Observer API
 - **Deploy:** GitHub → Vercel (auto-deploy)
 - **Fontok:** Roboto 700 + DM Sans 400/500, self-hosted woff2 (GDPR)
@@ -63,13 +64,16 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 
 ### Réteg 4 — Jelenetek 🔄 FOLYAMATBAN
 - ✅ Minden preview komponens kész (Dashboard, AI, Automation, Website)
-- ✅ Navbar végleges (flex + absolute menü + absolute nyelv)
+- ✅ Navbar végleges
 - ✅ P23 tartalmi szövegek, P12 pozíció csere, P22 szín tompítás, P18 Amelia mondatok
-- ✅ P24 "Let's build something" méretezés, P25 navbar, P27 preview fontok
+- ✅ P24 "Let's build something" méretezés + responsive
+- ✅ P25 navbar végleges
+- ✅ P27 preview fontok
+- ✅ P30 háttér gradient (naplemente stílus)
+- ✅ Canvas 2D particle háttér (radial gradient sprite + additív blending + hero szín szinkron)
 - ⬜ P26: Preview szövegek vizuális beágyazás
 - ⬜ P28: Amelia szekció vizuális újratervezés
-- ⬜ P29: Kétoldalt üres — hiányzik az élet
-- ⬜ P30: Háttér átdolgozás
+- ⬜ P29: Kétoldalt üres — nézd meg most a particle háttérrel
 - ⬜ P7: Építős szekció újratervezés
 - ⬜ P8: Folyamat finomhangolás
 - ⬜ P16: IVERSO parázs a CTA fölé — végére parkolva
@@ -85,26 +89,14 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 **Repo:** github.com/iverso369/iverso — aktív
 **Deploy:** iverso-orpin.vercel.app
 
-**Amit most csinálunk:** Réteg 4 — navbar kész. Következő: P26-P30 design döntések.
+**Amit most csinálunk:** Réteg 4 — Canvas 2D particle háttér KÉSZ. Következő: P26/P28/P29 vizuális javítások vagy P7 építős újratervezés.
 
 ---
 
-## Döntések (03.06)
+## Döntések (03.09)
 
-- **Font:** Playfair Display → Roboto 700
-- **Navbar gomb:** E stílus (outline + tint + shadow)
-- **P23 szövegek:** Semleges, tárgyilagos, hétköznapi nyelv. Preview kártyák alá.
-- **"Folyamat" → "Tudnivalók"** — Route: /folyamat → /tudnivalok
-- **Kapcsolat gomb:** solid narancs → E stílus
-- **Amelia stílus:** Önirónia, saját helyzetéről mesél. 10 mondat HU/DE/EN.
-
-## Döntések (03.08)
-
-- **Navbar végleges:** flex sor + menüpontok absolute középen + nyelvváltó absolute jobb szélre
-- **IVERSO navbar logó:** 2.3rem, #D96A08 (sötétebb narancs)
-- **Menüpont keretek:** border körbe, hover narancs
-- **Nyelvváltó:** 3 gomb (HU EN DE), dropdown megszűnt
-- **Navbar responsive:** 1200px alatt hamburger
+- **Canvas 2D particle háttér:** Radial gradient sprite-ok + additív blending (`globalCompositeOperation: 'lighter'`). 600-800 részecske, nagyon alacsony opacity (0.03-0.15), átfedésnél fény összeadódik. Szín palette szinkronban a Three.js hero-val.
+- **Particle megközelítés tanulság:** ctx.arc() + glow kör = konfetti. Radial gradient sprite + additív blending = parázs. A rajzolási technika számít, nem a paraméterek finomhangolása.
 
 ---
 

@@ -1,6 +1,6 @@
 # IVERSO — Fordítások és demó tartalmak
 
-> Utolsó frissítés: 2026.03.05
+> Utolsó frissítés: 2026.03.09
 
 ---
 
@@ -35,15 +35,16 @@ A főoldali dashboard demó egy **pékség** belső rendszerét mutatja — éle
 
 ## Navigáció
 
+A navbar-ban a szolgáltatások kibontva jelennek meg (nincs dropdown).
+
 | HU | DE | EN |
 |---|---|---|
-| Szolgáltatások | Leistungen | Services |
-| Tudnivalók | Wissenswertes | Good to know |
-| Kapcsolat | Kontakt | Contact |
 | Dashboardok | Dashboards | Dashboards |
 | AI | AI | AI |
 | Automatizáció | Automatisierung | Automation |
 | Weboldalak | Webseiten | Websites |
+| Tudnivalók | Wissenswertes | Good to know |
+| Kapcsolat | Kontakt | Contact |
 
 ---
 
@@ -152,7 +153,7 @@ A főoldali dashboard demó egy **pékség** belső rendszerét mutatja — éle
 
 ---
 
-## Hogyan dolgozom (/folyamat) oldal
+## Tudnivalók (/tudnivalok) oldal
 
 | HU | DE | EN |
 |---|---|---|

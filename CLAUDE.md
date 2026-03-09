@@ -30,16 +30,17 @@ Nincs személyes "rólam" rész — a munka beszél.
 ## Tech stack
 
 ```
-Framework:      Vite + React (SPA)
-Nyelv:          TypeScript
-Styling:        CSS Modules
-Routing:        react-router-dom
-i18n:           react-i18next (HU/DE/EN)
-Hero (gépen):   Three.js (3D parázs particle rendszer)
-Hero (mobilon): CSS + Canvas 2D (könnyebb, ugyanaz a hangulat)
-Scroll:         Intersection Observer API
-Fontok:         Syne (display) + DM Sans (body) — Google Fonts
-Deploy:         GitHub → Vercel (auto-deploy)
+Framework:        Vite + React (SPA)
+Nyelv:            TypeScript
+Styling:          CSS Modules
+Routing:          react-router-dom
+i18n:             react-i18next (HU/DE/EN)
+Hero (gépen):     Three.js (3D parázs particle rendszer)
+Hero (mobilon):   Canvas 2D (könnyebb, ugyanaz a hangulat)
+Háttér particlek: Canvas 2D (radial gradient sprite + additív blending)
+Scroll:           Intersection Observer API
+Fontok:           Roboto 700 (display) + DM Sans 400/500 (body) — self-hosted woff2 (GDPR)
+Deploy:           GitHub → Vercel (auto-deploy)
 ```
 
 ### Projekt struktúra
@@ -50,18 +51,15 @@ iverso/
 ├── src/
 │   ├── components/
 │   │   ├── ui/              # Közös építőkockák
-│   │   │   ├── KpiCard.tsx
-│   │   │   ├── KpiCard.module.css
-│   │   │   ├── ChatBubble.tsx
-│   │   │   ├── ChatBubble.module.css
-│   │   │   ├── WorkflowNode.tsx
-│   │   │   ├── WorkflowNode.module.css
-│   │   │   ├── MiniWebsite.tsx
-│   │   │   ├── MiniWebsite.module.css
-│   │   │   ├── CompanySizeSlider.tsx
-│   │   │   └── CompanySizeSlider.module.css
-│   │   ├── hero/            # Parázs hero (Three.js + Canvas 2D)
-│   │   ├── nav/             # Navigáció (scroll-aware)
+│   │   │   ├── KpiCard.tsx (+.module.css)
+│   │   │   ├── ChatBubble.tsx (+.module.css)
+│   │   │   ├── WorkflowNode.tsx (+.module.css)
+│   │   │   ├── MiniWebsite.tsx (+.module.css)
+│   │   │   ├── CompanySizeSlider.tsx (+.module.css)
+│   │   │   └── DemoCard.tsx (+.module.css)
+│   │   ├── hero/            # Parázs hero (Three.js)
+│   │   ├── background/      # BackgroundParticles (Canvas 2D, mindig fut)
+│   │   ├── nav/             # Navigáció (gépen mindig látható)
 │   │   ├── demos/           # 4 mini demó előzetes (főoldal)
 │   │   │   ├── DashboardPreview.tsx
 │   │   │   ├── AiChatPreview.tsx
@@ -79,7 +77,7 @@ iverso/
 │   │   ├── AI.tsx           # /ai
 │   │   ├── Automation.tsx   # /automatizacio
 │   │   ├── Websites.tsx     # /weboldalak
-│   │   ├── Process.tsx      # /folyamat
+│   │   ├── GoodToKnow.tsx   # /tudnivalok (korábban /folyamat)
 │   │   ├── Contact.tsx      # /kapcsolat (Amelia)
 │   │   ├── Impressum.tsx    # /impressum
 │   │   └── Privacy.tsx      # /adatvedelem
@@ -103,6 +101,12 @@ iverso/
 ├── IVERSO_BUILD_PLAN.md
 ├── IVERSO_TRANSLATIONS.md
 ├── IVERSO_NAPLO.md
+├── IVERSO_JAVITAS_TERV.md
+├── RETEG_1_NAPLO.md
+├── RETEG_2_NAPLO.md
+├── RETEG_3_NAPLO.md
+├── RETEG_4_NAPLO.md
+├── Képernyőkép_*.png        # Régi projekt referencia képek (nem az aktuális oldal!)
 ├── package.json
 ├── tsconfig.json
 ├── vite.config.ts
@@ -125,16 +129,25 @@ iverso/
 **NINCS más szín.** A szolgáltatásokat nem szín különbözteti meg, hanem az interaktív tartalom.
 
 ### Háttér
-"Ultra mély" gradient — végig ugyanaz:
-- Drámai narancs radial gradient felülről
-- Több mélységi réteg, vignette, film grain, lélegző fény
-- Közepes intenzitás, NEM reagál egérre
+Naplemente stílusú gradient:
+- Narancs fényoszlop középen (a kártyák szélességében)
+- Barna mélység mögötte, széles szétterülés
+- Vignette a széleken (75%-tól halványodik, 93%-nál fekete)
+- background-attachment: fixed
+- NEM reagál egérre
+
+Canvas 2D particle háttér felette:
+- BackgroundParticles.tsx — position: fixed, z-index: 1, pointer-events: none
+- Radial gradient sprite-ok + additív blending (globalCompositeOperation: 'lighter')
+- Szín szinkronban a Three.js hero palettájával
+- Mindig fut, minden oldalon
 
 ### Fontok
-- **Syne** — display (címsorok, hero, CTA), weight: 600-800
-- **DM Sans** — body (szövegtörzs), weight: 300-500
-- IVERSO felirat: Syne, 800, narancs
-- "Let's build something": Syne, 600, szürke — MINDIG angolul
+- **Roboto 700** — display (címsorok, hero, CTA, nav)
+- **DM Sans** — body (szövegtörzs), weight: 400-500
+- IVERSO felirat: Three.js parázs particle rendszer (nem CSS font)
+- "Let's build something": Roboto 700, szürke — MINDIG angolul
+- IVERSO navbar logó: 2.3rem, #D96A08 (sötétebb narancs)
 
 ### Ikonok
 SVG thin line: 1.5px stroke, currentColor
@@ -152,12 +165,13 @@ SVG thin line: 1.5px stroke, currentColor
 - `WorkflowNode` — hover: tooltip, kattintás: kinyit, adat flow animáció (narancs glow)
 - `MiniWebsite` — böngésző keret (macOS dot-ok), nyelvfüggő URL sáv
 - `CompanySizeSlider` — húzós sáv, 4 szint, instant váltás (nincs animált átmenet)
+- `DemoCard` — egységes preview kártya keret (méret, cím, alcím, "Tovább" link)
 
 ### 2. réteg: demos/ — Főoldali előzetesek
-- `DashboardPreview` → 2-3 KpiCard, gépen: folyamatos animáció, mobilon: statikus
-- `AiChatPreview` → 1 ChatBubble + typing, gépen: loop, mobilon: statikus
-- `AutomationPreview` → 3 WorkflowNode + adat flow, gépen: folyamatos, mobilon: statikus
-- `WebsitePreview` → 1 MiniWebsite + progresszív betöltés
+- `DashboardPreview` → sidebar + KPI kártyák + táblázat, 5 oldalas ciklikus animáció
+- `AiChatPreview` → két panel (külső + belső chatbot), gyorsválasz gombok, input
+- `AutomationPreview` → 4 WorkflowNode + adat flow animáció
+- `WebsitePreview` → világos krém pékség téma (saját paletta, Lora font)
 
 ### 3. réteg: pages/ — Aloldalak
 - `Dashboards` → KpiCard-ok + CompanySizeSlider + sidebar + táblázat
@@ -183,9 +197,13 @@ SVG thin line: 1.5px stroke, currentColor
 - Reduced motion: egyszerűsített animációk (prefers-reduced-motion)
 
 ### Navigáció
-- Hero-nál: NINCS nav — csak nyelvváltó jobb felül
-- Scrollra: nav besúszik felülről
-- Visszagörgetés hero-hoz: nav eltűnik
+- **Gépen: MINDIG látható** (scroll-aware kikapcsolva)
+- Menüpontok: Dashboardok · AI · Automatizáció · Weboldalak · Tudnivalók | Kapcsolat | HU EN DE
+- Szolgáltatások kibontva (nincs dropdown)
+- Kapcsolat gomb: E stílus (outline + halvány narancs tint + shadow)
+- Nyelvváltó: 3 külön gomb (HU EN DE), nem dropdown
+- **1350px alatt:** hamburger menü (fullscreen overlay)
+- Mobilon: hamburger → overlay (menüpontok + nyelvváltó)
 
 ---
 
@@ -200,9 +218,7 @@ SVG thin line: 1.5px stroke, currentColor
 ```
 
 ### Háttér — aloldalak
-Ugyanaz a parázs rendszer mint a hero, de visszafogottabb (intensity paraméter).
-- Gépen: Three.js (gyenge)
-- Mobilon: Canvas 2D (gyenge)
+Canvas 2D particle háttér + naplemente gradient (ugyanaz mint a főoldalon).
 
 ### CompanySizeSlider szintek (mind a 4 aloldalon)
 1. Egyedül
@@ -227,10 +243,23 @@ Ugyanaz a parázs rendszer mint a hero, de visszafogottabb (intensity paraméter
 
 Karakter, nem "chatbot". Főoldalon ízelítő (random mondat + gomb), /kapcsolat-on teljes chat.
 - Személyiség: ironikus, szókimondó, "hatalmas forma"
+- Önirónia, saját helyzetéről mesél, színfalak mögötti bepillantás
+- Norbi-t szidja szeretettel, pozitív hangulat
+- Emojik: csak arckifejezések (😂😅😌😤🙄🥲), csak mondatok végén
+- Tegez
+- Nem sales, nem manipulál
 - Először magáz, átvált tegezésre ha a látogató is tegez
 - Valódi AI (API hívás) — provider még nem eldöntött
 - Átadás Norbinak: email értesítés
+- 10 véletlenszerű mondat HU/DE/EN (lásd AMELIA_MONDATOK.md)
 - Részletek: IVERSO_STORYBOARD.md 6. jelenet
+
+---
+
+## Szövegírási stílus
+
+- **Általános:** Semleges, tárgyilagos, hétköznapi nyelv. NEM sales, NEM személyeskedés, NEM kérdések, NEM feltételes mód, NEM manipuláció. Folyó szöveg, nem felsorolás. "Lexikonszerű de nem száraz."
+- **Amelia:** Lásd fent.
 
 ---
 
@@ -261,6 +290,12 @@ Karakter, nem "chatbot". Főoldalon ízelítő (random mondat + gomb), /kapcsola
 5. Ne dönts a nyitott kérdésekben
 6. Ne találj ki dolgokat amik nincsenek a storyboardban
 7. Ne használj más színt mint a 3 (+szürke) megadott szín
+
+---
+
+## Referencia képek
+
+A repo gyökerében lévő `Képernyőkép_*.png` fájlok a **régi projektből** származnak. Ezek vizuális referenciaként szolgálnak — az IVERSO parázs felirat, az izzó hatás, a hover interakció kinézetéhez. **NEM a jelenlegi oldal képernyőképei.**
 
 ---
 
