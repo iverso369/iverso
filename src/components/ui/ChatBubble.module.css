@@ -40,17 +40,15 @@
 }
 
 .bot .bubble {
-  background: #1e1e24;
+  background: #1a1a1f;
   border-bottom-left-radius: 4px;
 }
 
 .user .bubble {
-  background: var(--accent);
+  background: rgba(247, 127, 10, 0.07);
+  border: 1px solid rgba(247, 127, 10, 0.12);
+  box-shadow: 0 0 12px rgba(247, 127, 10, 0.06);
   border-bottom-right-radius: 4px;
-}
-
-.user .text {
-  color: #fff;
 }
 
 /* ── avatar ── */
