@@ -262,6 +262,7 @@
 .overlayLangSwitcher {
   position: static;
   transform: none;
+  display: flex !important;
 }
 
 /* ========================================
