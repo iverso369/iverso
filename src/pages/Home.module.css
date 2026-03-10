@@ -43,7 +43,7 @@
 .demosSection {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 70px;
   padding: 100px 24px;
   width: 65vw;
   margin: 0 auto;
