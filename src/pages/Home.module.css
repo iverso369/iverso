@@ -185,7 +185,7 @@
 
 .cinemaTop {
   position: relative;
-  min-height: 320px;
+  min-height: 280px;
   background: #0d0d0f;
 }
 
@@ -195,11 +195,20 @@
   left: 0;
   right: 0;
   padding: 24px 28px;
-  background: linear-gradient(180deg, rgba(13,13,15,0.95) 0%, rgba(13,13,15,0.7) 50%, transparent 100%);
+  background: linear-gradient(180deg,
+    rgba(13, 13, 15, 0.95) 0%,
+    rgba(13, 13, 15, 0.7) 50%,
+    transparent 100%
+  );
   z-index: 2;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  pointer-events: none;
+}
+
+.cinemaOverlay > * {
+  pointer-events: auto;
 }
 
 .cinemaTitle {
@@ -218,7 +227,7 @@
 
 .cinemaDemo {
   width: 100%;
-  min-height: 320px;
+  min-height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
