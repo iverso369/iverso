@@ -1,6 +1,6 @@
 /* === KÁRTYA ALAP === */
 .card {
-  width: 85vw;
+  width: 78vw;
   max-width: 1100px;
   margin: 0 auto;
   background: rgba(17, 17, 19, 0.85);
@@ -95,6 +95,13 @@
   justify-content: center;
   min-height: 380px;
   padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.demo > * {
+  width: 100%;
+  max-width: 100%;
 }
 
 .borderLeft {
