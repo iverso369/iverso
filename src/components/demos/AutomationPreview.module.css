@@ -55,7 +55,7 @@
   height: 24px;
   margin: 0 2px;
   flex-shrink: 1;
-  min-width: 10px;
+  min-width: 24px;
 }
 
 .connectorVertical {
