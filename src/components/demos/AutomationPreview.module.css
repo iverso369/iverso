@@ -31,6 +31,8 @@
   justify-content: center;
   overflow: hidden;
   padding: 20px;
+  transform: scale(0.85);
+  transform-origin: center center;
 }
 
 /* ── node group (node + connector pair) ── */
