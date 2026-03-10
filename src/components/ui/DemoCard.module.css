@@ -16,6 +16,8 @@
 .grid {
   display: grid;
   min-height: clamp(320px, 28vw, 500px);
+  padding: clamp(10px, 0.8vw, 16px);
+  gap: clamp(10px, 0.8vw, 16px);
 }
 
 /* Info bal oldalon */
@@ -97,6 +99,7 @@
   padding: clamp(16px, 1.5vw, 32px);
   position: relative;
   overflow: hidden;
+  border-radius: clamp(8px, 0.6vw, 12px);
 }
 
 .demo > div {
@@ -105,11 +108,9 @@
 }
 
 .borderLeft {
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .borderRight {
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* === RESPONSIVE (768px alatt) === */
@@ -119,9 +120,6 @@
   }
 
   .demo {
-    border-left: none !important;
-    border-right: none !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
     min-height: 280px;
     order: 2;
   }
