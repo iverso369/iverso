@@ -5,7 +5,6 @@ import DashboardPreview from '../components/demos/DashboardPreview'
 import AiChatPreview from '../components/demos/AiChatPreview'
 import AutomationPreview from '../components/demos/AutomationPreview'
 import WebsitePreview from '../components/demos/WebsitePreview'
-import ProcessSection from '../components/process/ProcessSection'
 import BuilderSection from '../components/builder/BuilderSection'
 import CtaSection from '../components/cta/CtaSection'
 import Footer from '../components/footer/Footer'
@@ -13,7 +12,6 @@ import useIntersection from '../hooks/useIntersection'
 import styles from './Home.module.css'
 
 export default function Home() {
-  const process = useIntersection({ threshold: 0.15 })
   const cta = useIntersection({ threshold: 0.15 })
   const footer = useIntersection({ threshold: 0.15 })
 
@@ -80,11 +78,6 @@ export default function Home() {
         </DemoCard>
 
       </div>
-
-      {/* 4. jelenet: Folyamat — node sequence */}
-      <section ref={process.ref} className={styles.processScene}>
-        <ProcessSection animated={!process.isVisible} />
-      </section>
 
       {/* 5. jelenet: Építős — block drop */}
       <section className={styles.builderScene}>
