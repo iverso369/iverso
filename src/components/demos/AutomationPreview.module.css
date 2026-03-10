@@ -132,6 +132,8 @@
 @media (max-width: 768px) {
   .workflow {
     flex-direction: column;
+    align-items: center;
+    gap: 0;
     padding: 16px 12px;
   }
 
