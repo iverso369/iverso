@@ -158,3 +158,12 @@
 .ctaButton:active {
   transform: scale(0.98);
 }
+
+/* Twemoji inline emojik */
+.chatBody :global(img.emoji) {
+  height: 1.2em;
+  width: 1.2em;
+  margin: 0 0.05em 0 0.1em;
+  vertical-align: -0.2em;
+  display: inline;
+}
