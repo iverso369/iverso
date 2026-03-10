@@ -89,7 +89,7 @@
 .splitLink {
   display: inline-block;
   align-self: flex-start;
-  margin-top: auto;
+  margin-top: 20px;
   color: #F77F0A;
   font-family: var(--font-body);
   font-weight: 500;
@@ -151,7 +151,7 @@
 .cardFooter {
   padding: 22px 28px;
   border-top: 1px solid #1a1a1f;
-  background: rgba(8, 8, 10, 0.5);
+  background: rgba(8, 8, 10, 0.7);
   display: flex;
   gap: 20px;
 }
@@ -159,7 +159,7 @@
 .cardFooterAccent {
   width: 2px;
   flex-shrink: 0;
-  background: linear-gradient(180deg, transparent, rgba(247,127,10,0.66), transparent);
+  background: linear-gradient(180deg, transparent, rgba(247,127,10,0.85), transparent);
   border-radius: 1px;
 }
 
