@@ -122,6 +122,18 @@
   border-color: var(--accent);
 }
 
+/* ── mobile: smaller nodes ── */
+
+@media (max-width: 768px) {
+  .body {
+    padding: 10px 14px;
+  }
+
+  .title {
+    font-size: 12px;
+  }
+}
+
 /* ── reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
