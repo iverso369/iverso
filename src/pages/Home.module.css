@@ -49,14 +49,6 @@
   z-index: 1;
 }
 
-/* ── 4. jelenet: Folyamat — node sequence ── */
-
-.processScene {
-  position: relative;
-  z-index: 1;
-  padding: 100px 0;
-}
-
 /* ── 5. jelenet: Építős — block drop ── */
 
 .builderScene {
