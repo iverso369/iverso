@@ -127,19 +127,16 @@
   }
 }
 
-/* ── mobile scaling ── */
+/* ── mobile: vertical layout ── */
 
 @media (max-width: 768px) {
   .workflow {
-    transform: scale(0.7);
-    transform-origin: center center;
+    flex-direction: column;
+    padding: 16px 12px;
   }
-}
 
-@media (max-width: 480px) {
-  .workflow {
-    transform: scale(0.55);
-    transform-origin: center center;
+  .nodeGroup {
+    flex-direction: column;
   }
 }
 
