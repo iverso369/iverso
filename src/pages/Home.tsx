@@ -7,7 +7,6 @@ import DashboardPreview from '../components/demos/DashboardPreview'
 import AiChatPreview from '../components/demos/AiChatPreview'
 import AutomationPreview from '../components/demos/AutomationPreview'
 import WebsitePreview from '../components/demos/WebsitePreview'
-import TextSection from '../components/ui/TextSection'
 import ProcessSection from '../components/process/ProcessSection'
 import BuilderSection from '../components/builder/BuilderSection'
 import CtaSection from '../components/cta/CtaSection'
@@ -35,34 +34,33 @@ export default function Home() {
       {/* 3. jelenet: 4 demó előzetes — új sorrend + layoutok */}
       <section className={styles.demosSection}>
 
-        {/* 1. Dashboard — STANDARD (DemoCard, mint eddig) */}
+        {/* 1. Dashboard — STANDARD + card-footer */}
         <DemoCard
           titleKey="dashboards.title"
           subtitleKey="dashboards.subtitle"
           linkTo="/dashboardok"
+          footer={
+            <div className={styles.cardFooter}>
+              <div className={styles.cardFooterAccent} />
+              <p>{t('demos.dashboard.description')}</p>
+            </div>
+          }
         >
           <DashboardPreview />
         </DemoCard>
-
-        <TextSection>
-          <p>{t('demos.dashboard.description')}</p>
-        </TextSection>
 
         {/* 2. AI Chat — SPLIT (szöveg bal, demo jobb) */}
         <div className={styles.splitCard}>
           <div className={styles.splitInfo}>
             <h2 className={styles.splitTitle}>{t('ai.title')}</h2>
             <p className={styles.splitSubtitle}>{t('ai.subtitle')}</p>
+            <p className={styles.splitDescription}>{t('demos.ai.description')}</p>
             <Link to="/ai" className={styles.splitLink}>{t('demos.more')}</Link>
           </div>
           <div className={styles.splitDemo}>
             <AiChatPreview />
           </div>
         </div>
-
-        <TextSection>
-          <p>{t('demos.ai.description')}</p>
-        </TextSection>
 
         {/* 3. Weboldal — FORDÍTOTT SPLIT (demo bal, szöveg jobb) */}
         <div className={styles.reverseSplitCard}>
@@ -72,31 +70,30 @@ export default function Home() {
           <div className={styles.splitInfo}>
             <h2 className={styles.splitTitle}>{t('websites.title')}</h2>
             <p className={styles.splitSubtitle}>{t('websites.subtitle')}</p>
+            <p className={styles.splitDescription}>{t('demos.websites.description')}</p>
             <Link to="/weboldalak" className={styles.splitLink}>{t('demos.more')}</Link>
           </div>
         </div>
 
-        <TextSection>
-          <p>{t('demos.websites.description')}</p>
-        </TextSection>
-
-        {/* 4. Automatizáció — CINEMA OVERLAY (demo kitölti, cím overlay) */}
+        {/* 4. Automatizáció — CINEMA OVERLAY + card-footer */}
         <div className={styles.cinemaCard}>
-          <div className={styles.cinemaOverlay}>
-            <div>
-              <h2 className={styles.cinemaTitle}>{t('automation.title')}</h2>
-              <p className={styles.cinemaSubtitle}>{t('automation.subtitle')}</p>
+          <div className={styles.cinemaTop}>
+            <div className={styles.cinemaOverlay}>
+              <div>
+                <h2 className={styles.cinemaTitle}>{t('automation.title')}</h2>
+                <p className={styles.cinemaSubtitle}>{t('automation.subtitle')}</p>
+              </div>
+              <Link to="/automatizacio" className={styles.splitLink}>{t('demos.more')}</Link>
             </div>
-            <Link to="/automatizacio" className={styles.splitLink}>{t('demos.more')}</Link>
+            <div className={styles.cinemaDemo}>
+              <AutomationPreview />
+            </div>
           </div>
-          <div className={styles.cinemaDemo}>
-            <AutomationPreview />
+          <div className={styles.cardFooter}>
+            <div className={styles.cardFooterAccent} />
+            <p>{t('demos.automation.description')}</p>
           </div>
         </div>
-
-        <TextSection>
-          <p>{t('demos.automation.description')}</p>
-        </TextSection>
 
       </section>
 

@@ -7,9 +7,10 @@ interface DemoCardProps {
   subtitleKey: string
   linkTo: string
   children: React.ReactNode
+  footer?: React.ReactNode
 }
 
-export default function DemoCard({ titleKey, subtitleKey, linkTo, children }: DemoCardProps) {
+export default function DemoCard({ titleKey, subtitleKey, linkTo, children, footer }: DemoCardProps) {
   const { t } = useTranslation()
 
   return (
@@ -25,6 +26,8 @@ export default function DemoCard({ titleKey, subtitleKey, linkTo, children }: De
       <div className={styles.content}>
         {children}
       </div>
+
+      {footer}
     </div>
   )
 }
