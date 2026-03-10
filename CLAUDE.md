@@ -67,7 +67,7 @@ iverso/
 │   │   │   └── WebsitePreview.tsx
 │   │   ├── process/         # Folyamat szekció (node-ok)
 │   │   ├── builder/         # Építős interaktív szekció
-│   │   ├── cta/             # Amelia ízelítő
+│   │   ├── cta/             # Amélia ízelítő
 │   │   └── footer/          # Footer
 │   ├── layouts/
 │   │   └── SubpageLayout.tsx  # Közös aloldal keret
@@ -153,7 +153,7 @@ Canvas 2D particle háttér felette:
 SVG thin line: 1.5px stroke, currentColor
 
 ### Emojik
-**NINCSENEK** — sehol az oldalon, kivéve Amelia chat üzenetei (ő használhat)
+**NINCSENEK** — sehol az oldalon, kivéve Amélia chat üzenetei (ő használhat)
 
 ---
 
@@ -165,7 +165,7 @@ SVG thin line: 1.5px stroke, currentColor
 - `WorkflowNode` — hover: tooltip, kattintás: kinyit, adat flow animáció (narancs glow)
 - `MiniWebsite` — böngésző keret (macOS dot-ok), nyelvfüggő URL sáv
 - `CompanySizeSlider` — húzós sáv, 4 szint, instant váltás (nincs animált átmenet)
-- `DemoCard` — egységes preview kártya keret (méret, cím, alcím, "Tovább" link)
+- `DemoCard` — egységes preview kártya keret (split grid layout, info blokk: cím+alcím+leírás+Tovább, demo blokk, váltakozó pozíció, 4 variáció: info-left/right + wide-demo/normal)
 
 ### 2. réteg: demos/ — Főoldali előzetesek
 - `DashboardPreview` → sidebar + KPI kártyák + táblázat, 5 oldalas ciklikus animáció
@@ -181,15 +181,14 @@ SVG thin line: 1.5px stroke, currentColor
 
 ---
 
-## Főoldal — 7 jelenet
+## Főoldal — 6 jelenet
 
 1. **PARÁZS** — Three.js (gép) / Canvas 2D (mobil), hover+kattintás interakció
 2. **IVERSO FELIRAT** — depth fade animáció, parázs halványul de marad
-3. **4 DEMÓ ELŐZETES** — stagger rise, "Tovább →" morph animáció aloldalra
-4. **FOLYAMAT** — 4 node (Beszélgetés→Tervezés→Építés→Átadás), node sequence animáció
-5. **ÉPÍTŐS** — 8+ drag/tap blokk, morph → mini dashboard, block drop animáció
-6. **CTA** — Amelia buborék (random mondat), glow reveal + bubble pop
-7. **FOOTER** — Impressum + Adatvédelem + ©, simple fade
+3. **4 DEMÓ ELŐZETES** — DemoCard split layout, sorrend: Dashboard→Weboldal→AI→Automatizáció, demo pozíció: JOBB→BAL→JOBB→BAL
+4. **ÉPÍTŐS** — 8+ drag/tap blokk, morph → mini dashboard, block drop animáció
+5. **CTA** — Amélia buborék (random mondat), glow reveal + bubble pop
+6. **FOOTER** — Impressum + Adatvédelem + ©, simple fade
 
 ### Scroll animációk
 - Intersection Observer, threshold 0.15, egyszer triggerelődik
@@ -239,7 +238,7 @@ Canvas 2D particle háttér + naplemente gradient (ugyanaz mint a főoldalon).
 
 ---
 
-## Amelia
+## Amélia
 
 Karakter, nem "chatbot". Főoldalon ízelítő (random mondat + gomb), /kapcsolat-on teljes chat.
 - Személyiség: ironikus, szókimondó, "hatalmas forma"
@@ -259,13 +258,13 @@ Karakter, nem "chatbot". Főoldalon ízelítő (random mondat + gomb), /kapcsola
 ## Szövegírási stílus
 
 - **Általános:** Semleges, tárgyilagos, hétköznapi nyelv. NEM sales, NEM személyeskedés, NEM kérdések, NEM feltételes mód, NEM manipuláció. Folyó szöveg, nem felsorolás. "Lexikonszerű de nem száraz."
-- **Amelia:** Lásd fent.
+- **Amélia:** Lásd fent.
 
 ---
 
 ## Nyitott kérdések — NE dönts helyette!
 
-- [ ] Amelia AI provider (OpenAI / Anthropic / más)
+- [ ] Amélia AI provider (OpenAI / Anthropic / más)
 - [ ] Impressum + Adatvédelem tartalom
 - [ ] Cookie-Banner implementáció
 
@@ -281,12 +280,13 @@ Karakter, nem "chatbot". Főoldalon ízelítő (random mondat + gomb), /kapcsola
 5. CSS Modules — minden komponensnek saját .module.css
 6. TypeScript — típusok mindenhol
 7. "Ne nyúlj hozzá" → NE nyúlj hozzá
+8. Minden elem reszponzív legyen a böngésző ablak méretéhez — ha kicsinyítve van az ablak, az oldal igazodjon hozzá. Fix pixel méretek helyett használj clamp(), vw, %, flex-shrink, min-width: 0 megoldásokat.
 
 ### SOHA NE
 1. Ne hagyj `console.log`-ot
 2. Ne változtass fájlokat amit nem kértek
 3. Ne telepíts dependency-t amit nem kértek
-4. Ne használj emojit az oldalon (kivéve Amelia chat üzenetei)
+4. Ne használj emojit az oldalon (kivéve Amélia chat üzenetei)
 5. Ne dönts a nyitott kérdésekben
 6. Ne találj ki dolgokat amik nincsenek a storyboardban
 7. Ne használj más színt mint a 3 (+szürke) megadott szín
@@ -303,7 +303,7 @@ A repo gyökerében lévő `Képernyőkép_*.png` fájlok a **régi projektből*
 
 Lásd: IVERSO_BUILD_PLAN.md
 
-① Alap → ② Háttér+Hero → ③ Komponensek → ④ Főoldal → ⑤ Aloldalak → ⑥ Amelia → ⑦ Polish
+① Alap → ② Háttér+Hero → ③ Komponensek → ④ Főoldal → ⑤ Aloldalak → ⑥ Amélia → ⑦ Polish
 
 ---
 

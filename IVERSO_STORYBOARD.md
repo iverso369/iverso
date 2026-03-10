@@ -18,7 +18,7 @@ Nem kell külön bizalom-szekció (nincs referencia, garancia, számok). **Az ol
 ## Vizuális szabályok
 - **3 szín**: fekete (#0A0A0C), fehér (#EDEDF0), narancs (#F77F0A)
 - **Ikonok**: SVG thin line (1.5px stroke, currentColor)
-- **Emojik**: nincsenek sehol az oldalon (kivéve Amelia chat üzenetei — ő használhat)
+- **Emojik**: nincsenek sehol az oldalon (kivéve Amélia chat üzenetei — ő használhat)
 - **Fontok**: Roboto 700 (display), DM Sans 400/500 (body)
 - **Háttér**: #0A0A0C + **naplemente stílusú gradient** — narancs fényoszlop középen, barna mélység mögötte, vignette a széleken. Nem reagál egérre. background-attachment: fixed. + **Canvas 2D particle háttér** (radial gradient sprite-ok, additív blending, Three.js hero palettájával szinkronban, mindig fut).
 - **Szürke:** #88889A (másodlagos szöveg, pl. "Let's build something")
@@ -38,19 +38,18 @@ A repo gyökerében lévő `Képernyőkép_*.png` fájlok a **régi projektből*
 ### Főoldal (scroll élmény)
 1. Parázs (hero)
 2. IVERSO + "Let's build something"
-3. 4 mini demó előzetes (dashboard, AI, automatizáció, weboldal)
-4. Folyamat — rövid (hogyan dolgozom, 3-4 interaktív node)
-5. Építős interaktív szekció
-6. CTA — Amelia ízelítő
-7. Footer (minimális)
+3. 4 mini demó előzetes (dashboard, weboldal, AI, automatizáció)
+4. Építős interaktív szekció
+5. CTA — Amélia ízelítő
+6. Footer (minimális)
 
 ### Aloldalak
 - **/dashboardok** — részletes demó + CompanySizeSlider
 - **/ai** — részletes AI demó + CompanySizeSlider
 - **/automatizacio** — részletes workflow demó + CompanySizeSlider (node szám változik szintenként)
 - **/weboldalak** — CompanySizeSlider (komplexitás) + weboldal konfigurátor
-- **/tudnivalok** — részletes bemutató oldal (korábban /folyamat — kibővítve: működés, lehetőségek, közös munka)
-- **/kapcsolat** — Amelia teljes chat
+- **/tudnivalok** — részletes bemutató oldal: hogyan dolgozom (teljes folyamat), működés, lehetőségek, közös munka. A főoldalról kikerült folyamat szekció IDE kerül kibővítve. Új menüpont kell hozzá (a "Tudnivalók" nem elég egyértelmű).
+- **/kapcsolat** — Amélia teljes chat
 - **/impressum** — kötelező (Nebengewerbe)
 - **/adatvedelem** — kötelező (Datenschutz)
 
@@ -100,7 +99,7 @@ A repo gyökerében lévő `Képernyőkép_*.png` fájlok a **régi projektből*
 
 **Elrendezés:** 4 nagy mini demó egymás alatt, egyforma vizuális súllyal. Mindegyik tartalmaz: cím + leíró szöveg + mini verziót a demóból + "Tovább →" ami megnyitja a részletes aloldalt.
 
-**Sorrend:** Dashboard → AI → Automatizáció → Weboldal (fix)
+**Sorrend:** Dashboard → Weboldal → AI → Automatizáció (fix, JOBB→BAL→JOBB→BAL demo pozíció)
 
 **A 4 demó (sorrend nem fontossági — mind egyforma):**
 
@@ -171,13 +170,13 @@ NEM linkel a /tudnivalok aloldalra — ennyi elég a főoldalon.
 
 ---
 
-## 6. jelenet — CTA (Amelia ízelítő)
+## 6. jelenet — CTA (Amélia ízelítő)
 **Mi látszik:**
 ```
     Van egy ötleted?
     Építsük meg.
 
-    [Amelia chat buborék: random mondat — minden látogatásnál más]
+    [Amélia chat buborék: random mondat — minden látogatásnál más]
 
     [ Beszéljünk → ]  ← ez visz a /kapcsolat oldalra
 ```
@@ -186,10 +185,10 @@ NEM linkel a /tudnivalok aloldalra — ennyi elég a főoldalon.
 
 **CTA gomb:** Nyelvfüggő — HU: "Beszéljünk →", DE: "Lass uns reden →", EN: "Let's talk →"
 
-**A főoldalon:** Csak ízelítő — Amelia mond egy mondatot + gomb a teljes chat-hez.
-**A /kapcsolat oldalon:** Amelia teljes képernyőn él, van helye a beszélgetésnek.
+**A főoldalon:** Csak ízelítő — Amélia mond egy mondatot + gomb a teljes chat-hez.
+**A /kapcsolat oldalon:** Amélia teljes képernyőn él, van helye a beszélgetésnek.
 
-**Amelia jellemzői:**
+**Amélia jellemzői:**
 - Norbi "társa" — nem egy chatbot, hanem egy **karakter**
 - Nő, 20-as évek, fiatalos, láza energia
 - AI-generált realisztikus arc (avatár)
@@ -242,7 +241,7 @@ SCROLL →
 [  ..............  ]
 [  🧱 ÉPÍTS!     ]  ← interaktív blokk építés → morph → mini dashboard
 [  ..............  ]
-[  💬 Amelia     ]  ← CTA ízelítő → /kapcsolat
+[  💬 Amélia     ]  ← CTA ízelítő → /kapcsolat
 [  — footer —    ]
 ```
 
@@ -334,7 +333,7 @@ Minden szolgáltatás aloldal (/dashboardok, /ai, /automatizacio, /weboldalak) u
 - Szabad input mező + küldés gomb
 - Beállítás panel: iparág, hangnem, nyelv — ezek befolyásolják a chatbot viselkedését
 - Typing indicator (3 pont pulzál + bot neve)
-- Előre megírt válaszok a demóban (nem valódi AI — az Amelia az)
+- Előre megírt válaszok a demóban (nem valódi AI — az Amélia az)
 
 **Demó chatbot kérdés-válasz párok:**
 1. "Mire jó?" → "Képzeld el, hogy éjjel 2-kor ír neked egy ügyfél, és valaki azonnal, kedvesen válaszol neki. Nem te — hanem egy chatbot ami ismeri a szolgáltatásaidat, az áraid, a nyitvatartásod. Reggel már csak a konkrét érdeklődőkkel kell foglalkoznod."
@@ -426,9 +425,9 @@ A látogató valós időben építi a saját weboldalát. A preview élőben rea
 
 ---
 
-### /kapcsolat — Amelia teljes chat
+### /kapcsolat — Amélia teljes chat
 
-Lásd: 6. jelenet (Amelia) — teljes képernyős chat, nem csak ízelítő.
+Lásd: 6. jelenet (Amélia) — teljes képernyős chat, nem csak ízelítő.
 
 ---
 
@@ -516,9 +515,9 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 - Nincs külön szekció — az oldal minősége maga a bizalom
 
 ### CTA
-- Főoldalon: Amelia ízelítő + gomb a /kapcsolat-ra
-- /kapcsolat oldalon: Amelia teljes chat
-- Amelia: karakter, nem chatbot — ironikus, szókimondó, hülyéskedik, de tud komoly lenni
+- Főoldalon: Amélia ízelítő + gomb a /kapcsolat-ra
+- /kapcsolat oldalon: Amélia teljes chat
+- Amélia: karakter, nem chatbot — ironikus, szókimondó, hülyéskedik, de tud komoly lenni
 - Nő, 20-as évek, AI-generált realisztikus avatár
 - Először magáz, átvált tegezésre ha a látogató is tegez
 - Valódi AI mögötte (API hívás) — bármiről beszél, visszaterel Iverso-ra
@@ -572,7 +571,7 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 - **3. jelenet (Demó kártyák):** Stagger rise — egymás után emelkednek fel, 0.12s késleltetéssel
 - **4. jelenet (Folyamat):** Node sequence — node-ok sorban kipattannak + összekötő vonal kitöltődik
 - **5. jelenet (Építős):** Block drop — blokkok fentről beesnek enyhe forgással
-- **6. jelenet (CTA/Amelia):** Glow reveal + Bubble pop — lágy izzó felfedés, chat buborék kipattan
+- **6. jelenet (CTA/Amélia):** Glow reveal + Bubble pop — lágy izzó felfedés, chat buborék kipattan
 - **7. jelenet (Footer):** Simple fade
 
 ### 4. Mini demó előzetesek mozgása ✅ ELDÖNTVE
@@ -602,13 +601,13 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 
 ## Még nyitott kérdések
 - [ ] Impressum + Adatvédelem tartalom megírása (implementációkor)
-- [ ] Amelia mögötti AI provider (OpenAI/Anthropic/más — később döntjük el)
+- [ ] Amélia mögötti AI provider (OpenAI/Anthropic/más — később döntjük el)
 - [ ] Cookie-Banner + Analitika (készülünk rá, implementációkor kerül be)
 - [ ] OG sharing image finomhangolás (parázs hero screenshot, fekete háttér)
 
 ## Eldöntve (Réteg 6)
 - ✅ Loading/Intro: 2 mp szikrás intro — jó ahogy van
-- ✅ Amelia átadás: email értesítés ha konkrét az érdeklődő
+- ✅ Amélia átadás: email értesítés ha konkrét az érdeklődő
 - ✅ "Mire jó — mire nem" szöveges szekciók: TÖRÖLVE — a demó magáért beszél
 - ✅ Nyelvfüggő cégnevek a demókban (HU/DE/EN)
 - ✅ Performance: React lazy, code splitting, Three.js csak gépen, WebP, font preload
@@ -627,7 +626,7 @@ Ha módosítod a Dashboard aloldalt → az előzetes nem törik el.
 
 ## Szövegírási stílus
 - **Általános:** Semleges, tárgyilagos, hétköznapi nyelv. NEM sales, NEM személyeskedés, NEM kérdések, NEM feltételes mód, NEM manipuláció. Folyó szöveg, nem felsorolás. "Lexikonszerű de nem száraz."
-- **Amelia:** Önirónia, saját helyzetéről mesél. Színfalak mögötti bepillantás, pozitív hangulat, Norbi-t szidja szeretettel. Nem sales, nem manipulál.
+- **Amélia:** Önirónia, saját helyzetéről mesél. Színfalak mögötti bepillantás, pozitív hangulat, Norbi-t szidja szeretettel. Nem sales, nem manipulál.
 
 ---
 

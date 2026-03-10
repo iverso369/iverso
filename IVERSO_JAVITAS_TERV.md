@@ -1,7 +1,7 @@
 # IVERSO — Javítási terv
 
 > 2026.03.03 — Első vizuális review után
-> Frissítve: 2026.03.09
+> Frissítve: 2026.03.10
 
 ---
 
@@ -14,7 +14,7 @@
 | 3 | DashboardPreview újra — sidebar + KPI + táblázat | ✅ kész |
 | 4 | AiChatPreview — két panel, input, gyorsválasz | ✅ kész |
 | 5 | WebsitePreview — v2 A világos krém pékség | ✅ kész + szín tompítva |
-| 6 | AutomationPreview — node-ok mindig láthatók | ✅ kész |
+| 6 | AutomationPreview — node-ok mindig láthatók | ✅ kész + flex reszponzív (gépen OK) |
 | 7 | Építős szekció javítás | ⬜ újratervezés lesz |
 | 8 | Folyamat finomhangolás | ⬜ |
 | 9 | "Tovább" gombok beépítése | ✅ kész |
@@ -37,6 +37,8 @@
 | 27 | WebsitePreview + AiChatPreview fontok | ✅ kész |
 | 30 | Háttér gradient (naplemente) | ✅ kész |
 | 31 | Canvas 2D particle háttér | ✅ kész (radial gradient sprite + additív blending + hero szín szinkron) |
+| 32 | DemoCard teljes újraépítés (split rendszer, arányos, padding, keret) | ✅ kész |
+| 33 | AutomationPreview flex reszponzív (node-ok zsugorodnak) | ✅ kész (gépen ellenőrizve, OK) |
 
 ---
 
@@ -47,17 +49,19 @@ DemoCard újraépítés → P8 → P7 → P16
 | Sorrend | # | Feladat | Állapot |
 |---------|---|---------|---------|
 | 1. | JAVITAS_01 | DemoCard preview kártyák teljes újraépítés (egységes split rendszer) | ✅ kész |
-| 2. | P8 | Folyamat finomhangolás | ⬜ |
+| 1a. | JAVITAS_01_FINOM | Arányos méretezés (clamp), kártya keret, belső padding, demo bg | ✅ kész |
+| 1b. | JAVITAS_01_AUTO | AutomationPreview flexibilis node-ok + connector gap | ✅ kész (gépen OK) |
+| 2. | P8 | Folyamat szekció | ✅ DÖNTÉS: főoldalról eltávolítva. A /tudnivalok aloldalon lesz részletesen (Réteg 5). |
 | 3. | P7 | Építős szekció újratervezés | ⬜ (legnagyobb falat) |
 | 4. | P16 | IVERSO parázs a CTA fölé | ⬜ végére parkolva |
 
-## Új ötletek (03.09 — átbeszélve, döntés este gépen)
+## Régi ötletek (03.09) — LEZÁRVA
 
 | Ötlet | Leírás | Állapot |
 |-------|--------|---------|
-| Preview sorrend | Dashboard → AI → Weboldal → Automatizáció (Norbi preferencia) | ⬜ döntés kell |
-| Építős pozíció | AI preview után berakni — megtöri a monoton ritmust | ⬜ döntés kell ("Let's build something" kontextus?) |
-| AutomationPreview | Jelenlegi túl gyenge, újratervezés kell (nem csak finomhangolás) | ⬜ koncepció kell |
+| Preview sorrend | Dashboard → Weboldal → AI → Automatizáció | ✅ eldöntve |
+| Építős pozíció | AI preview után berakni | ⬜ P7-nél döntjük el |
+| AutomationPreview | Újratervezés → split layout lett | ✅ megoldva |
 
 ## Layout döntések (03.10 — VÉGLEGES)
 
@@ -75,5 +79,8 @@ Leírás szöveg: mindig az info oldalon (cím+alcím+leírás+Tovább együtt)
 TextSection: TÖRÖLVE — nincs szükség rá
 Card-footer: TÖRÖLVE — a leírás az info blokkban van
 Cinema overlay: TÖRÖLVE — az Automatizáció is split lett
-Kártyák között: 70px gap
-Egységes: border, border-radius 16px, box-shadow, padding
+Kártyák között: clamp(50px, 5vw, 90px) gap
+Egységes: border rgba(255,255,255,0.1), border-radius 16px, box-shadow, belső padding (.grid-en)
+Kártya háttér: rgba(20, 20, 22, 0.9), demo háttér: transparent
+Minden méret clamp() alapú (viewport-hoz arányos)
+Reszponzív: böngésző ablak méretéhez igazodik. Telós asztali nézet NEM prioritás.

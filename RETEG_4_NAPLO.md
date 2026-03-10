@@ -1,12 +1,12 @@
 # Réteg 4 — Jelenetek (Napló)
 
-> Utolsó frissítés: 2026.03.09
+> Utolsó frissítés: 2026.03.10
 
 ---
 
 ## Mit tartalmaz ez a réteg
 
-Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
+Főoldal 6 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 
 | # | Feladat | Állapot |
 |---|---------|---------|
@@ -15,9 +15,9 @@ Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 | 3 | AiChatPreview (3. jelenet) | ✅ újratervezve, kész |
 | 4 | AutomationPreview (3. jelenet) | ✅ javítva, kész |
 | 5 | WebsitePreview (3. jelenet) | ✅ újratervezve, szín tompítva |
-| 6 | Folyamat szekció (4. jelenet) | ⚠️ implementálva, finomhangolás kell |
-| 7 | Építős szekció (5. jelenet) | ⬜ újratervezés lesz |
-| 8 | CTA + Footer (6-7. jelenet) | ✅ implementálva, Amélia mondatok frissítve |
+| 6 | Folyamat szekció | ✅ ELTÁVOLÍTVA a főoldalról → /tudnivalok aloldal (Réteg 5) |
+| 7 | Építős szekció (4. jelenet) | ⬜ újratervezés lesz |
+| 8 | CTA + Footer (5-6. jelenet) | ✅ implementálva, Amélia mondatok frissítve |
 | 9 | Home.tsx összeszerelés | ✅ implementálva |
 | 10 | Navbar mindig látható (gépen) | ✅ kész |
 | 11 | Hero magasság ~50vh | ✅ kész |
@@ -157,6 +157,8 @@ Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 | 03.10 | Sorrend: Dashboard → Weboldal → AI → Automatizáció |
 | 03.10 | Demo pozíció: JOBB → BAL → JOBB → BAL (váltakozik) |
 | 03.10 | Dashboard + Automatizáció: szélesebb demo (2.2fr), AI + Weboldal: normál (1.6fr) |
+| 03.10 | DÖNTÉS: Folyamat szekció (P8) ELTÁVOLÍTVA a főoldalról. A /tudnivalok aloldalon lesz részletesen kifejtve (Réteg 5). Új menüpont kell a folyamatnak — a "Tudnivalók" nem elég egyértelmű. |
+| 03.10 | SZABÁLY: Minden elem reszponzív a böngésző ablak méretéhez. Telós asztali nézet NEM prioritás — desktop (böngésző ablak) + későbbi mobil nézet (Réteg 7) a fontos. |
 
 ---
 
@@ -178,7 +180,9 @@ Főoldal 7 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 - 🔄 **P26/FIX3: Cinema overlay + 70px gap** — implementálva, cinema MEGINT nem jó
 - ✅ **P26/FIX4: Noto emoji** — 73 SVG self-hosted
 - ✅ **P28: Amélia CTA** — V1 chat ablak, implementálva
-- ✅ **JAVITAS_01: DemoCard újraépítés** — teljes preview szekció nulláról, egységes split rendszer + arányos méretezés + belső padding + keret erősítés — KÉSZ
-- ⬜ **P8: Folyamat finomhangolás** — vizuálisan gyenge, keret/sötétítő zóna kell
+- ✅ **JAVITAS_01: DemoCard újraépítés** — teljes preview szekció nulláról, egységes split rendszer + arányos méretezés + belső padding + keret erősítés + demo bg eltávolítás — KÉSZ
+- ✅ **AutomationPreview mobilon:** telón asztali nézetben a node-ok kilógtak. Végső fix: flexibilis node-ok (min-width: 0, overflow: hidden, flex-shrink: 1) + connector min-width: 24px + kisebb node padding/font. Telón asztali nézetben elfogadható. **Gépen ellenőrizve, OK.**
+- ⬜ **P8: Folyamat szekció** — ELTÁVOLÍTVA a főoldalról. A tartalom a /tudnivalok aloldalra kerül (Réteg 5). Prompt kell: Home.tsx-ből a folyamat szekció JSX + CSS törlése.
 - ⬜ **P7: Építős szekció újratervezés** — legnagyobb falat
 - ⬜ **P16: IVERSO parázs a CTA fölé** — végére parkolva
+- ⬜ **Új menüpont:** A "Tudnivalók" átnevezése vagy új menüpont a folyamatnak — Réteg 5-nél döntjük el

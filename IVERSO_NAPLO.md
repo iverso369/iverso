@@ -1,6 +1,6 @@
 # IVERSO — Projekt Napló
 
-> Utolsó frissítés: 2026.03.09
+> Utolsó frissítés: 2026.03.10
 
 ---
 
@@ -78,9 +78,10 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 - ✅ Automatizáció cinema overlay → megoldva DemoCard split-tel
 - ✅ Dashboard/Automatizáció card-footer → megoldva (leírás info blokkban)
 - ✅ Weboldal split Tovább gomb pozíció → megoldva (egységes info blokk)
+- ✅ P8: Folyamat szekció → ELTÁVOLÍTVA a főoldalról, /tudnivalok aloldalra kerül (Réteg 5)
 - ⬜ P7: Építős szekció újratervezés
-- ⬜ P8: Folyamat finomhangolás
 - ⬜ P16: IVERSO parázs a CTA fölé — végére parkolva
+- ⬜ Új menüpont a folyamatnak (Réteg 5-nél döntjük el)
 
 ### Réteg 5 — Aloldalak ⬜ vár
 ### Réteg 6 — Amélia ⬜ vár
@@ -93,29 +94,38 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 **Repo:** github.com/iverso369/iverso — aktív
 **Deploy:** iverso-orpin.vercel.app
 
-**Amit most csinálunk:** Réteg 4 — DemoCard preview kártyák ✅ KÉSZ (teljes újraépítés, egységes split rendszer, arányos méretezés, belső padding, keret). Következő: P8 Folyamat szekció, P7 Építős szekció újratervezés.
+**Amit most csinálunk:** Réteg 4 — DemoCard preview kártyák ✅ KÉSZ. AutomationPreview ✅ gépen OK. Folyamat szekció ✅ döntés: eltávolítva a főoldalról. Következő: P8_TORLES prompt (folyamat szekció törlése Home.tsx-ből), P7 Építős szekció újratervezés.
 
 ---
 
 ## Döntések (03.10)
 
 - **Amélia ékezettel:** A karakter neve AMÉLIA (nem Amelia). Minden projekt fájlban és kódbázisban javítva.
-- **TextSection TÖRÖLVE a preview szekciókból.** A leíró szöveg a kártyákon BELÜL van:
-  - AI split: bal oldalon (cím+alcím+leírás+Tovább)
-  - Weboldal split: jobb oldalon (cím+alcím+leírás+Tovább)
-  - Dashboard: card-footer (C stílus: accent vonal + sötétebb háttér)
-  - Automatizáció: card-footer (C stílus)
-- **Card-footer C stílus:** accent vonal bal + sötétebb háttér (`rgba(8,8,10,0.5)`)
-- **Preview kártyák között 70px gap**
+- **DemoCard preview kártyák:** Teljes újraépítés. Mind a 4 kártya split layout, egységes vizuális rendszer.
+  - Sorrend: Dashboard → Weboldal → AI → Automatizáció
+  - Demo pozíció: JOBB → BAL → JOBB → BAL (váltakozik)
+  - Dashboard + Automatizáció: szélesebb demo (2.2fr)
+  - AI + Weboldal: normál demo (1.6fr)
+  - Leírás szöveg mindig az info blokkban (cím+alcím+leírás+Tovább együtt)
+  - TextSection: TÖRÖLVE
+  - Card-footer: TÖRÖLVE
+  - Cinema overlay: TÖRÖLVE
+  - Kártyák között: clamp(50px, 5vw, 90px) gap
+  - Egységes: border, border-radius 16px, box-shadow, belső padding (.grid-en)
+  - Demo háttér: transparent (nincs #0d0d0f)
+  - Kártya háttér: rgba(20, 20, 22, 0.9), border: rgba(255,255,255,0.1)
+  - Minden méret clamp() alapú (viewport-hoz arányos)
 - **Noto emoji:** 73 SVG self-hosted (`public/emojis/`), Google Noto Color Emoji (WhatsApp stílus). `parseEmojis` utility function. GDPR tiszta, nincs CDN.
 - **P28 Amélia CTA:** V1 chat ablak, 10 set × 3 buborék × 3 nyelv, Noto emojikkal
+- **Reszponzív szabály:** Minden elem reszponzív legyen a böngésző ablak méretéhez. Ha kicsinyítve van az ablak, az oldal igazodjon hozzá. Telós asztali nézet NEM prioritás. A desktop (böngésző ablak) és a későbbi mobil nézet (Réteg 7) a fontos.
 
 ## Ismert problémák (03.10)
 
 - ~~Automatizáció cinema overlay~~ → ✅ megoldva (DemoCard split rendszer)
 - ~~Dashboard card-footer kontraszt~~ → ✅ megoldva (card-footer törölve, leírás info blokkban)
 - ~~Weboldal split Tovább gomb pozíció~~ → ✅ megoldva (egységes info blokk)
-- **Folyamat szekció (P8):** vizuálisan gyenge, nincs keret/sötétítő zóna, lebeg a semmiben
+- **~~AutomationPreview telón asztali nézetben:~~** → ✅ flex fix kész, gépen OK. Telón asztali nézetben elfogadható.
+- **~~Folyamat szekció (P8):~~** → ELTÁVOLÍTVA a főoldalról. A tartalom a /tudnivalok aloldalra kerül (Réteg 5). Új menüpont kell.
 - **Építős szekció (P7):** újratervezés kell
 
 ---

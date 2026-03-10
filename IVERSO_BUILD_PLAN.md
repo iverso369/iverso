@@ -61,25 +61,24 @@ Ami másnak a függősége, az készül először.
 
 ---
 
-## ④ FŐOLDAL (7 jelenet) 🔄 FOLYAMATBAN
+## ④ FŐOLDAL (6 jelenet) 🔄 FOLYAMATBAN
 
 **Mit:** A teljes scroll élmény.
 
 **Tartalmazza:**
 - Nav (gépen mindig látható, 1350px alatt hamburger)
 - Nyelvváltó (3 gomb: HU EN DE)
-- 7 jelenet komponensei:
+- 6 jelenet komponensei:
   1. Parázs hero (②-ből megvan)
   2. IVERSO felirat (depth fade animáció)
   3. 4 mini demó előzetes (③ komponenseiből, stagger rise)
-  4. Folyamat 4 node (node sequence animáció)
-  5. Építős szekció (drag/tap blokkok, morph, block drop)
-  6. CTA/Amelia ízelítő (glow reveal, bubble pop)
-  7. Footer (simple fade)
+  4. Építős szekció (drag/tap blokkok, morph, block drop)
+  5. CTA/Amélia ízelítő (glow reveal, bubble pop)
+  6. Footer (simple fade)
 - Intersection Observer scroll animációk (threshold 0.15, egyszer)
 - Tartalmi szövegek HU/DE/EN (preview kártyák alatt)
 
-**Eredmény:** Teljes scroll élmény, 7 jelenet, animációkkal.
+**Eredmény:** Teljes scroll élmény, 6 jelenet, animációkkal.
 
 ---
 
@@ -94,10 +93,10 @@ Ami másnak a függősége, az készül először.
 - /automatizacio (workflow vizualizáció, SVG vonalak, slider szintenként más node szám)
 - /weboldalak (konfigurátor: 4 tab, iparág, preview, slider)
 - /tudnivalok (kibővített bemutató: működés, lehetőségek, közös munka)
-- /kapcsolat (Amelia placeholder — teljes chat UI, de még nincs AI mögötte)
+- /kapcsolat (Amélia placeholder — teljes chat UI, de még nincs AI mögötte)
 - /impressum + /adatvedelem (egyszerű szöveges oldalak, tartalom később)
 
-**Eredmény:** Teljes weboldal, minden aloldal működik (Amelia még placeholder).
+**Eredmény:** Teljes weboldal, minden aloldal működik (Amélia még placeholder).
 
 ---
 
@@ -107,12 +106,12 @@ Ami másnak a függősége, az készül először.
 
 **Tartalmazza:**
 - AI provider integráció (API hívás — provider később döntjük el)
-- Amelia személyiség/system prompt
+- Amélia személyiség/system prompt
 - Nyelvfüggő stílus (tegez, önirónia, Norbi-t szidja szeretettel)
 - Email értesítés Norbinak ha konkrét az érdeklődő
 - Főoldali random Amelia mondatok (10 db HU/DE/EN, lásd AMELIA_MONDATOK.md)
 
-**Eredmény:** Amelia él, beszélget, terel, értesít.
+**Eredmény:** Amélia él, beszélget, terel, értesít.
 
 ---
 
