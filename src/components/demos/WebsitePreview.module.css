@@ -2,12 +2,14 @@
 
 .wrapper {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  height: 100%;
 }
 
 .browser {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── page inside MiniWebsite ── */
@@ -17,6 +19,8 @@
   padding: 0;
   transition: opacity 0.8s ease;
   font-family: 'Lora', 'Georgia', serif;
+  flex: 1;
+  overflow: hidden;
 }
 
 .fading {

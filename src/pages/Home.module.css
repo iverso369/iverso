@@ -43,8 +43,8 @@
 .previewSection {
   display: flex;
   flex-direction: column;
-  gap: 70px;
-  padding: 60px 0 80px;
+  gap: clamp(50px, 5vw, 90px);
+  padding: clamp(40px, 4vw, 80px) 0;
   position: relative;
   z-index: 1;
 }

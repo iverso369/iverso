@@ -2,12 +2,16 @@
 
 .wrapper {
   width: 100%;
+  height: 100%;
 }
 
 /* ── MiniWebsite wrapper ── */
 
 .browser {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── workflow layout ── */
@@ -17,6 +21,7 @@
   align-items: center;
   justify-content: center;
   padding: 32px 16px;
+  flex: 1;
 }
 
 /* ── node group (node + connector pair) ── */
