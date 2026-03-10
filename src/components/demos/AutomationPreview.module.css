@@ -25,11 +25,12 @@
 /* ── workflow layout ── */
 
 .workflow {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px 16px;
-  flex: 1;
+  overflow: hidden;
+  padding: 20px;
 }
 
 /* ── node group (node + connector pair) ── */
@@ -47,7 +48,7 @@
 }
 
 .connectorHorizontal {
-  width: 40px;
+  width: clamp(20px, 3vw, 40px);
   height: 24px;
   margin: 0 2px;
 }
