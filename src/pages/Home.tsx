@@ -1,8 +1,6 @@
-import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
 import EmberHero from '../components/hero/EmberHero'
 import Nav from '../components/nav/Nav'
-import DemoCard from '../components/demos/DemoCard'
+import DemoCard from '../components/ui/DemoCard'
 import DashboardPreview from '../components/demos/DashboardPreview'
 import AiChatPreview from '../components/demos/AiChatPreview'
 import AutomationPreview from '../components/demos/AutomationPreview'
@@ -15,7 +13,6 @@ import useIntersection from '../hooks/useIntersection'
 import styles from './Home.module.css'
 
 export default function Home() {
-  const { t } = useTranslation()
   const process = useIntersection({ threshold: 0.15 })
   const cta = useIntersection({ threshold: 0.15 })
   const footer = useIntersection({ threshold: 0.15 })
@@ -31,71 +28,58 @@ export default function Home() {
       {/* Nav */}
       <Nav heroElementId="hero-area" />
 
-      {/* 3. jelenet: 4 demó előzetes — új sorrend + layoutok */}
-      <section className={styles.demosSection}>
+      {/* 3. jelenet: 4 demó előzetes */}
+      <div className={styles.previewSection}>
 
-        {/* 1. Dashboard — STANDARD + card-footer */}
+        {/* 1. Dashboard — info BAL, demo JOBB (széles) */}
         <DemoCard
           titleKey="dashboards.title"
           subtitleKey="dashboards.subtitle"
+          descriptionKey="demos.dashboard.description"
           linkTo="/dashboardok"
-          footer={
-            <div className={styles.cardFooter}>
-              <div className={styles.cardFooterAccent} />
-              <p>{t('demos.dashboard.description')}</p>
-            </div>
-          }
+          layout="info-left"
+          ratio="wide-demo"
         >
           <DashboardPreview />
         </DemoCard>
 
-        {/* 2. AI Chat — SPLIT (szöveg bal, demo jobb) */}
-        <div className={styles.splitCard}>
-          <div className={styles.splitInfo}>
-            <h2 className={styles.splitTitle}>{t('ai.title')}</h2>
-            <p className={styles.splitSubtitle}>{t('ai.subtitle')}</p>
-            <p className={styles.splitDescription}>{t('demos.ai.description')}</p>
-            <Link to="/ai" className={styles.splitLink}>{t('demos.more')}</Link>
-          </div>
-          <div className={styles.splitDemo}>
-            <AiChatPreview />
-          </div>
-        </div>
+        {/* 2. Weboldal — demo BAL, info JOBB */}
+        <DemoCard
+          titleKey="websites.title"
+          subtitleKey="websites.subtitle"
+          descriptionKey="demos.websites.description"
+          linkTo="/weboldalak"
+          layout="info-right"
+          ratio="normal"
+        >
+          <WebsitePreview />
+        </DemoCard>
 
-        {/* 3. Weboldal — FORDÍTOTT SPLIT (demo bal, szöveg jobb) */}
-        <div className={styles.reverseSplitCard}>
-          <div className={styles.reverseSplitDemo}>
-            <WebsitePreview />
-          </div>
-          <div className={styles.splitInfo}>
-            <h2 className={styles.splitTitle}>{t('websites.title')}</h2>
-            <p className={styles.splitSubtitle}>{t('websites.subtitle')}</p>
-            <p className={styles.splitDescription}>{t('demos.websites.description')}</p>
-            <Link to="/weboldalak" className={styles.splitLink}>{t('demos.more')}</Link>
-          </div>
-        </div>
+        {/* 3. AI Chat — info BAL, demo JOBB */}
+        <DemoCard
+          titleKey="ai.title"
+          subtitleKey="ai.subtitle"
+          descriptionKey="demos.ai.description"
+          linkTo="/ai"
+          layout="info-left"
+          ratio="normal"
+        >
+          <AiChatPreview />
+        </DemoCard>
 
-        {/* 4. Automatizáció — CINEMA OVERLAY + card-footer */}
-        <div className={styles.cinemaCard}>
-          <div className={styles.cinemaTop}>
-            <div className={styles.cinemaOverlay}>
-              <div>
-                <h2 className={styles.cinemaTitle}>{t('automation.title')}</h2>
-                <p className={styles.cinemaSubtitle}>{t('automation.subtitle')}</p>
-              </div>
-              <Link to="/automatizacio" className={styles.splitLink}>{t('demos.more')}</Link>
-            </div>
-            <div className={styles.cinemaDemo}>
-              <AutomationPreview />
-            </div>
-          </div>
-          <div className={styles.cardFooter}>
-            <div className={styles.cardFooterAccent} />
-            <p>{t('demos.automation.description')}</p>
-          </div>
-        </div>
+        {/* 4. Automatizáció — demo BAL, info JOBB (széles demo) */}
+        <DemoCard
+          titleKey="automation.title"
+          subtitleKey="automation.subtitle"
+          descriptionKey="demos.automation.description"
+          linkTo="/automatizacio"
+          layout="info-right"
+          ratio="wide-demo"
+        >
+          <AutomationPreview />
+        </DemoCard>
 
-      </section>
+      </div>
 
       {/* 4. jelenet: Folyamat — node sequence */}
       <section ref={process.ref} className={styles.processScene}>
