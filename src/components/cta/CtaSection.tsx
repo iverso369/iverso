@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { parseEmojis } from '../../utils/parseEmojis'
 import styles from './CtaSection.module.css'
 
 const SET_COUNT = 10
 
 export default function CtaSection() {
   const { t } = useTranslation()
-  const chatBodyRef = useRef<HTMLDivElement>(null)
 
   const setIdx = useMemo(() => Math.floor(Math.random() * SET_COUNT), [])
 
@@ -15,16 +15,6 @@ export default function CtaSection() {
     const raw = t(`amelia.cta.set${setIdx}`, { returnObjects: true })
     return Array.isArray(raw) ? (raw as string[]) : []
   }, [t, setIdx])
-
-  useEffect(() => {
-    if (chatBodyRef.current && (window as unknown as Record<string, unknown>).twemoji) {
-      const twemoji = (window as unknown as Record<string, { parse: (el: HTMLElement, opts: Record<string, string>) => void }>).twemoji
-      twemoji.parse(chatBodyRef.current, {
-        folder: 'svg',
-        ext: '.svg',
-      })
-    }
-  }, [bubbles])
 
   return (
     <section className={styles.section}>
@@ -44,10 +34,10 @@ export default function CtaSection() {
         </div>
 
         {/* Body */}
-        <div ref={chatBodyRef} className={styles.chatBody}>
+        <div className={styles.chatBody}>
           {bubbles.map((msg, i) => (
             <div key={i} className={styles.bubble} style={{ animationDelay: `${i * 1.5}s` }}>
-              {msg}
+              {parseEmojis(msg)}
             </div>
           ))}
         </div>
