@@ -127,6 +127,22 @@
   }
 }
 
+/* ── mobile scaling ── */
+
+@media (max-width: 768px) {
+  .workflow {
+    transform: scale(0.7);
+    transform-origin: center center;
+  }
+}
+
+@media (max-width: 480px) {
+  .workflow {
+    transform: scale(0.55);
+    transform-origin: center center;
+  }
+}
+
 /* ── reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
