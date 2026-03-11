@@ -44,6 +44,7 @@ const vertexShader = /* glsl */ `
   attribute float aSizeClass;
   attribute float aEdgeDist;
   attribute vec3 aColor;
+  attribute float aDestroyGlow;
   uniform float uTime;
   uniform vec3 uMouse3D;
   uniform float uMouseActive;
@@ -54,6 +55,7 @@ const vertexShader = /* glsl */ `
   varying float vMouseGlow;
   varying float vSizeClass;
   varying float vEdgeDist;
+  varying float vDestroyGlow;
 
   void main() {
     vec3 pos = position;
@@ -73,13 +75,15 @@ const vertexShader = /* glsl */ `
     float pulse = 1.0;
     float edgeSizeBoost = 1.0 + (1.0 - aEdgeDist) * 0.15;
     float hoverBoost = 1.0 + vMouseGlow * 0.15;
+    float destroyShrink = 1.0 - aDestroyGlow * 0.4;
 
-    gl_PointSize = baseSize * pulse * hoverBoost * edgeSizeBoost * (150.0 / -mvPosition.z);
+    gl_PointSize = baseSize * pulse * hoverBoost * edgeSizeBoost * destroyShrink * (150.0 / -mvPosition.z);
     gl_Position = projectionMatrix * mvPosition;
     vColor = aColor;
     vAlpha = uOpacity;
     vSizeClass = aSizeClass;
     vEdgeDist = aEdgeDist;
+    vDestroyGlow = aDestroyGlow;
   }
 `
 
@@ -89,24 +93,29 @@ const fragmentShader = /* glsl */ `
   varying float vMouseGlow;
   varying float vSizeClass;
   varying float vEdgeDist;
+  varying float vDestroyGlow;
 
   void main() {
     vec2 center = gl_PointCoord - 0.5;
     float dist = length(center);
     if (dist > 0.5) discard;
 
-    float sharpness = mix(19.2, 9.6, vSizeClass);
+    float destroySharpBoost = vDestroyGlow * 18.0;
+    float sharpness = mix(19.2, 9.6, vSizeClass) + destroySharpBoost;
     float glow = exp(-dist * sharpness);
-    float core = exp(-dist * 24.0);
+    float coreSharpness = 24.0 + vDestroyGlow * 16.0;
+    float core = exp(-dist * coreSharpness);
+    float coreIntensity = 0.25 + vDestroyGlow * 0.35;
     float edgeBrightness = 1.0 + (1.0 - vEdgeDist) * 0.3;
 
     vec3 color = vColor * glow * edgeBrightness
-               + vec3(1.0, 0.85, 0.65) * core * 0.25 * edgeBrightness;
+               + vec3(1.0, 0.85, 0.65) * core * coreIntensity * edgeBrightness;
 
     vec3 hoverColor = vec3(1.0, 0.82, 0.63);
     color = mix(color, hoverColor * (glow + core * 0.5) * 1.5, vMouseGlow * 0.15);
 
-    float baseAlpha = mix(0.85, 0.35, vSizeClass);
+    float destroyAlphaBoost = vDestroyGlow * 0.4;
+    float baseAlpha = mix(0.85, 0.35, vSizeClass) + destroyAlphaBoost;
     float softEdge = smoothstep(0.5, 0.02, dist);
     float edgeAlpha = 1.0 + (1.0 - vEdgeDist) * 0.15;
     float alpha = softEdge * glow * baseAlpha * vAlpha * edgeAlpha;
@@ -232,6 +241,7 @@ export default function EmberHero() {
     let scrollVelocities: Float32Array
     let scrollOffsets: Float32Array
     let scrollDirections: Float32Array
+    let destroyGlowArr: Float32Array
     let prevDispersal = 0
     let storedVisW = 1
     let storedVisH = 1
@@ -300,6 +310,7 @@ export default function EmberHero() {
       scrollVelocities = new Float32Array(count * 3)
       scrollOffsets = new Float32Array(count * 3)
       scrollDirections = new Float32Array(count * 3)
+      destroyGlowArr = new Float32Array(count)
       prevDispersal = 0
       splashNextIdx = 0
 
@@ -411,6 +422,7 @@ export default function EmberHero() {
       geometry.setAttribute('aSizeClass', new THREE.BufferAttribute(sizeClasses, 1))
       geometry.setAttribute('aEdgeDist', new THREE.BufferAttribute(edgeDists, 1))
       geometry.setAttribute('aColor', new THREE.BufferAttribute(colors, 3))
+      geometry.setAttribute('aDestroyGlow', new THREE.BufferAttribute(destroyGlowArr, 1))
 
       material = new THREE.ShaderMaterial({
         vertexShader, fragmentShader,
@@ -474,6 +486,7 @@ export default function EmberHero() {
             positionArray[i3] = 9999
             positionArray[i3 + 1] = 9999
             positionArray[i3 + 2] = 0
+            destroyGlowArr[i] = 0
             continue
           }
           // Active splash — process destroy phases below
@@ -490,6 +503,7 @@ export default function EmberHero() {
             destroyedAt[i] = 0
             destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
             destroyVelocities[i3] = destroyVelocities[i3 + 1] = destroyVelocities[i3 + 2] = 0
+            destroyGlowArr[i] = 0
             positionArray[i3] = 9999
             positionArray[i3 + 1] = 9999
             positionArray[i3 + 2] = 0
@@ -498,6 +512,12 @@ export default function EmberHero() {
             destroyVelocities[i3] *= 0.985
             destroyVelocities[i3 + 1] *= 0.985
             destroyVelocities[i3 + 2] *= 0.985
+            const vMagF = Math.sqrt(destroyVelocities[i3] ** 2 + destroyVelocities[i3 + 1] ** 2)
+            if (vMagF > 0 && vMagF < DRIFT_MIN_SPEED) {
+              const sc = DRIFT_MIN_SPEED / vMagF
+              destroyVelocities[i3] *= sc
+              destroyVelocities[i3 + 1] *= sc
+            }
           } else if (age < driftEnd) {
             // Drift: slow down but maintain minimum speed
             destroyVelocities[i3] *= 0.985
@@ -539,6 +559,15 @@ export default function EmberHero() {
           tx = homePositions[i3] + destroyOffsets[i3]
           ty = homePositions[i3 + 1] + destroyOffsets[i3 + 1]
           tz = homePositions[i3 + 2] + destroyOffsets[i3 + 2]
+
+          // Destroy glow for splash
+          if (age < driftEnd) {
+            destroyGlowArr[i] = 1.0
+          } else if (age < returnEnd) {
+            destroyGlowArr[i] = 1.0 - (age - driftEnd) / DESTROY_RETURN_PHASE
+          } else {
+            destroyGlowArr[i] = 0.0
+          }
 
           positionArray[i3] = tx
           positionArray[i3 + 1] = ty
@@ -618,10 +647,16 @@ export default function EmberHero() {
             destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
             destroyVelocities[i3] = destroyVelocities[i3 + 1] = destroyVelocities[i3 + 2] = 0
           } else if (age < DESTROY_FLY_PHASE) {
-            // Phase 1: fly outward with drag
+            // Phase 1: fly outward with drag + min speed floor
             destroyVelocities[i3] *= 0.985
             destroyVelocities[i3 + 1] *= 0.985
             destroyVelocities[i3 + 2] *= 0.985
+            const vMagFly = Math.sqrt(destroyVelocities[i3] ** 2 + destroyVelocities[i3 + 1] ** 2)
+            if (vMagFly > 0 && vMagFly < DRIFT_MIN_SPEED) {
+              const sc = DRIFT_MIN_SPEED / vMagFly
+              destroyVelocities[i3] *= sc
+              destroyVelocities[i3 + 1] *= sc
+            }
             destroyOffsets[i3] += destroyVelocities[i3]
             destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
             destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
@@ -691,6 +726,17 @@ export default function EmberHero() {
           tx += destroyOffsets[i3]
           ty += destroyOffsets[i3 + 1]
           tz += destroyOffsets[i3 + 2]
+
+          // Destroy glow for normal particles
+          if (age < driftEnd) {
+            destroyGlowArr[i] = 1.0
+          } else if (age < returnEnd) {
+            destroyGlowArr[i] = 1.0 - (age - driftEnd) / DESTROY_RETURN_PHASE
+          } else {
+            destroyGlowArr[i] = 0.0
+          }
+        } else {
+          destroyGlowArr[i] = 0.0
         }
 
         positionArray[i3] = tx
@@ -699,6 +745,8 @@ export default function EmberHero() {
       }
 
       posAttr.needsUpdate = true
+      const destroyGlowAttr = geometry.getAttribute('aDestroyGlow') as THREE.BufferAttribute
+      destroyGlowAttr.needsUpdate = true
       renderer.render(scene, camera)
       animationId = requestAnimationFrame(() => animate(startTime))
     }
