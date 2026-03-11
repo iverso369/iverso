@@ -16,7 +16,7 @@
 | 5 | WebsitePreview — v2 A világos krém pékség | ✅ kész + szín tompítva |
 | 6 | AutomationPreview — node-ok mindig láthatók | ✅ kész + flex reszponzív (gépen OK) |
 | 7 | Építős szekció javítás | ⬜ újratervezés lesz |
-| 8 | Folyamat finomhangolás | ⬜ |
+| 8 | Folyamat finomhangolás | ✅ ELTÁVOLÍTVA főoldalról → /tudnivalok (Réteg 5) |
 | 9 | "Tovább" gombok beépítése | ✅ kész |
 | 10 | Navbar mindig látható (gépen) | ✅ kész |
 | 11 | Hero magasság ~50vh | ✅ kész |
@@ -24,7 +24,7 @@
 | 13 | Navbar teljes újratervezés | ✅ kész |
 | 14 | Preview kártyák szélesség 85vw | ✅ kész |
 | 15 | Font váltás (Roboto 700) | ✅ kész |
-| 16 | IVERSO felirat a CTA szekció fölé | ⬜ végére parkolva |
+| 16 | ~~IVERSO felirat a CTA szekció fölé~~ | ✅ TÖRÖLVE — a parázs földgömb (P7) helyettesíti |
 | 17 | Kurzor + jobb klikk menü tiltás | ✅ kész |
 | 18 | Amélia szekció: méret, igazítás, mondatok | ✅ kész |
 | 19 | Építős: IVERSO parázs átlóg | ✅ megoldódott |
@@ -52,8 +52,8 @@ DemoCard újraépítés → P8 → P7 → P16
 | 1a. | JAVITAS_01_FINOM | Arányos méretezés (clamp), kártya keret, belső padding, demo bg | ✅ kész |
 | 1b. | JAVITAS_01_AUTO | AutomationPreview flexibilis node-ok + connector gap | ✅ kész (gépen OK) |
 | 2. | P8 | Folyamat szekció | ✅ DÖNTÉS: főoldalról eltávolítva. A /tudnivalok aloldalon lesz részletesen (Réteg 5). |
-| 3. | P7 | Építős szekció újratervezés | ⬜ (legnagyobb falat) |
-| 4. | P16 | IVERSO parázs a CTA fölé | ⬜ végére parkolva |
+| 3. | P7 | Építős szekció újratervezés | ⬜ KONCEPCIÓ KÉSZ: parázs kockák → hálózat → 3D particle földgömb kontinensekkel |
+| 4. | P16 | ~~IVERSO parázs a CTA fölé~~ | ✅ TÖRÖLVE — a földgömb helyettesíti |
 
 ## Régi ötletek (03.09) — LEZÁRVA
 

@@ -72,7 +72,7 @@ Ami másnak a függősége, az készül először.
   1. Parázs hero (②-ből megvan)
   2. IVERSO felirat (depth fade animáció)
   3. 4 mini demó előzetes (③ komponenseiből, stagger rise)
-  4. Építős szekció (drag/tap blokkok, morph, block drop)
+  4. Építős szekció (parázs kockák → hálózat → 3D particle földgömb kontinensekkel, interakció: bal klikk rombol, jobb klikk szétrobban)
   5. CTA/Amélia ízelítő (glow reveal, bubble pop)
   6. Footer (simple fade)
 - Intersection Observer scroll animációk (threshold 0.15, egyszer)

@@ -79,8 +79,8 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 - ✅ Dashboard/Automatizáció card-footer → megoldva (leírás info blokkban)
 - ✅ Weboldal split Tovább gomb pozíció → megoldva (egységes info blokk)
 - ✅ P8: Folyamat szekció → ELTÁVOLÍTVA a főoldalról, /tudnivalok aloldalra kerül (Réteg 5)
-- ⬜ P7: Építős szekció újratervezés
-- ⬜ P16: IVERSO parázs a CTA fölé — végére parkolva
+- ⬜ P7: Építős szekció újratervezés — KONCEPCIÓ KÉSZ: parázs kockák → hálózat → 3D particle földgömb kontinensekkel. Bal klikk rombol, jobb klikk szétrobban.
+- ~~⬜ P16: IVERSO parázs a CTA fölé~~ → TÖRÖLVE, a parázs földgömb helyettesíti
 - ⬜ Új menüpont a folyamatnak (Réteg 5-nél döntjük el)
 
 ### Réteg 5 — Aloldalak ⬜ vár
@@ -126,7 +126,7 @@ Az oldal minősége maga a bizalom — nincs referencia szekció, nincs garancia
 - ~~Weboldal split Tovább gomb pozíció~~ → ✅ megoldva (egységes info blokk)
 - **~~AutomationPreview telón asztali nézetben:~~** → ✅ flex fix kész, gépen OK. Telón asztali nézetben elfogadható.
 - **~~Folyamat szekció (P8):~~** → ELTÁVOLÍTVA a főoldalról. A tartalom a /tudnivalok aloldalra kerül (Réteg 5). Új menüpont kell.
-- **Építős szekció (P7):** újratervezés kell
+- **Építős szekció (P7):** KONCEPCIÓ KÉSZ — parázs kockák → hálózat → 3D particle földgömb kontinensekkel. Implementáció következik.
 
 ---
 

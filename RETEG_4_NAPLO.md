@@ -159,6 +159,8 @@ Főoldal 6 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 | 03.10 | Dashboard + Automatizáció: szélesebb demo (2.2fr), AI + Weboldal: normál (1.6fr) |
 | 03.10 | DÖNTÉS: Folyamat szekció (P8) ELTÁVOLÍTVA a főoldalról. A /tudnivalok aloldalon lesz részletesen kifejtve (Réteg 5). Új menüpont kell a folyamatnak — a "Tudnivalók" nem elég egyértelmű. |
 | 03.10 | SZABÁLY: Minden elem reszponzív a böngésző ablak méretéhez. Telós asztali nézet NEM prioritás — desktop (böngésző ablak) + későbbi mobil nézet (Réteg 7) a fontos. |
+| 03.10 | P7 ÉPÍTŐS KONCEPCIÓ VÉGLEGES: Parázs kockák → rácsba húzás → pontokká zsugorodás → hálózat terjeszkedés (+ új kockák megjelennek közben) → középről kifelé terjeszkedve 3D parázs particle FÖLDGÖMB ami kontinenseket mutat. Bal klikk: rombolódik. Jobb klikk: szétrobban. Referencia: projekt fájlok gömb morph képek. |
+| 03.10 | P16 TÖRÖLVE — a parázs földgömb helyettesíti az IVERSO parázs CTA fölötti szekciót. Alatta Amélia CTA. |
 
 ---
 
@@ -183,6 +185,11 @@ Főoldal 6 jelenet kitöltése tartalommal + navigáció + scroll animációk.
 - ✅ **JAVITAS_01: DemoCard újraépítés** — teljes preview szekció nulláról, egységes split rendszer + arányos méretezés + belső padding + keret erősítés + demo bg eltávolítás — KÉSZ
 - ✅ **AutomationPreview mobilon:** telón asztali nézetben a node-ok kilógtak. Végső fix: flexibilis node-ok (min-width: 0, overflow: hidden, flex-shrink: 1) + connector min-width: 24px + kisebb node padding/font. Telón asztali nézetben elfogadható. **Gépen ellenőrizve, OK.**
 - ⬜ **P8: Folyamat szekció** — ELTÁVOLÍTVA a főoldalról. A tartalom a /tudnivalok aloldalra kerül (Réteg 5). Prompt kell: Home.tsx-ből a folyamat szekció JSX + CSS törlése.
-- ⬜ **P7: Építős szekció újratervezés** — legnagyobb falat
-- ⬜ **P16: IVERSO parázs a CTA fölé** — végére parkolva
+- ⬜ **P7: Építős szekció újratervezés** — KONCEPCIÓ KÉSZ:
+  - Parázs kockák → behúzás rácsba → kockák pontokká zsugorodnak → hálózat vonalak terjeszkednek + közben új kockák jelennek meg → az egész KÖZÉPRŐL KIFELÉ terjeszkedve összeáll egy 3D parázs particle FÖLDGÖMBBÉ
+  - A földgömb KONTINENSEKET mutat (referencia: projekt fájlok gömb morph képek)
+  - Bal kattintás: rombolódik / Jobb kattintás: szétrobban (interakció)
+  - Ez HELYETTESÍTI a P16-ot (IVERSO parázs a CTA fölé) — nem kell külön, a földgömb tökéletesen betölti ezt a szerepet
+  - Alatta: Amélia CTA
+- ~~⬜ P16: IVERSO parázs a CTA fölé~~ → TÖRÖLVE, a földgömb helyettesíti
 - ⬜ **Új menüpont:** A "Tudnivalók" átnevezése vagy új menüpont a folyamatnak — Réteg 5-nél döntjük el

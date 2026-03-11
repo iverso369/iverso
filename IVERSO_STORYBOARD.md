@@ -146,27 +146,38 @@ NEM linkel a /tudnivalok aloldalra — ennyi elég a főoldalon.
 
 ---
 
-## 5. jelenet — ÉPÍTŐS INTERAKTÍV SZEKCIÓ
+## 4. jelenet — ÉPÍTŐS INTERAKTÍV SZEKCIÓ (Parázs Földgömb)
 **A "Let's build something" szlogen szó szerint megelevenedik.**
 
 **Flow:**
 1. Megjelenik: *"Let's build something"* felirat
-2. Egy narancs blokk pattog/ugrik a rács mellett: *"Húzz be!"* — ez tanítja meg mit kell csinálni
-3. A látogató húzza/tappolja a blokkokat a rácsba
-4. Amikor eleget rakott → a blokkok MORPHOLNAK: mindegyik más élő elem lesz
-   - Egyik → mini chat buborék
-   - Másik → grafikon
-   - Harmadik → KPI kártya
-   - Negyedik → workflow node
-5. Összeáll egy mini működő felület
-6. Alatta megjelenik a CTA
+2. Bal oldalon egy parázs kocka pattog: *"Húzz be!"* — tanítja mit kell csinálni
+3. A látogató kattint/húz → a kocka beugrik a rácsba (3x3), helyette új jelenik meg
+4. A rács slotjaira is kattinthat direkt
+5. Ahogy a rács telik:
+   - A kockák **pontokká zsugorodnak**
+   - **Parázs vonalak** húzódnak ki közöttük → hálózat
+   - A hálózat **terjeszkedik**, közben **új kockák is megjelennek**
+6. Az egész **KÖZÉPRŐL KIFELÉ terjeszkedve** összeáll egy **3D parázs particle FÖLDGÖMBBÉ**
+7. A földgömb **KONTINENSEKET mutat** — parázs részecskékből, izzó narancs vonalakkal
+8. A földgömb **lassan forog** (mint egy igazi földgömb), lélegzik, pulzál
+
+**Interakció a földgömbön:**
+- **Bal kattintás:** rombolódik (a részecskék szétesnek a kattintás helyén, majd visszaállnak)
+- **Jobb kattintás:** szétrobban (az egész gömb szétrepül, majd visszaáll)
+
+**Ha nem interaktál a látogató:** Az egész animáció automatikusan lefut — kockák maguktól beesnek, hálózat épül, földgömb összeáll.
 
 **Blokkok kinézete:** Különböző narancs árnyalatok (variáció, nem egyszínű).
-**Rács:** Nincs látható rács/háló — szabadon rak bárhova, snap-el a helyére.
+**Rács:** Halvány szaggatott szegély, nincs látható háló. Snap-el a helyére.
 
-**Mobilon:** Tap = blokk lerakás. Ha valaki nem interaktál, az ugráló blokk hívogatja. A morph rész CSS + Canvas, nem igényel külön interakciót.
+**Mobilon:** Tap = blokk lerakás. Ha valaki nem interaktál, automatikus. Touch támogatás a földgömbön.
 
-**Érzés:** *"Amit leraktam, abból valami lett. Wow."*
+**Referencia:** A projekt fájlok között lévő gömb morph képek — a kontinensek particle stílusa.
+
+**Ez HELYETTESÍTI a korábbi P16-ot (IVERSO parázs a CTA fölé).** A földgömb tölti be ezt a szerepet.
+
+**Érzés:** *"Amit leraktam, abból egy VILÁG lett. Aztakurva."*
 
 ---
 

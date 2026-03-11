@@ -186,8 +186,8 @@ SVG thin line: 1.5px stroke, currentColor
 1. **PARÁZS** — Three.js (gép) / Canvas 2D (mobil), hover+kattintás interakció
 2. **IVERSO FELIRAT** — depth fade animáció, parázs halványul de marad
 3. **4 DEMÓ ELŐZETES** — DemoCard split layout, sorrend: Dashboard→Weboldal→AI→Automatizáció, demo pozíció: JOBB→BAL→JOBB→BAL
-4. **ÉPÍTŐS** — 8+ drag/tap blokk, morph → mini dashboard, block drop animáció
-5. **CTA** — Amélia buborék (random mondat), glow reveal + bubble pop
+4. **ÉPÍTŐS** — Parázs kockák behúzása rácsba → kockák pontokká → hálózat terjeszkedés (új kockák közben) → középről kifelé 3D parázs particle FÖLDGÖMB (kontinensek!). Bal klikk: rombolódik. Jobb klikk: szétrobban. Ha nem interaktál: automatikusan lefut.
+5. **CTA** — Amélia buborék (random mondat), glow reveal + bubble pop (közvetlenül a földgömb alatt)
 6. **FOOTER** — Impressum + Adatvédelem + ©, simple fade
 
 ### Scroll animációk
