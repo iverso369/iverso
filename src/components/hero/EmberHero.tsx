@@ -132,7 +132,7 @@ function sampleTextPositions(
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.fillStyle = '#ffffff'
-  ctx.fillText(text, canvas.width / 2, canvas.height * 0.32)
+  ctx.fillText(text, canvas.width / 2, canvas.height * 0.37)
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const px = imageData.data
