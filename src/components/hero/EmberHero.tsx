@@ -114,8 +114,8 @@ const fragmentShader = /* glsl */ `
     vec3 hoverColor = vec3(1.0, 0.82, 0.63);
     color = mix(color, hoverColor * (glow + core * 0.5) * 1.5, vMouseGlow * 0.15);
 
-    float destroyAlphaDim = 1.0 - vDestroyGlow * 0.3;
-    float baseAlpha = mix(0.85, 0.35, vSizeClass) * destroyAlphaDim;
+    float destroyAlphaBoost = vDestroyGlow * 0.28;
+    float baseAlpha = mix(0.85, 0.35, vSizeClass) + destroyAlphaBoost;
     float softEdge = smoothstep(0.5, 0.02, dist);
     float edgeAlpha = 1.0 + (1.0 - vEdgeDist) * 0.15;
     float alpha = softEdge * glow * baseAlpha * vAlpha * edgeAlpha;
