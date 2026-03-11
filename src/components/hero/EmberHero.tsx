@@ -6,8 +6,6 @@ import styles from './EmberHero.module.css'
    CONSTANTS
    ======================================== */
 const PARTICLE_COUNT = 72000
-const SPLASH_POOL_SIZE = 2000
-const TOTAL_PARTICLES = PARTICLE_COUNT + SPLASH_POOL_SIZE
 const CAMERA_Z = 35
 const CAMERA_FOV = 75
 
@@ -65,11 +63,11 @@ const vertexShader = /* glsl */ `
 
     float baseSize;
     if (aSizeClass < 0.25) {
-      baseSize = 1.0 + aRandom * 0.8;
+      baseSize = 1.5 + aRandom * 1.2;
     } else if (aSizeClass < 0.75) {
-      baseSize = 2.5 + aRandom * 2.0;
+      baseSize = 3.75 + aRandom * 3.0;
     } else {
-      baseSize = 7.0 + aRandom * 6.0;
+      baseSize = 10.5 + aRandom * 9.0;
     }
 
     float contourSize = 4.5;
@@ -267,7 +265,6 @@ export default function EmberHero() {
     const mousePlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
     const raycaster = new THREE.Raycaster()
     let mouseActive = false
-    let splashNextIdx = 0
     const recentDestroys: number[] = []
     const clickRC = new THREE.Raycaster()
 
@@ -318,7 +315,7 @@ export default function EmberHero() {
         }
       }
 
-      const count = TOTAL_PARTICLES
+      const count = PARTICLE_COUNT
       positionArray = new Float32Array(count * 3)
       homePositions = new Float32Array(count * 3)
       randoms = new Float32Array(count)
@@ -332,7 +329,6 @@ export default function EmberHero() {
       scrollDirections = new Float32Array(count * 3)
       destroyGlowArr = new Float32Array(count)
       prevDispersal = 0
-      splashNextIdx = 0
 
       const sizeClasses = new Float32Array(count)
       const edgeDists = new Float32Array(count)
@@ -413,25 +409,6 @@ export default function EmberHero() {
         returnDelays[i] = Math.random()
       }
 
-      // Init splash pool (offscreen, invisible until activated)
-      for (let i = PARTICLE_COUNT; i < TOTAL_PARTICLES; i++) {
-        const i3 = i * 3
-        homePositions[i3] = 9999
-        homePositions[i3 + 1] = 9999
-        homePositions[i3 + 2] = 0
-        positionArray[i3] = 9999
-        positionArray[i3 + 1] = 9999
-        positionArray[i3 + 2] = 0
-        randoms[i] = Math.random()
-        edgeDistArr[i] = 0
-        edgeDists[i] = 0
-        sizeClasses[i] = 0.0 // small sparks
-        colors[i3] = 1.0     // bright orange default (overwritten on spawn)
-        colors[i3 + 1] = 0.4
-        colors[i3 + 2] = 0.0
-        returnDelays[i] = Math.random()
-      }
-
       if (geometry) geometry.dispose()
       if (material) material.dispose()
       if (points) scene.remove(points)
@@ -493,109 +470,10 @@ export default function EmberHero() {
       const wrapY = storedVisH * 0.7
       const posAttr = geometry.getAttribute('position') as THREE.BufferAttribute
 
-      for (let i = 0; i < TOTAL_PARTICLES; i++) {
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
         const i3 = i * 3
         const r = randoms[i]
         const hx = homePositions[i3], hy = homePositions[i3 + 1], hz = homePositions[i3 + 2]
-        const isSplash = i >= PARTICLE_COUNT
-
-        // Splash particles: skip scroll/idle, only process destroy
-        if (isSplash) {
-          if (destroyedAt[i] === 0) {
-            // Inactive splash — stay offscreen
-            positionArray[i3] = 9999
-            positionArray[i3 + 1] = 9999
-            positionArray[i3 + 2] = 0
-            destroyGlowArr[i] = 0
-            continue
-          }
-          // Active splash — process destroy phases below
-          let tx = homePositions[i3] + destroyOffsets[i3]
-          let ty = homePositions[i3 + 1] + destroyOffsets[i3 + 1]
-          let tz = homePositions[i3 + 2] + destroyOffsets[i3 + 2]
-
-          const age = now - destroyedAt[i]
-          const driftEnd = DESTROY_FLY_PHASE + DESTROY_DRIFT_PHASE
-          const returnEnd = driftEnd + DESTROY_RETURN_PHASE
-
-          if (age >= DESTROY_TOTAL) {
-            // Done — deactivate splash, move offscreen
-            destroyedAt[i] = 0
-            destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
-            destroyVelocities[i3] = destroyVelocities[i3 + 1] = destroyVelocities[i3 + 2] = 0
-            destroyGlowArr[i] = 0
-            positionArray[i3] = 9999
-            positionArray[i3 + 1] = 9999
-            positionArray[i3 + 2] = 0
-            continue
-          } else if (age < DESTROY_FLY_PHASE) {
-            destroyVelocities[i3] *= 0.985
-            destroyVelocities[i3 + 1] *= 0.985
-            destroyVelocities[i3 + 2] *= 0.985
-            const vMagF = Math.sqrt(destroyVelocities[i3] ** 2 + destroyVelocities[i3 + 1] ** 2)
-            if (vMagF > 0 && vMagF < DRIFT_MIN_SPEED) {
-              const sc = DRIFT_MIN_SPEED / vMagF
-              destroyVelocities[i3] *= sc
-              destroyVelocities[i3 + 1] *= sc
-            }
-          } else if (age < driftEnd) {
-            // Drift: slow down but maintain minimum speed
-            destroyVelocities[i3] *= 0.985
-            destroyVelocities[i3 + 1] *= 0.985
-            destroyVelocities[i3 + 2] *= 0.985
-            const vMag = Math.sqrt(destroyVelocities[i3] * destroyVelocities[i3] + destroyVelocities[i3 + 1] * destroyVelocities[i3 + 1])
-            if (vMag > 0 && vMag < DRIFT_MIN_SPEED) {
-              const scale = DRIFT_MIN_SPEED / vMag
-              destroyVelocities[i3] *= scale
-              destroyVelocities[i3 + 1] *= scale
-            }
-            destroyVelocities[i3] += (Math.random() - 0.5) * 0.002
-            destroyVelocities[i3 + 1] += (Math.random() - 0.5) * 0.002
-          } else if (age < returnEnd) {
-            const ra = (age - driftEnd) / DESTROY_RETURN_PHASE
-            const pd = returnDelays[i] * 0.6
-            if (ra > pd) {
-              const t = (ra - pd) / (1 - pd)
-              const s = 0.01 + t * t * 0.06
-              destroyOffsets[i3] *= 1 - s
-              destroyOffsets[i3 + 1] *= 1 - s
-              destroyOffsets[i3 + 2] *= 1 - s
-            }
-            destroyVelocities[i3] *= 0.992
-            destroyVelocities[i3 + 1] *= 0.992
-            destroyVelocities[i3 + 2] *= 0.992
-          } else {
-            const sp = (age - returnEnd) / DESTROY_SNAP_PHASE
-            const s = 0.08 + sp * 0.25
-            destroyOffsets[i3] *= 1 - s
-            destroyOffsets[i3 + 1] *= 1 - s
-            destroyOffsets[i3 + 2] *= 1 - s
-          }
-
-          destroyOffsets[i3] += destroyVelocities[i3]
-          destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
-          destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
-
-          tx = homePositions[i3] + destroyOffsets[i3]
-          ty = homePositions[i3 + 1] + destroyOffsets[i3 + 1]
-          tz = homePositions[i3 + 2] + destroyOffsets[i3 + 2]
-
-          // Destroy glow for splash
-          if (age < driftEnd) {
-            destroyGlowArr[i] = 1.0
-          } else if (age < returnEnd) {
-            destroyGlowArr[i] = 1.0 - (age - driftEnd) / DESTROY_RETURN_PHASE
-          } else {
-            destroyGlowArr[i] = 0.0
-          }
-
-          positionArray[i3] = tx
-          positionArray[i3 + 1] = ty
-          positionArray[i3 + 2] = tz
-          continue
-        }
-
-        // === Normal particles (i < PARTICLE_COUNT) ===
 
         // Scroll physics — extra damping near zero dispersal to prevent trembling
         const scrollDamp = dispersal < 0.05 ? SCROLL_DAMPING * 0.9 : SCROLL_DAMPING
@@ -792,7 +670,6 @@ export default function EmberHero() {
 
       const dR = destroyAll ? 9999 : DESTROY_RADIUS_FACTOR * textWorldWidth
       let hitCount = 0
-      const hitIndices: number[] = []
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         const i3 = i * 3
 
@@ -815,8 +692,6 @@ export default function EmberHero() {
         }
 
         hitCount++
-        if (!destroyAll) hitIndices.push(i)
-
         // Shockwave physics: closer particles get MORE speed (inverse distance)
         // Like a water ripple or supernova — epicenter = fastest
         const maxDist = destroyAll ? textWorldWidth * 0.8 : dR
@@ -854,45 +729,6 @@ export default function EmberHero() {
         }
       }
       if (hitCount > 0) recentDestroys.push(now)
-
-      // Spawn splash clones for left-click only (not destroyAll/right-click)
-      if (!destroyAll && hitCount > 0) {
-        const colorsAttr = geometry.getAttribute('aColor') as THREE.BufferAttribute
-        const colorsArr = colorsAttr.array as Float32Array
-        const splashCount = Math.min(hitCount, SPLASH_POOL_SIZE)
-        for (let s = 0; s < splashCount; s++) {
-          const si = PARTICLE_COUNT + (splashNextIdx % SPLASH_POOL_SIZE)
-          splashNextIdx++
-          const si3 = si * 3
-
-          // Pick a random hit particle to clone from
-          const srcIdx = hitIndices[Math.floor(Math.random() * hitIndices.length)]
-          const src3 = srcIdx * 3
-
-          // Set splash home to the source particle's current position
-          homePositions[si3] = positionArray[src3]
-          homePositions[si3 + 1] = positionArray[src3 + 1]
-          homePositions[si3 + 2] = positionArray[src3 + 2]
-
-          // Copy color from source
-          colorsArr[si3] = colorsArr[src3]
-          colorsArr[si3 + 1] = colorsArr[src3 + 1]
-          colorsArr[si3 + 2] = colorsArr[src3 + 2]
-
-          // Random direction, slightly faster than normal destroy
-          const angle = Math.random() * Math.PI * 2
-          const speed = 0.2 + Math.random() * 0.5
-          destroyedAt[si] = now
-          returnDelays[si] = Math.random()
-          destroyVelocities[si3] = Math.cos(angle) * speed
-          destroyVelocities[si3 + 1] = Math.sin(angle) * speed
-          destroyVelocities[si3 + 2] = (Math.random() - 0.5) * speed * 0.3
-          destroyOffsets[si3] = 0
-          destroyOffsets[si3 + 1] = 0
-          destroyOffsets[si3 + 2] = 0
-        }
-        colorsAttr.needsUpdate = true
-      }
     }
 
     function handleClick(e: MouseEvent) {
