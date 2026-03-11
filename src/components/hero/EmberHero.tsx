@@ -75,8 +75,9 @@ const vertexShader = /* glsl */ `
     float pulse = 1.0;
     float edgeSizeBoost = 1.0 + (1.0 - aEdgeDist) * 0.15;
     float hoverBoost = 1.0 + vMouseGlow * 0.15;
+    float destroyGrow = 1.0 + aDestroyGlow * 0.5;
 
-    gl_PointSize = baseSize * pulse * hoverBoost * edgeSizeBoost * (150.0 / -mvPosition.z);
+    gl_PointSize = baseSize * pulse * hoverBoost * edgeSizeBoost * destroyGrow * (150.0 / -mvPosition.z);
     gl_Position = projectionMatrix * mvPosition;
     vColor = aColor;
     vAlpha = uOpacity;
