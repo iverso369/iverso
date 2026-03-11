@@ -143,7 +143,7 @@ function sampleTextPositions(
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.fillStyle = '#ffffff'
-  ctx.fillText(text, canvas.width / 2, canvas.height * 0.37)
+  ctx.fillText(text, canvas.width / 2, canvas.height * 0.45)
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const px = imageData.data
@@ -402,18 +402,21 @@ export default function EmberHero() {
       const elapsed = (now - startTime) / 1000
       const fadeIn = Math.min(elapsed / 1.5, 1.0)
 
-      // Reset explode when scrolled back to top
+      // Reset explode when scrolled back to top — animate return
       if (exploded && container) {
         const rect = container.getBoundingClientRect()
         if (rect.top >= 0) {
           exploded = false
           explodeTime = 0
+          // Put each particle at the start of RETURN phase so they animate back
+          const returnStart = now - (DESTROY_FLY_PHASE + DESTROY_DRIFT_PHASE)
           for (let i = 0; i < PARTICLE_COUNT; i++) {
             const i3 = i * 3
-            destroyedAt[i] = 0
-            destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
-            destroyVelocities[i3] = destroyVelocities[i3 + 1] = destroyVelocities[i3 + 2] = 0
-            destroyGlowArr[i] = 0
+            destroyedAt[i] = returnStart
+            destroyVelocities[i3] = 0
+            destroyVelocities[i3 + 1] = 0
+            destroyVelocities[i3 + 2] = 0
+            returnDelays[i] = Math.random()
           }
         }
       }
