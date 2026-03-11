@@ -22,16 +22,8 @@ const DESTROY_TOTAL = DESTROY_FLY_PHASE + DESTROY_DRIFT_PHASE + DESTROY_RETURN_P
 // Drift minimum speed (world units/frame) — matches background particle drift
 const DRIFT_MIN_SPEED = 0.015
 
-// Scroll thresholds
-const SCROLL_DISPERSE_START = 0.15
-const SCROLL_DISPERSE_END = 0.30
-// Reform removed — once dispersed, stays dispersed
-
-// Scroll physics
-const SCROLL_IMPULSE = 1.0
-const SCROLL_DAMPING = 0.96
-const SCROLL_SPRING_K = 0.03
-const DRIFT_FORCE = 0.004
+// Explode: fade duration after scroll-triggered explosion (ms)
+const EXPLODE_FADE_DURATION = 1500
 
 /* ========================================
    SHADERS
@@ -198,26 +190,6 @@ function selectRandom<T>(arr: T[], n: number): T[] {
 }
 
 /* ========================================
-   SCROLL HELPERS
-   ======================================== */
-function getScrollRatio(): number {
-  const m = document.documentElement.scrollHeight - window.innerHeight
-  return m <= 0 ? 0 : Math.min(1, Math.max(0, window.scrollY / m))
-}
-
-function getDispersalFactor(r: number): number {
-  if (r <= SCROLL_DISPERSE_START) return 0
-  if (r <= SCROLL_DISPERSE_END) return (r - SCROLL_DISPERSE_START) / (SCROLL_DISPERSE_END - SCROLL_DISPERSE_START)
-  return 1
-}
-
-function getOpacityFactor(r: number): number {
-  if (r <= SCROLL_DISPERSE_START) return 1.0
-  if (r <= SCROLL_DISPERSE_END) return 1.0 - ((r - SCROLL_DISPERSE_START) / (SCROLL_DISPERSE_END - SCROLL_DISPERSE_START)) * 0.8
-  return 0.2
-}
-
-/* ========================================
    COMPONENT
    ======================================== */
 export default function EmberHero() {
@@ -239,11 +211,9 @@ export default function EmberHero() {
     let destroyVelocities: Float32Array
     let destroyOffsets: Float32Array
     let returnDelays: Float32Array
-    let scrollVelocities: Float32Array
-    let scrollOffsets: Float32Array
-    let scrollDirections: Float32Array
     let destroyGlowArr: Float32Array
-    let prevDispersal = 0
+    let exploded = false
+    let explodeTime = 0
     let storedVisW = 1
     let storedVisH = 1
     let textWorldWidth = 1
@@ -319,11 +289,7 @@ export default function EmberHero() {
       destroyVelocities = new Float32Array(count * 3)
       destroyOffsets = new Float32Array(count * 3)
       returnDelays = new Float32Array(count)
-      scrollVelocities = new Float32Array(count * 3)
-      scrollOffsets = new Float32Array(count * 3)
-      scrollDirections = new Float32Array(count * 3)
       destroyGlowArr = new Float32Array(count)
-      prevDispersal = 0
 
       const sizeClasses = new Float32Array(count)
       const edgeDists = new Float32Array(count)
@@ -383,12 +349,6 @@ export default function EmberHero() {
         edgeDists[i] = ed
         edgeDistArr[i] = ed
 
-        const sa = Math.random() * Math.PI * 2
-        const ss = 0.3 + r * 0.7
-        scrollDirections[i * 3] = Math.cos(sa) * ss * visW * 0.02
-        scrollDirections[i * 3 + 1] = Math.sin(sa) * ss * visH * 0.02
-        scrollDirections[i * 3 + 2] = (Math.random() - 0.5) * 0.5
-
         positionArray[i * 3] = hx
         positionArray[i * 3 + 1] = hy
         positionArray[i * 3 + 2] = hz
@@ -442,14 +402,34 @@ export default function EmberHero() {
       const elapsed = (now - startTime) / 1000
       const fadeIn = Math.min(elapsed / 1.5, 1.0)
 
-      const scrollRatio = getScrollRatio()
-      const dispersal = getDispersalFactor(scrollRatio)
-      const scrollOpacity = getOpacityFactor(scrollRatio)
-      const scrollDelta = dispersal - prevDispersal
-      prevDispersal = dispersal
+      // Explode trigger: when container scrolls near top of viewport
+      if (!exploded && container) {
+        const rect = container.getBoundingClientRect()
+        if (rect.bottom < window.innerHeight * 0.3) {
+          exploded = true
+          explodeTime = now
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const i3 = i * 3
+            const angle = Math.random() * Math.PI * 2
+            const speed = 0.08 + Math.random() * 0.2
+            destroyedAt[i] = now
+            destroyVelocities[i3] = Math.cos(angle) * speed
+            destroyVelocities[i3 + 1] = Math.sin(angle) * speed
+            destroyVelocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.3
+            returnDelays[i] = Math.random()
+          }
+        }
+      }
+
+      // Opacity: fade in normally, fade out after explosion
+      let opacity = fadeIn
+      if (exploded && explodeTime > 0) {
+        const fadeProgress = Math.min(1, (now - explodeTime) / EXPLODE_FADE_DURATION)
+        opacity = fadeIn * (1 - fadeProgress)
+      }
 
       material.uniforms.uTime.value = elapsed
-      material.uniforms.uOpacity.value = fadeIn * scrollOpacity
+      material.uniforms.uOpacity.value = opacity
       material.uniforms.uBreathing.value = 1.0
 
       const tgtActive = mouseActive ? 1.0 : 0.0
@@ -461,8 +441,6 @@ export default function EmberHero() {
 
       while (recentDestroys.length > 0 && now - recentDestroys[0] > DESTROY_TOTAL) recentDestroys.shift()
 
-      const wrapX = storedVisW * 0.7
-      const wrapY = storedVisH * 0.7
       const posAttr = geometry.getAttribute('position') as THREE.BufferAttribute
 
       for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -470,49 +448,9 @@ export default function EmberHero() {
         const r = randoms[i]
         const hx = homePositions[i3], hy = homePositions[i3 + 1], hz = homePositions[i3 + 2]
 
-        // Scroll physics — extra damping near zero dispersal to prevent trembling
-        const scrollDamp = dispersal < 0.05 ? SCROLL_DAMPING * 0.9 : SCROLL_DAMPING
-        scrollVelocities[i3] *= scrollDamp
-        scrollVelocities[i3 + 1] *= scrollDamp
-        scrollVelocities[i3 + 2] *= scrollDamp
-
-        if (scrollDelta > 0.005) {
-          const imp = scrollDelta * SCROLL_IMPULSE
-          scrollVelocities[i3] += scrollDirections[i3] * imp
-          scrollVelocities[i3 + 1] += scrollDirections[i3 + 1] * imp
-          scrollVelocities[i3 + 2] += scrollDirections[i3 + 2] * imp
-        }
-
-        if (dispersal > 0.1) {
-          const ds = dispersal * DRIFT_FORCE
-          scrollVelocities[i3] += (Math.sin(elapsed * 0.13 + r * 173.7) + Math.sin(elapsed * 0.31 + r * 47.1) * 0.6) * ds
-          scrollVelocities[i3 + 1] += (Math.cos(elapsed * 0.17 + r * 231.3) + Math.cos(elapsed * 0.23 + r * 89.7) * 0.5) * ds
-          scrollVelocities[i3 + 2] += Math.sin(elapsed * 0.11 + r * 317.9) * 0.3 * ds * 0.3
-        }
-
-        const springBase = 1 - dispersal
-        if (springBase > returnDelays[i] * 0.5) {
-          const k = springBase * SCROLL_SPRING_K
-          scrollVelocities[i3] -= scrollOffsets[i3] * k
-          scrollVelocities[i3 + 1] -= scrollOffsets[i3 + 1] * k
-          scrollVelocities[i3 + 2] -= scrollOffsets[i3 + 2] * k
-        }
-
-        scrollOffsets[i3] += scrollVelocities[i3]
-        scrollOffsets[i3 + 1] += scrollVelocities[i3 + 1]
-        scrollOffsets[i3 + 2] += scrollVelocities[i3 + 2]
-
-        if (dispersal > 0.3) {
-          const px = hx + scrollOffsets[i3], py = hy + scrollOffsets[i3 + 1]
-          if (px > wrapX) scrollOffsets[i3] -= wrapX * 2
-          else if (px < -wrapX) scrollOffsets[i3] += wrapX * 2
-          if (py > wrapY) scrollOffsets[i3 + 1] -= wrapY * 2
-          else if (py < -wrapY) scrollOffsets[i3 + 1] += wrapY * 2
-        }
-
-        let tx = hx + scrollOffsets[i3]
-        let ty = hy + scrollOffsets[i3 + 1]
-        let tz = hz + scrollOffsets[i3 + 2]
+        let tx = hx
+        let ty = hy
+        let tz = hz
 
         // Idle movement (subtle, keeps contour readable)
         tx += Math.sin(elapsed * 0.4 + r * 6.28) * 0.03 + Math.sin(elapsed * 0.9 + r * 12.56) * 0.015
@@ -521,21 +459,21 @@ export default function EmberHero() {
 
         // Edge sparks only (edgeDist < 0.2, random directions)
         const ed = edgeDistArr[i]
-        if (ed < 0.2 && r > 0.94 && dispersal < 0.5) {
+        if (ed < 0.2 && r > 0.94 && !exploded) {
           const sp = elapsed * 0.5 + r * 30
-          const ss = 0.06 * (1 - dispersal * 2) * (0.2 - ed) / 0.2
+          const ss = 0.06 * (0.2 - ed) / 0.2
           const sa = r * 100 + elapsed * 0.3
           tx += Math.cos(sa) * (Math.sin(sp) * 0.5 + 0.5) * ss
           ty += Math.sin(sa) * (Math.sin(sp) * 0.5 + 0.5) * ss
         }
 
-        // Destroy — 4 phases: FLY → DRIFT → RETURN → SNAP
+        // Destroy — 4 phases: FLY → DRIFT → RETURN → SNAP (explode skips return+snap)
         if (destroyedAt[i] > 0) {
           const age = now - destroyedAt[i]
           const driftEnd = DESTROY_FLY_PHASE + DESTROY_DRIFT_PHASE
           const returnEnd = driftEnd + DESTROY_RETURN_PHASE
 
-          if (age >= DESTROY_TOTAL) {
+          if (!exploded && age >= DESTROY_TOTAL) {
             destroyedAt[i] = 0
             destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
             destroyVelocities[i3] = destroyVelocities[i3 + 1] = destroyVelocities[i3 + 2] = 0
@@ -553,19 +491,18 @@ export default function EmberHero() {
             destroyOffsets[i3] += destroyVelocities[i3]
             destroyOffsets[i3 + 1] += destroyVelocities[i3 + 1]
             destroyOffsets[i3 + 2] += destroyVelocities[i3 + 2]
-          } else if (age < driftEnd) {
+          } else if (age < driftEnd || exploded) {
             // Phase 2: drift — slow down but maintain minimum speed
+            // When exploded: stay in drift forever (no return)
             destroyVelocities[i3] *= 0.985
             destroyVelocities[i3 + 1] *= 0.985
             destroyVelocities[i3 + 2] *= 0.985
-            // Enforce minimum drift speed
             const vMag = Math.sqrt(destroyVelocities[i3] * destroyVelocities[i3] + destroyVelocities[i3 + 1] * destroyVelocities[i3 + 1])
             if (vMag > 0 && vMag < DRIFT_MIN_SPEED) {
               const scale = DRIFT_MIN_SPEED / vMag
               destroyVelocities[i3] *= scale
               destroyVelocities[i3 + 1] *= scale
             }
-            // Subtle random perturbation for organic drift
             destroyVelocities[i3] += (Math.random() - 0.5) * 0.002
             destroyVelocities[i3 + 1] += (Math.random() - 0.5) * 0.002
             destroyOffsets[i3] += destroyVelocities[i3]
@@ -653,7 +590,7 @@ export default function EmberHero() {
     function handleMouseLeave() { mouseActive = false }
 
     function doDestroy(cx: number, cy: number, destroyAll = false) {
-      if (!camera || !geometry || !material) return
+      if (!camera || !geometry || !material || exploded) return
       const now = performance.now()
       while (recentDestroys.length > 0 && now - recentDestroys[0] > DESTROY_TOTAL) recentDestroys.shift()
 

@@ -11,13 +11,13 @@
 .heroSpacer {
   position: relative;
   z-index: 1;
-  min-height: 65vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: calc(56px + 41vh);   /* below IVERSO parázs — centered between nav and first card */
+  padding-top: 2rem;
+  padding-bottom: 4rem;
   pointer-events: none;
 }
 
