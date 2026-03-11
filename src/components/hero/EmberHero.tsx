@@ -72,8 +72,12 @@ const vertexShader = /* glsl */ `
       baseSize = 7.0 + aRandom * 6.0;
     }
 
+    float contourSize = 4.5;
+    float edgeContour = smoothstep(0.25, 0.02, aEdgeDist);
+    baseSize = mix(baseSize, contourSize, edgeContour);
+
     float pulse = 1.0;
-    float edgeSizeBoost = 1.0 + (1.0 - aEdgeDist) * 0.15;
+    float edgeSizeBoost = 1.0;
     float hoverBoost = 1.0 + vMouseGlow * 0.15;
     float destroyGrow = 1.0 + aDestroyGlow * 0.5;
 
@@ -101,15 +105,19 @@ const fragmentShader = /* glsl */ `
     if (dist > 0.5) discard;
 
     float destroySharpBoost = vDestroyGlow * 18.0;
-    float sharpness = mix(19.2, 9.6, vSizeClass) + destroySharpBoost;
+    float edgeContour = smoothstep(0.25, 0.02, vEdgeDist);
+    float contourSharpness = 12.0;
+    float sharpness = mix(mix(19.2, 9.6, vSizeClass), contourSharpness, edgeContour) + destroySharpBoost;
     float glow = exp(-dist * sharpness);
     float coreSharpness = 24.0 + vDestroyGlow * 16.0;
     float core = exp(-dist * coreSharpness);
     float coreIntensity = 0.25 + vDestroyGlow * 0.35;
-    float edgeBrightness = 1.0 + (1.0 - vEdgeDist) * 0.3;
+    float edgeBrightness = 1.0 + edgeContour * 1.0;
 
     vec3 color = vColor * glow * edgeBrightness
                + vec3(1.0, 0.85, 0.65) * core * coreIntensity * edgeBrightness;
+    vec3 contourHot = vec3(1.0, 0.75, 0.35);
+    color += contourHot * edgeContour * glow * 0.39;
 
     vec3 hoverColor = vec3(1.0, 0.82, 0.63);
     color = mix(color, hoverColor * (glow + core * 0.5) * 1.5, vMouseGlow * 0.15);
@@ -117,7 +125,7 @@ const fragmentShader = /* glsl */ `
     float destroyAlphaBoost = vDestroyGlow * 0.28;
     float baseAlpha = mix(0.85, 0.35, vSizeClass) + destroyAlphaBoost;
     float softEdge = smoothstep(0.5, 0.02, dist);
-    float edgeAlpha = 1.0 + (1.0 - vEdgeDist) * 0.15;
+    float edgeAlpha = 1.0 + edgeContour * 0.325;
     float alpha = softEdge * glow * baseAlpha * vAlpha * edgeAlpha;
     alpha *= 1.0 + vMouseGlow * 0.5;
 
@@ -296,7 +304,19 @@ export default function EmberHero() {
       textWorldWidth = (maxX - minX) * visW
 
       const textCount = Math.floor(PARTICLE_COUNT * 0.95)
-      const useSampled = sampled.length >= textCount ? selectRandom(sampled, textCount) : sampled
+      const edgePixels = sampled.filter(p => p.edgeDist < 0.25)
+      const innerPixels = sampled.filter(p => p.edgeDist >= 0.25)
+      let useSampled: SampledPixel[]
+      if (sampled.length <= textCount) {
+        useSampled = sampled
+      } else {
+        const remaining = textCount - edgePixels.length
+        if (remaining > 0) {
+          useSampled = [...edgePixels, ...selectRandom(innerPixels, remaining)]
+        } else {
+          useSampled = selectRandom(edgePixels, textCount)
+        }
+      }
 
       const count = TOTAL_PARTICLES
       positionArray = new Float32Array(count * 3)
