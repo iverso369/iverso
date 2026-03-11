@@ -25,8 +25,7 @@ const DRIFT_MIN_SPEED = 0.015
 // Scroll thresholds
 const SCROLL_DISPERSE_START = 0.15
 const SCROLL_DISPERSE_END = 0.30
-const SCROLL_REFORM_START = 0.85
-const SCROLL_REFORM_END = 0.95
+// Reform removed — once dispersed, stays dispersed
 
 // Scroll physics
 const SCROLL_IMPULSE = 1.0
@@ -209,17 +208,13 @@ function getScrollRatio(): number {
 function getDispersalFactor(r: number): number {
   if (r <= SCROLL_DISPERSE_START) return 0
   if (r <= SCROLL_DISPERSE_END) return (r - SCROLL_DISPERSE_START) / (SCROLL_DISPERSE_END - SCROLL_DISPERSE_START)
-  if (r <= SCROLL_REFORM_START) return 1
-  if (r <= SCROLL_REFORM_END) return 1 - (r - SCROLL_REFORM_START) / (SCROLL_REFORM_END - SCROLL_REFORM_START)
-  return 0
+  return 1
 }
 
 function getOpacityFactor(r: number): number {
   if (r <= SCROLL_DISPERSE_START) return 1.0
   if (r <= SCROLL_DISPERSE_END) return 1.0 - ((r - SCROLL_DISPERSE_START) / (SCROLL_DISPERSE_END - SCROLL_DISPERSE_START)) * 0.8
-  if (r <= SCROLL_REFORM_START) return 0.2
-  if (r <= SCROLL_REFORM_END) return 0.2 + ((r - SCROLL_REFORM_START) / (SCROLL_REFORM_END - SCROLL_REFORM_START)) * 0.8
-  return 1.0
+  return 0.2
 }
 
 /* ========================================
