@@ -143,7 +143,7 @@ function sampleTextPositions(
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.fillStyle = '#ffffff'
-  ctx.fillText(text, canvas.width / 2, canvas.height * 0.45)
+  ctx.fillText(text, canvas.width / 2, canvas.height * 0.37)
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const px = imageData.data
@@ -214,6 +214,8 @@ export default function EmberHero() {
     let destroyGlowArr: Float32Array
     let exploded = false
     let explodeTime = 0
+    let returning = false
+    let returnStartTime = 0
     let storedVisW = 1
     let storedVisH = 1
     let textWorldWidth = 1
@@ -408,6 +410,8 @@ export default function EmberHero() {
         if (rect.top >= 0) {
           exploded = false
           explodeTime = 0
+          returning = true
+          returnStartTime = now
           // Put each particle at the start of RETURN phase so they animate back
           const returnStart = now - (DESTROY_FLY_PHASE + DESTROY_DRIFT_PHASE)
           for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -440,11 +444,15 @@ export default function EmberHero() {
         }
       }
 
-      // Opacity: fade in normally, fade out after explosion
+      // Opacity: fade in normally, fade out after explosion, fade in during return
       let opacity = fadeIn
       if (exploded && explodeTime > 0) {
         const fadeProgress = Math.min(1, (now - explodeTime) / EXPLODE_FADE_DURATION)
         opacity = fadeIn * (1 - fadeProgress)
+      } else if (returning && returnStartTime > 0) {
+        const returnFade = Math.min(1, (now - returnStartTime) / 800)
+        opacity = fadeIn * returnFade
+        if (returnFade >= 1) returning = false
       }
 
       material.uniforms.uTime.value = elapsed
