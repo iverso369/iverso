@@ -402,6 +402,22 @@ export default function EmberHero() {
       const elapsed = (now - startTime) / 1000
       const fadeIn = Math.min(elapsed / 1.5, 1.0)
 
+      // Reset explode when scrolled back to top
+      if (exploded && container) {
+        const rect = container.getBoundingClientRect()
+        if (rect.top >= 0) {
+          exploded = false
+          explodeTime = 0
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const i3 = i * 3
+            destroyedAt[i] = 0
+            destroyOffsets[i3] = destroyOffsets[i3 + 1] = destroyOffsets[i3 + 2] = 0
+            destroyVelocities[i3] = destroyVelocities[i3 + 1] = destroyVelocities[i3 + 2] = 0
+            destroyGlowArr[i] = 0
+          }
+        }
+      }
+
       // Explode trigger: when container scrolls near top of viewport
       if (!exploded && container) {
         const rect = container.getBoundingClientRect()
