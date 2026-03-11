@@ -22,7 +22,7 @@
 }
 
 .slogan {
-  margin-top: 41px;
+  margin-top: 28px;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: clamp(1.2rem, 3.5vw, 3rem);
